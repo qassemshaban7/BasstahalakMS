@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BasstahalakMS.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240312123252_filetable")]
-    partial class filetable
+    [Migration("20240313133636_filemigrat")]
+    partial class filemigrat
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,6 +33,10 @@ namespace BasstahalakMS.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("BookName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -41,9 +45,15 @@ namespace BasstahalakMS.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("LessonsCount")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UnitsCount")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -356,16 +366,16 @@ namespace BasstahalakMS.Data.Migrations
                         {
                             Id = "ecc07b18-f55e-4f6b-95bd-0e84f556135f",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1d996ebd-bd72-4693-b06c-f7ae59571630",
+                            ConcurrencyStamp = "29f31e88-a666-42fa-9e4e-7ea439438869",
                             Email = "mohamedsalah@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "MOHAMEDSALAH@GMAIL.COM",
                             NormalizedUserName = "MOHAMEDSALAH",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBxhrUiPzbAFJG/fDku2UMPpJqdj4C6AJ0FUc9KaALdNqLzXXuACywktHgo2NYNX3Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEB9eQlO1nPjE/6PYgWZLU0CG2kCR1z5BxNETD7orqxq1J8cZXrrY0Y/vLNLALuhQmQ==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e0554e8c-48d8-4c93-8c3d-c9c0c6f88d4d",
+                            SecurityStamp = "f6d0f14e-3c39-4ed3-ad27-f472de8cb4e4",
                             TwoFactorEnabled = false,
                             UserName = "mohamedsalah",
                             FullName = "محمد صلاح"
@@ -374,16 +384,16 @@ namespace BasstahalakMS.Data.Migrations
                         {
                             Id = "898d9efa-cd60-4446-b9ae-e0c48dd87c49",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "09a75c94-c92f-4fbf-8b96-ff03373fe003",
+                            ConcurrencyStamp = "0c4e2cb1-7fd6-478d-9c7e-2ddc06f655b6",
                             Email = "ehab@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "EHAB@GMAIL.COM",
                             NormalizedUserName = "EHAB",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIQM+PD8dTUictiidowaaQwWEqgt7tCAkex1G1kONJbOZ1bKUu/784+GZc20W6IoOA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEK2f7qoBlN3cWHIong2pXqQIYujJwSmX6dGjunlFi3LhYbJfJzo+/3prcVmH/NDw7g==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "14eb1e11-cfba-4b34-a0fe-825f63542801",
+                            SecurityStamp = "cbd88fd7-f826-42fa-aee0-d908ad671e2a",
                             TwoFactorEnabled = false,
                             UserName = "ehab",
                             FullName = "ايهاب ابراهيم "
@@ -392,16 +402,16 @@ namespace BasstahalakMS.Data.Migrations
                         {
                             Id = "c2d7916d-74c1-4588-b2f2-6616b0e687f0",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3db12ebf-0e94-460e-8759-9c798b06881b",
+                            ConcurrencyStamp = "4c61b03c-51c7-4e8d-a022-7cbb4dab6ffd",
                             Email = "shaban@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "SHABAN@GMAIL.COM",
                             NormalizedUserName = "SHABAN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDU+oSz8X8Rgb45xiybgtA4+vfMw1oVeDnygrKyd65xvTd4ws4IOWUFh/3hriKQnGw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOqor5rdTK+PpeYAwHRyCazmCwWpUN5NA4RCogunz/dY6ZO4wlG7p/3DlEML8BV7gw==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "42fde197-73bb-42ff-a778-dd733cab341b",
+                            SecurityStamp = "261b56fd-e9bc-4090-9074-a9a4ad24ce02",
                             TwoFactorEnabled = false,
                             UserName = "shaban",
                             FullName = "شعبان ابراهيم"
@@ -410,16 +420,16 @@ namespace BasstahalakMS.Data.Migrations
                         {
                             Id = "325a3e6f-b33e-43d6-8cee-f6b0ad00f620",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "240f3b41-3871-412c-8a84-6ed154bd2b4c",
+                            ConcurrencyStamp = "a2bdfd70-ba34-4804-8913-c9e36b88608a",
                             Email = "malek@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "MALEK@GMAIL.COM",
                             NormalizedUserName = "MALEK",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGkPQxnnnw7QDStj0rKkflkdENizevHwdAlVUTRRIYomIntXTeKiFSiY40Sp14wUjQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECGCX2C/GHZaI6V21uCsXlTQ1qXbYzOz+TZUOxGB/4yocg4eFfQCemQ+mTBnvoJi9Q==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "39786852-35fc-4f34-9e97-ba80ca8c5e1c",
+                            SecurityStamp = "10597bd3-4308-4810-b496-c0183c3f760a",
                             TwoFactorEnabled = false,
                             UserName = "malek",
                             FullName = "مالك ايهاب"

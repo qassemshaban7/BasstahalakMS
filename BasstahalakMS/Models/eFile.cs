@@ -22,7 +22,17 @@ namespace BasstahalakMS.Models
         public IFormFile UploadedFile { get; set; }
         public string FilePath { get; set; }
 
+        [Required(ErrorMessage = "يرجى إدخال اسم الكتاب")]
+        public string BookName { get; set; }
+
+        [Required(ErrorMessage = "يرجى إدخال عدد الوحدات")]
+        public int UnitsCount { get; set; }
+
+        [Required(ErrorMessage = "يرجى إدخال عدد الدروس")]
+        public int LessonsCount { get; set; }
+
         public string UserId { get; set; }
-        public ApplicationUser User { get; set; }   
+        public ApplicationUser User { get; set; }
     }
+
 }
