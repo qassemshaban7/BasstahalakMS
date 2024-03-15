@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 
 namespace BasstahalakMS.Areas.Prepare.Controllers
 {
@@ -14,9 +15,19 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
     [Route(nameof(Prepare) + "/[controller]")]
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _hostingEnvironment;
+
+        public HomeController(ApplicationDbContext context, IWebHostEnvironment hostingEnvironment)
         {
-            return View();
+            _context = context;
+            _hostingEnvironment = hostingEnvironment;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var files = await _context.BFiles.ToListAsync();
+            return View(files);
         }
     }
 }

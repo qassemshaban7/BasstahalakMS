@@ -10,6 +10,6 @@ namespace BasstahalakMS.Models
     {
         public string FullName { get; set; }
 
-        public ICollection<eFile> EFiles { get; set; }    
+        public ICollection<BFile> BFiles { get; set; }    
     }
 }

@@ -4,18 +4,13 @@ using BasstahalakMS.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace BasstahalakMS.Areas.Prepare.Controllers
 {
-    [Authorize(Roles = "Prepare")]
+    [Authorize(Roles = StaticDetails.Prepare)]
     [Area(nameof(Prepare))]
-    [Route(nameof(Prepare) + "/[controller]")]
+    [Route(nameof(Prepare) + "/[controller]/[action]")]
     public class FileController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -27,11 +22,13 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
             _hostingEnvironment = hostingEnvironment;
         }
 
-        public IActionResult Index()
-        {
-            var files = _context.EFiles.ToList();
-            return View(files);
-        }
+        
+
+        //public async Task<IActionResult> Index()
+        //{
+        //    var files = await _context.BFiles.ToListAsync();
+        //    return View(files);
+        //}
 
         public IActionResult Upload()
         {
@@ -40,7 +37,7 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Upload(eFile file)
+        public async Task<IActionResult> Upload(BFile file)
         {
             if (ModelState.IsValid)
             {
@@ -57,7 +54,7 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
 
                     file.FilePath = filePath;
 
-                    _context.EFiles.Add(file);
+                    _context.BFiles.Add(file);
                     await _context.SaveChangesAsync();
 
                     return RedirectToAction(nameof(Index));
@@ -68,7 +65,7 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var file = await _context.EFiles.FindAsync(id);
+            var file = await _context.BFiles.FindAsync(id);
             if (file == null)
             {
                 return NotFound();
@@ -76,14 +73,14 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
             return View(file);
         }
 
-        [Authorize(Roles = "Prepare")]
+        //[Authorize(Roles = "Prepare")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(eFile file)
+        public async Task<IActionResult> Edit(BFile file)
         {
             if (ModelState.IsValid)
             {
-                var existingFile = await _context.EFiles.FindAsync(file.Id);
+                var existingFile = await _context.BFiles.FindAsync(file.Id);
                 if (existingFile == null)
                 {
                     return NotFound();

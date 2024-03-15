@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BasstahalakMS.Models
 {
-    public class eFile
+    public class BFile
     {
         public int Id { get; set; }
 
@@ -32,6 +28,7 @@ namespace BasstahalakMS.Models
         public int LessonsCount { get; set; }
 
         public string UserId { get; set; }
+        [ForeignKey("UserId")]
         public ApplicationUser User { get; set; }
     }
 
