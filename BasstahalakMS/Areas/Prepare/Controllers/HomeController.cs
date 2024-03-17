@@ -26,8 +26,7 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var files = await _context.BFiles.ToListAsync();
-            return View(files);
+            return View();
         }
     }
 }

@@ -20,6 +20,8 @@ namespace BasstahalakMS.Models
 
         [Required(ErrorMessage = "يرجى إدخال اسم الكتاب")]
         public string BookName { get; set; }
+        [Required(ErrorMessage = "يرجى إدخال اسم الفرع")]
+        public string BranchName { get; set; }
 
         [Required(ErrorMessage = "يرجى إدخال عدد الوحدات")]
         public int UnitsCount { get; set; }
@@ -31,5 +33,4 @@ namespace BasstahalakMS.Models
         [ForeignKey("UserId")]
         public ApplicationUser User { get; set; }
     }
-
 }

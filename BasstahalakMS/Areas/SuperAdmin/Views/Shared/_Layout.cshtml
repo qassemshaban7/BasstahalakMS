@@ -43,13 +43,25 @@
                 <li class="br-menu-item">
                     <a href="#" class="br-menu-link with-sub">
                         <i class="menu-item-icon icon fas fa-light fa-building tx-20"></i>
-                        <span class="menu-item-label">المطابع</span>
+                        <span class="menu-item-label">الكتب</span>
                     </a><!-- br-menu-link -->
                     <ul class="br-menu-sub">
-                        <li class="sub-item"><a asp-action="Create" asp-controller="Printing" class="sub-link">اضافة مطبعة جديدة</a></li>
-                        <li class="sub-item"><a asp-action="Index" asp-controller="Printing" class="sub-link">عرض المطابع</a></li>
+                        <li class="sub-item"><a asp-action="Create" asp-controller="Book" class="sub-link">اضافة كتاب جديد</a></li>
+                        <li class="sub-item"><a asp-action="Index" asp-controller="Book" class="sub-link">عرض الكتب</a></li>
                     </ul>
                 </li>
+
+                <li class="br-menu-item">
+                    <a href="#" class="br-menu-link with-sub">
+                        <i class="menu-item-icon icon fas fa-light fa-building tx-20"></i>
+                        <span class="menu-item-label">الفروع</span>
+                    </a><!-- br-menu-link -->
+                    <ul class="br-menu-sub">
+                        <li class="sub-item"><a asp-action="Create" asp-controller="Branch" class="sub-link">اضافة فرع جديد</a></li>
+                        <li class="sub-item"><a asp-action="Index" asp-controller="Branch" class="sub-link">عرض الفروع</a></li>
+                    </ul>
+                </li>
+
                @* <li class="br-menu-item">
                     <a href="#" class="br-menu-link with-sub">
                         <i class="menu-item-icon icon fas fa-light fa-building tx-20"></i>

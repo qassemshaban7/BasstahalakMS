@@ -4,19 +4,16 @@ using BasstahalakMS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace BasstahalakMS.Data.Migrations
+namespace BasstahalakMS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240303205606_EditRolesAndUsers")]
-    partial class EditRolesAndUsers
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,6 +21,87 @@ namespace BasstahalakMS.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("BasstahalakMS.Models.BFile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BookName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BranchName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LessonsCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UnitsCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("BFiles");
+                });
+
+            modelBuilder.Entity("BasstahalakMS.Models.Book", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Books");
+                });
+
+            modelBuilder.Entity("BasstahalakMS.Models.Branch", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Branches");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -231,6 +309,16 @@ namespace BasstahalakMS.Data.Migrations
                         {
                             UserId = "898d9efa-cd60-4446-b9ae-e0c48dd87c49",
                             RoleId = "2cdda855-1f15-4e11-9440-cfa84493cbd6"
+                        },
+                        new
+                        {
+                            UserId = "c2d7916d-74c1-4588-b2f2-6616b0e687f0",
+                            RoleId = "4be32c82-c795-4db6-89ac-8cc33b11d012"
+                        },
+                        new
+                        {
+                            UserId = "325a3e6f-b33e-43d6-8cee-f6b0ad00f620",
+                            RoleId = "f770a463-640a-43f6-b9f6-a1317fe2c214"
                         });
                 });
 
@@ -281,6 +369,22 @@ namespace BasstahalakMS.Data.Migrations
                             Name = "Admin",
                             NormalizedName = "ADMIN",
                             ArabicRoleName = "المدير"
+                        },
+                        new
+                        {
+                            Id = "4be32c82-c795-4db6-89ac-8cc33b11d012",
+                            ConcurrencyStamp = "4be32c82-c795-4db6-89ac-8cc33b11d012",
+                            Name = "Prepare",
+                            NormalizedName = "PREPARE",
+                            ArabicRoleName = "الاعداد"
+                        },
+                        new
+                        {
+                            Id = "f770a463-640a-43f6-b9f6-a1317fe2c214",
+                            ConcurrencyStamp = "f770a463-640a-43f6-b9f6-a1317fe2c214",
+                            Name = "Review",
+                            NormalizedName = "REVIEW",
+                            ArabicRoleName = "المراجعة"
                         });
                 });
 
@@ -299,16 +403,16 @@ namespace BasstahalakMS.Data.Migrations
                         {
                             Id = "ecc07b18-f55e-4f6b-95bd-0e84f556135f",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "eed207cd-d8e3-4d44-bd8b-bb701cd4e944",
+                            ConcurrencyStamp = "bad5d522-22c2-4b1e-bdc8-770ef9427fdc",
                             Email = "mohamedsalah@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "MOHAMEDSALAH@GMAIL.COM",
                             NormalizedUserName = "MOHAMEDSALAH",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAxVXBgfi+IPftlT/R0hqR+JCuUyWgsZGXJgLYcfiStaTYVEFyYfRBIUZXDaSisPfA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELRWDRexQs/uA99ssggq1Q0RtIh7/v9YaTX6FyrPbpx9HR30lsES9sWG30DO1rjH5Q==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "baae3b7a-9cb7-441b-9343-3ebc4bc1ea50",
+                            SecurityStamp = "a0cbeae1-5347-426a-b113-67af0e5d82e9",
                             TwoFactorEnabled = false,
                             UserName = "mohamedsalah",
                             FullName = "محمد صلاح"
@@ -317,20 +421,67 @@ namespace BasstahalakMS.Data.Migrations
                         {
                             Id = "898d9efa-cd60-4446-b9ae-e0c48dd87c49",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "38261248-cd71-4137-8167-84f9ca5f10fb",
+                            ConcurrencyStamp = "3d31ae5c-f851-4516-9b02-49c53059f2e0",
                             Email = "ehab@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "EHAB@GMAIL.COM",
                             NormalizedUserName = "EHAB",
-                            PasswordHash = "AQAAAAIAAYagAAAAELfAksHZfkyK7ZgbHUdAhPoRNGSgPwYxLKCna8nNBjggVt8I1bvBIgy3ttpSEYZC5w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELhhtMW0KEfvACjcmIRUYe4MgaUghqL/mHS5frfDhxyez29iNnmTo/F3WOY9dYgw7w==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "38363752-569d-43cc-8906-bb1ef12d4f8d",
+                            SecurityStamp = "004927ef-1f2e-4f1b-84bb-50ee789a116b",
                             TwoFactorEnabled = false,
                             UserName = "ehab",
                             FullName = "ايهاب ابراهيم "
+                        },
+                        new
+                        {
+                            Id = "c2d7916d-74c1-4588-b2f2-6616b0e687f0",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "762c8d49-3ab2-45cd-8c7e-d47227a2e48a",
+                            Email = "shaban@gmail.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "SHABAN@GMAIL.COM",
+                            NormalizedUserName = "SHABAN",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBXrBb+Kh8+cU1LdU0ujVN7bcJK4jdy1a1wOclbFUFPy8lq4JlFLgKgwI+1QKQhTJw==",
+                            PhoneNumber = "1234567890",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "44fda992-eb51-4d10-a165-f6433b5cc151",
+                            TwoFactorEnabled = false,
+                            UserName = "shaban",
+                            FullName = "شعبان ابراهيم"
+                        },
+                        new
+                        {
+                            Id = "325a3e6f-b33e-43d6-8cee-f6b0ad00f620",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "669d7946-2db9-476e-b511-20804953e574",
+                            Email = "malek@gmail.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "MALEK@GMAIL.COM",
+                            NormalizedUserName = "MALEK",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFiRvCmQvkksr5UOciqGqA5Pg7ZIdQyO5uA8f9ruk/U0dRx24/NtAAuJEdEdL0HlIw==",
+                            PhoneNumber = "1234567890",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "15715091-5fba-4670-a0e5-918f062b384d",
+                            TwoFactorEnabled = false,
+                            UserName = "malek",
+                            FullName = "مالك ايهاب"
                         });
+                });
+
+            modelBuilder.Entity("BasstahalakMS.Models.BFile", b =>
+                {
+                    b.HasOne("BasstahalakMS.Models.ApplicationUser", "User")
+                        .WithMany("BFiles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -382,6 +533,11 @@ namespace BasstahalakMS.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("BasstahalakMS.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("BFiles");
                 });
 #pragma warning restore 612, 618
         }
