@@ -30,37 +30,30 @@ namespace BasstahalakMS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("BookName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("BranchName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FilePath")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("LessonsCount")
-                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UnitsCount")
-                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BookId");
 
                     b.HasIndex("UserId");
 
@@ -101,6 +94,35 @@ namespace BasstahalakMS.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Branches");
+                });
+
+            modelBuilder.Entity("BasstahalakMS.Models.FileBranch", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BFileId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BranchId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LessonsCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UnitsCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BFileId");
+
+                    b.HasIndex("BranchId");
+
+                    b.ToTable("FileBranches");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -298,6 +320,28 @@ namespace BasstahalakMS.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "ecc07b18-f55e-4f6b-95bd-0e84f556135f",
+                            RoleId = "ba51b8f7-2a1d-45c6-9c00-68099eebd485"
+                        },
+                        new
+                        {
+                            UserId = "898d9efa-cd60-4446-b9ae-e0c48dd87c49",
+                            RoleId = "2cdda855-1f15-4e11-9440-cfa84493cbd6"
+                        },
+                        new
+                        {
+                            UserId = "c2d7916d-74c1-4588-b2f2-6616b0e687f0",
+                            RoleId = "4be32c82-c795-4db6-89ac-8cc33b11d012"
+                        },
+                        new
+                        {
+                            UserId = "325a3e6f-b33e-43d6-8cee-f6b0ad00f620",
+                            RoleId = "f770a463-640a-43f6-b9f6-a1317fe2c214"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -330,6 +374,40 @@ namespace BasstahalakMS.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasDiscriminator().HasValue("ApplicationRole");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "ba51b8f7-2a1d-45c6-9c00-68099eebd485",
+                            ConcurrencyStamp = "ba51b8f7-2a1d-45c6-9c00-68099eebd485",
+                            Name = "SuperAdmin",
+                            NormalizedName = "SUPERADMIN",
+                            ArabicRoleName = "المدير العام"
+                        },
+                        new
+                        {
+                            Id = "2cdda855-1f15-4e11-9440-cfa84493cbd6",
+                            ConcurrencyStamp = "2cdda855-1f15-4e11-9440-cfa84493cbd6",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN",
+                            ArabicRoleName = "المدير"
+                        },
+                        new
+                        {
+                            Id = "4be32c82-c795-4db6-89ac-8cc33b11d012",
+                            ConcurrencyStamp = "4be32c82-c795-4db6-89ac-8cc33b11d012",
+                            Name = "Prepare",
+                            NormalizedName = "PREPARE",
+                            ArabicRoleName = "الاعداد"
+                        },
+                        new
+                        {
+                            Id = "f770a463-640a-43f6-b9f6-a1317fe2c214",
+                            ConcurrencyStamp = "f770a463-640a-43f6-b9f6-a1317fe2c214",
+                            Name = "Review",
+                            NormalizedName = "REVIEW",
+                            ArabicRoleName = "المراجعة"
+                        });
                 });
 
             modelBuilder.Entity("BasstahalakMS.Models.ApplicationUser", b =>
@@ -347,17 +425,118 @@ namespace BasstahalakMS.Migrations
                         .HasColumnType("int");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "ecc07b18-f55e-4f6b-95bd-0e84f556135f",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "de42f7af-a83d-4999-a57a-40ccaca05d5f",
+                            Email = "mohamedsalah@gmail.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "MOHAMEDSALAH@GMAIL.COM",
+                            NormalizedUserName = "MOHAMEDSALAH",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMW/WDuJlHbahEY0z+8mvlhg0HkSVK+zkAULrPkdizdaRF/wgoL04+gYa3HDV7RDzA==",
+                            PhoneNumber = "1234567890",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "11592d66-f898-428b-afb9-e45281936c50",
+                            TwoFactorEnabled = false,
+                            UserName = "mohamedsalah",
+                            FullName = "محمد صلاح"
+                        },
+                        new
+                        {
+                            Id = "898d9efa-cd60-4446-b9ae-e0c48dd87c49",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "29136026-6d6c-442c-9b1f-392a01a093fb",
+                            Email = "ehab@gmail.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "EHAB@GMAIL.COM",
+                            NormalizedUserName = "EHAB",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBkCAlYq65N2x2LwXw7S1XYAbZamMccYIb3Vy+RhkblotVFHuPK/QzIryLDyIVUnsw==",
+                            PhoneNumber = "1234567890",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "751c986b-6f29-424e-ad8f-e42a3b4cb32f",
+                            TwoFactorEnabled = false,
+                            UserName = "ehab",
+                            FullName = "ايهاب ابراهيم "
+                        },
+                        new
+                        {
+                            Id = "c2d7916d-74c1-4588-b2f2-6616b0e687f0",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "9fadfc16-ff4d-443e-b159-6ab82d9333b7",
+                            Email = "shaban@gmail.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "SHABAN@GMAIL.COM",
+                            NormalizedUserName = "SHABAN",
+                            PasswordHash = "AQAAAAIAAYagAAAAEO+M/ggz1qc1AFOpl96gY+MqFkgvV+jYa8FS1Hqq3/9fGQ3r8xMAfrhPYaWaovXxsg==",
+                            PhoneNumber = "1234567890",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "2d77bd4b-6e0b-4c61-b89c-3b77563cd6eb",
+                            TwoFactorEnabled = false,
+                            UserName = "shaban",
+                            FullName = "شعبان ابراهيم"
+                        },
+                        new
+                        {
+                            Id = "325a3e6f-b33e-43d6-8cee-f6b0ad00f620",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "cc69f0c9-35ed-4a67-bfd8-e8d8cf9c9923",
+                            Email = "malek@gmail.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "MALEK@GMAIL.COM",
+                            NormalizedUserName = "MALEK",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHg4Be/cfS9BUmlpp05JgnfA3//WyevP1rrPbbgtDyYR/JVgrb4OAseM4V/0gz6KaA==",
+                            PhoneNumber = "1234567890",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "5060c41f-8a9c-45e0-981e-27d7fca8bb1a",
+                            TwoFactorEnabled = false,
+                            UserName = "malek",
+                            FullName = "مالك ايهاب"
+                        });
                 });
 
             modelBuilder.Entity("BasstahalakMS.Models.BFile", b =>
                 {
+                    b.HasOne("BasstahalakMS.Models.Book", "Book")
+                        .WithMany()
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BasstahalakMS.Models.ApplicationUser", "User")
                         .WithMany("BFiles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Book");
+
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BasstahalakMS.Models.FileBranch", b =>
+                {
+                    b.HasOne("BasstahalakMS.Models.BFile", "BFile")
+                        .WithMany()
+                        .HasForeignKey("BFileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BasstahalakMS.Models.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BFile");
+
+                    b.Navigation("Branch");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
