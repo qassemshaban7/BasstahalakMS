@@ -18,6 +18,10 @@ builder.Services.AddControllersWithViews().AddRazorPagesOptions(options => {
 });
 builder.Services.AddRazorPages()
     .AddRazorRuntimeCompilation();
+builder.Services.AddSession(options => {
+    options.IdleTimeout = TimeSpan.FromDays(1);//You can set Time   
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -36,6 +40,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseSession();
 
 app.UseAuthorization();
 

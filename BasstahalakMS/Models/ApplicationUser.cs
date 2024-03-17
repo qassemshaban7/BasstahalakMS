@@ -10,6 +10,10 @@ namespace BasstahalakMS.Models
     {
         public string FullName { get; set; }
 
+        public string? Address { get; set; } // عنوان المطبعة
+
+        public int? Type { get; set; } // نوع المطبعة 
+
         public ICollection<BFile> BFiles { get; set; }    
     }
 }

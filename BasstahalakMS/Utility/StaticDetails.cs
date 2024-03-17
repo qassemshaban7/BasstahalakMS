@@ -11,6 +11,7 @@ namespace BasstahalakMS.Utility
         public const string Admin = "Admin";
         public const string Prepare = "Prepare";
         public const string Review = "Review";
+        public const string Printing = "Printing";
 
     }
 }

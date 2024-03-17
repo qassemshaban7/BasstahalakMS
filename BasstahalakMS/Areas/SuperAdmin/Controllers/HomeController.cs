@@ -7,7 +7,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
 {
     [Authorize(Roles = StaticDetails.SuperAdmin)]
     [Area(nameof(SuperAdmin))]
-    [Route(nameof(SuperAdmin) + "/[controller]")]
+    [Route(nameof(SuperAdmin) + "/[controller]/[action]")]
     public class HomeController : Controller
     {
         public IActionResult Index()
