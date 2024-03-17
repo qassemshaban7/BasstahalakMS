@@ -2,8 +2,12 @@
 using BasstahalakMS.Models;
 using BasstahalakMS.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 
 namespace BasstahalakMS.Areas.Prepare.Controllers
@@ -22,37 +26,57 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
             _hostingEnvironment = hostingEnvironment;
         }
 
-        
 
-        //public async Task<IActionResult> Index()
-        //{
-        //    var files = await _context.BFiles.ToListAsync();
-        //    return View(files);
-        //}
+        public async Task<IActionResult> Index()
+        {
+            var files = await _context.BFiles.ToListAsync();
+            return View(files);
+        }
 
         public IActionResult Upload()
         {
+            var books = _context.Books.ToList();
+            ViewBag.Books = books;
+            var branches = _context.Branches.ToList();
+            ViewBag.Branches = branches;
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Upload(BFile file)
+        public async Task<IActionResult> Upload(string name, string description, string bookName, string branchName, int unitsCount, int lessonsCount, IFormFile uploadedFile)
         {
             if (ModelState.IsValid)
             {
-                if (file.UploadedFile != null)
+                if (uploadedFile != null)
                 {
-                    string uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-                    string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.UploadedFile.FileName;
-                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    string uploadsFolder = Path.Combine("files");
+                    string uploadsFolderPath = Path.Combine(_hostingEnvironment.WebRootPath, uploadsFolder);
+                    if (!Directory.Exists(uploadsFolderPath))
                     {
-                        await file.UploadedFile.CopyToAsync(stream);
+                        Directory.CreateDirectory(uploadsFolderPath);
                     }
 
-                    file.FilePath = filePath;
+                    string uniqueFileName = Guid.NewGuid().ToString() + "_" + uploadedFile.FileName;
+                    string filePath = Path.Combine(uploadsFolderPath, uniqueFileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await uploadedFile.CopyToAsync(stream);
+                    }
+
+                    string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                    var file = new BFile
+                    {
+                        Name = name,
+                        Description = description,
+                        FilePath = Path.Combine(uploadsFolder, uniqueFileName),
+                        BookName = bookName,
+                        BranchName = branchName,
+                        UnitsCount = unitsCount,
+                        LessonsCount = lessonsCount,
+                        UserId = userId
+                    };
 
                     _context.BFiles.Add(file);
                     await _context.SaveChangesAsync();
@@ -60,60 +84,89 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
                     return RedirectToAction(nameof(Index));
                 }
             }
-            return View(file);
+            return View();
         }
 
         public async Task<IActionResult> Edit(int id)
         {
-            var file = await _context.BFiles.FindAsync(id);
-            if (file == null)
+            var existingFile = await _context.BFiles.FindAsync(id);
+            if (existingFile == null)
             {
                 return NotFound();
             }
-            return View(file);
+
+            var editViewModel = new EditBFileViewModel
+            {
+                Id = existingFile.Id,
+                Name = existingFile.Name,
+                Description = existingFile.Description,
+                BookName = existingFile.BookName,
+                BranchName = existingFile.BranchName,
+                UnitsCount = existingFile.UnitsCount,
+                LessonsCount = existingFile.LessonsCount
+            };
+
+            var books = _context.Books.ToList(); 
+            ViewBag.Books = books;
+
+            var branches = _context.Branches.ToList();
+            ViewBag.Branches = branches;
+
+            return View(editViewModel);
         }
 
-        //[Authorize(Roles = "Prepare")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(BFile file)
+        public async Task<IActionResult> Edit(EditBFileViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var existingFile = await _context.BFiles.FindAsync(file.Id);
+                var existingFile = await _context.BFiles.FindAsync(model.Id);
                 if (existingFile == null)
                 {
                     return NotFound();
                 }
 
-                if (file.UploadedFile != null)
+                if (model.UploadedFile != null)
                 {
                     if (System.IO.File.Exists(existingFile.FilePath))
                     {
                         System.IO.File.Delete(existingFile.FilePath);
                     }
-                    string uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "files");
-                    string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.UploadedFile.FileName;
-                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    string uploadsFolder = "files";
+                    string uploadsFolderPath = Path.Combine(_hostingEnvironment.WebRootPath, uploadsFolder);
+                    if (!Directory.Exists(uploadsFolderPath))
+                    {
+                        Directory.CreateDirectory(uploadsFolderPath);
+                    }
+
+                    string uniqueFileName = Guid.NewGuid().ToString() + "_" + model.UploadedFile.FileName;
+                    string filePath = Path.Combine(uploadsFolderPath, uniqueFileName);
+
+                    string wwwRootPath = Path.GetFullPath(_hostingEnvironment.WebRootPath);
+
+                    existingFile.FilePath = Path.GetRelativePath(wwwRootPath, filePath);
 
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
-                        await file.UploadedFile.CopyToAsync(stream);
+                        await model.UploadedFile.CopyToAsync(stream);
                     }
-
-                    existingFile.FilePath = filePath;
                 }
 
-                existingFile.Name = file.Name;
-                existingFile.Description = file.Description;
-                existingFile.BookName = file.BookName;
-                existingFile.UnitsCount = file.UnitsCount;
-                existingFile.LessonsCount = file.LessonsCount;
+                existingFile.Name = model.Name;
+                existingFile.Description = model.Description;
+                existingFile.BookName = model.BookName;
+                existingFile.BranchName = model.BranchName;
+                existingFile.UnitsCount = model.UnitsCount;
+                existingFile.LessonsCount = model.LessonsCount;
+
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
-            return View(file);
+            return View(model);
         }
+
     }
 }

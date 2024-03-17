@@ -1,8 +1,8 @@
-﻿@model IEnumerable<BFile>
+﻿@model IEnumerable<Branch>
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Areas/Prepare/Views/Shared/_Layout.cshtml";
+    Layout = "~/Areas/SuperAdmin/Views/Shared/_Layout.cshtml";
 }
 
 @section head {
@@ -16,11 +16,11 @@
     <i class="icon fas fa-light fa-cog"></i>
     <div class="row">
         <div class="col-lg-10 col-10">
-            <h3 class="text-info">قائمة الملفات</h3>
+            <h3 class="text-info">قائمة الفروع</h3>
         </div>
 
         <div class="col-lg-2 col-2">
-            <a asp-action="Upload" asp-controller="File" class="btn btn-primary">اضافة ماده علمية </a>
+            <a asp-action="Create" asp-controller="Branch" class="btn btn-primary">اضافة فرع </a>
         </div>
 
     </div>
@@ -32,33 +32,21 @@
             <table id="deptsTable" class="table display responsive nowrap">
                 <thead>
                     <tr>
-                        <th>اسم الملف</th>
-                        <th>الوصف</th>
-                        <th>اسم الكتاب</th>
                         <th>اسم الفرع</th>
-                        <th>عدد الوحدات</th>
-                        <th>عدد الدروس</th>
-                        <th>ملف</th>
                         <th>تعديل</th>
+                        <th>حذف</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var file in Model)
+                    @foreach (var book in Model)
                     {
                         <tr>
-                            <td>@file.Name</td>
-                            <td>@file.Description</td>
-                            <td>@file.BookName</td>
-                            <td>@file.BranchName</td>
-                            <td>@file.UnitsCount</td>
-                            <td>@file.LessonsCount</td>
+                            <td>@book.Name</td>
                             <td>
-                                <a href="@Url.Content(file.FilePath)">
-                                    <i class="fas fa-file-word"></i>
-                                </a>
+                                <a asp-action="Edit" asp-controller="Branch" asp-route-id="@book.Id" class=" btn btn-info">تعديل </a>
                             </td>
                             <td>
-                                <a asp-action="Edit" asp-controller="File" asp-route-id="@file.Id" class=" btn btn-info">تعديل </a>
+                                <a asp-action="Delete" asp-controller="Branch" asp-route-id="@book.Id" class="btn btn-danger">حذف </a>
                             </td>
                         </tr>
                     }

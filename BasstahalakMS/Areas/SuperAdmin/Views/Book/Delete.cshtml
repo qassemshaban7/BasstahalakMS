@@ -1,0 +1,30 @@
+﻿@model Book
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Areas/SuperAdmin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="br-pagetitle">
+    <i class="icon fas fa-light fa-cog"></i>
+    <div class="row">
+        <div class="col-lg-10 col-10">
+            <h3 class="text-info">
+                <span>حذف الكتاب </span>
+                <span>"@Model.Name"</span>
+            </h3>
+        </div>
+    </div>
+</div>
+
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div>
+            <h4>هل أنت متأكد أنك تريد حذف الكتاب "@Model.Name"؟</h4>
+            <form asp-action="Delete" asp-controller="Book" asp-route-id="@Model.Id" method="post">
+                <input type="submit" value="حذف" class="btn btn-danger" />
+                <a asp-action="Index" asp-controller="Book" class=" btn btn-info">الغاء</a>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,6 +1,102 @@
-﻿@model BFile
+﻿@model EditBFileViewModel
+
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/Prepare/Views/Shared/_Layout.cshtml";
+}
+
+<div class="br-pagetitle">
+    <h3 class="text-info mr-3">تعديل ملف @Model.Name</h3>
+</div><!-- d-flex -->
+
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="form-layout form-layout-4">
+                    <form method="post" asp-action="Edit" asp-controller="File" enctype="multipart/form-data">
+                        <div class="row mb-3">
+                            <label class="col-sm-4 form-control-label">اسم الملف: <span class="tx-danger">*</span></label>
+                            <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                                <input asp-for="Name" type="text" class="form-control" required>
+                                <span class="text-danger" asp-validation-for="Name"></span>
+                            </div>
+                        </div><!-- row -->
+                        <div class="row mb-3">
+                            <label class="col-sm-4 form-control-label">الوصف: <span class="tx-danger">*</span></label>
+                            <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                                <textarea asp-for="Description" rows="5" class="form-control" required>
+                                 </textarea>
+                                <span class="text-danger" asp-validation-for="Description"></span>
+                            </div>
+                        </div><!-- row -->
+                        <div class="row mb-3">
+                            <label class="col-sm-4 form-control-label">اسم الكتاب: <span class="tx-danger">*</span></label>
+                            <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                                <select asp-for="BookName" class="form-control" required>
+                                    <option value="">اختر اسم الكتاب</option>
+                                    @foreach (var book in ViewBag.Books)
+                                    {
+                                        <option value="@book.Name">@book.Name</option>
+                                    }
+                                </select>
+                                <span class="text-danger" asp-validation-for="BookName"></span>
+                            </div>
+                        </div><!-- row -->
+                        <div class="row mb-3">
+                            <label class="col-sm-4 form-control-label">اسم الفرع: <span class="tx-danger">*</span></label>
+                            <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                                <select asp-for="BranchName" class="form-control" required>
+                                    <option value="">اختر اسم الفرع</option>
+                                    @foreach (var branch in ViewBag.Branches)
+                                    {
+                                        <option value="@branch.Name">@branch.Name</option>
+                                    }
+                                </select>
+                                <span class="text-danger" asp-validation-for="BranchName"></span>
+                            </div>
+                        </div><!-- row -->
+                        <div class="row mb-3">
+                            <label class="col-sm-4 form-control-label">عدد الوحدات: <span class="tx-danger">*</span></label>
+                            <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                                <input asp-for="UnitsCount" type="number" class="form-control" required>
+                                <span class="text-danger" asp-validation-for="UnitsCount"></span>
+                            </div>
+                        </div><!-- row -->
+                        <div class="row mb-3">
+                            <label class="col-sm-4 form-control-label">عدد الدروس: <span class="tx-danger">*</span></label>
+                            <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                                <input asp-for="LessonsCount" type="number" class="form-control" required>
+                                <span class="text-danger" asp-validation-for="LessonsCount"></span>
+                            </div>
+                        </div><!-- row -->
+                        <div class="row">
+                            <label class="col-sm-4 form-control-label">الملف: <span class="tx-danger">*</span></label>
+                            <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                                <input type="file" asp-for="UploadedFile" class="form-control" required>
+                                <span class="text-danger" asp-validation-for="UploadedFile"></span>
+                            </div>
+                        </div><!-- row -->
+                        <input type="hidden" asp-for="Id" />
+                        <div class="form-layout-footer mg-t-30 text-center">
+                            <input type="submit" value="حفظ التعديلات" class="btn btn-info">
+                            <a asp-action="Index" asp-controller="File" class="btn btn-secondary">الرجوع</a>
+                        </div><!-- form-layout-footer -->
+                    </form>
+                </div><!-- form-layout -->
+            </div>
+        </div><!-- row -->
+    </div><!-- br-section-wrapper -->
+</div><!-- br-pagebody -->
+
+
+
+
+
+
+@* @model BFile
+@{
+    ViewData["Title"] = "Edit";
     Layout = "~/Areas/Prepare/Views/Shared/_Layout.cshtml";
 }
 
@@ -60,11 +156,11 @@
                         <input type="hidden" asp-for="Id" />
                         <div class="form-layout-footer mg-t-30 text-center">
                             <input type="submit" value="حفظ التعديلات" class="btn btn-info">
-                            <a asp-action="Index" class="btn btn-secondary">الرجوع</a>
+                            <a asp-action="Index" asp-controller="File" class="btn btn-secondary">الرجوع</a>
                         </div><!-- form-layout-footer -->
                     </form>
                 </div><!-- form-layout -->
             </div>
         </div><!-- row -->
     </div><!-- br-section-wrapper -->
-</div><!-- br-pagebody -->
+</div><!-- br-pagebody --> *@
