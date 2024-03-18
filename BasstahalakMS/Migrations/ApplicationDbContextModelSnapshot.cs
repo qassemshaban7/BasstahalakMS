@@ -99,7 +99,47 @@ namespace BasstahalakMS.Migrations
                     b.ToTable("Branches");
                 });
 
+<<<<<<< HEAD
+            modelBuilder.Entity("BasstahalakMS.Models.Library", b =>
+                {
+                    b.Property<int>("LibraryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LibraryId"));
+
+                    b.Property<int>("Color")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PriceOfUnit")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PrintTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Total")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LibraryId");
+
+                    b.HasIndex("PrintTypeId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Libraries");
+                });
+
+            modelBuilder.Entity("BasstahalakMS.Models.PrintType", b =>
+=======
             modelBuilder.Entity("BasstahalakMS.Models.FileBranch", b =>
+>>>>>>> e94a54fcfe3e90fc2e1bc067f37e8b81453eae98
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -107,6 +147,15 @@ namespace BasstahalakMS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+<<<<<<< HEAD
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PrintTypes");
+=======
                     b.Property<int>("BFileId")
                         .HasColumnType("int");
 
@@ -126,6 +175,7 @@ namespace BasstahalakMS.Migrations
                     b.HasIndex("BranchId");
 
                     b.ToTable("FileBranches");
+>>>>>>> e94a54fcfe3e90fc2e1bc067f37e8b81453eae98
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -434,16 +484,24 @@ namespace BasstahalakMS.Migrations
                         {
                             Id = "ecc07b18-f55e-4f6b-95bd-0e84f556135f",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ad60afef-4fd7-4a30-aee5-263d548d6ad9",
+                            ConcurrencyStamp = "de42f7af-a83d-4999-a57a-40ccaca05d5f",
+>>>>>>> e94a54fcfe3e90fc2e1bc067f37e8b81453eae98
                             Email = "mohamedsalah@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "MOHAMEDSALAH@GMAIL.COM",
                             NormalizedUserName = "MOHAMEDSALAH",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPuQg1h5QXf8ErJTG7SnohTgv4M1y3eipdSju0CSKmxXj8tBQFZG5yvLomvbVUJ3OQ==",
+<<<<<<< HEAD
+                            PasswordHash = "AQAAAAIAAYagAAAAEN/XeCV3F3t5kDaWd5VUh+rxaGwm3HttSrtWNrtKQEKtn+67uAcwYOjFSdSO+WEYFw==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b5c4c3d0-69ac-4d53-8e3e-8a600dc8c307",
+                            SecurityStamp = "a759b843-ed2d-4bfa-b995-80019d9fe060",
+=======
+                            PasswordHash = "AQAAAAIAAYagAAAAEMW/WDuJlHbahEY0z+8mvlhg0HkSVK+zkAULrPkdizdaRF/wgoL04+gYa3HDV7RDzA==",
+                            PhoneNumber = "1234567890",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "11592d66-f898-428b-afb9-e45281936c50",
+>>>>>>> e94a54fcfe3e90fc2e1bc067f37e8b81453eae98
                             TwoFactorEnabled = false,
                             UserName = "mohamedsalah",
                             FullName = "محمد صلاح"
@@ -452,16 +510,27 @@ namespace BasstahalakMS.Migrations
                         {
                             Id = "898d9efa-cd60-4446-b9ae-e0c48dd87c49",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3a82faa7-b548-461a-8570-74fd2df08d78",
+<<<<<<< HEAD
+                            ConcurrencyStamp = "85bdb5bd-bfcf-4d26-a4e4-205f8a167cf9",
+=======
+                            ConcurrencyStamp = "29136026-6d6c-442c-9b1f-392a01a093fb",
+>>>>>>> e94a54fcfe3e90fc2e1bc067f37e8b81453eae98
                             Email = "ehab@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "EHAB@GMAIL.COM",
                             NormalizedUserName = "EHAB",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJv9Ic/2ND8/OBiayi9OQv6ZPnuiUKmVURGPLYRbd0BMNx9HWF/eRILJC8GhrpgFgg==",
+<<<<<<< HEAD
+                            PasswordHash = "AQAAAAIAAYagAAAAEHqRaQgfuZiiuJ3VwFFMOZTDnmd8p7O9yfsm1aXLmqtZ/3O2RDJdGZNuovwlAScVsw==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b9238191-2a48-4a43-8758-b141380371d4",
+                            SecurityStamp = "ce734788-4103-4416-969f-e3066a6a2e62",
+=======
+                            PasswordHash = "AQAAAAIAAYagAAAAEBkCAlYq65N2x2LwXw7S1XYAbZamMccYIb3Vy+RhkblotVFHuPK/QzIryLDyIVUnsw==",
+                            PhoneNumber = "1234567890",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "751c986b-6f29-424e-ad8f-e42a3b4cb32f",
+>>>>>>> e94a54fcfe3e90fc2e1bc067f37e8b81453eae98
                             TwoFactorEnabled = false,
                             UserName = "ehab",
                             FullName = "ايهاب ابراهيم "
@@ -470,16 +539,27 @@ namespace BasstahalakMS.Migrations
                         {
                             Id = "c2d7916d-74c1-4588-b2f2-6616b0e687f0",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0eb44923-33b7-4f8e-9430-b18adb7eb3bd",
+<<<<<<< HEAD
+                            ConcurrencyStamp = "a48a16c2-91d6-437f-a05e-efd9f6b8f0d7",
+=======
+                            ConcurrencyStamp = "9fadfc16-ff4d-443e-b159-6ab82d9333b7",
+>>>>>>> e94a54fcfe3e90fc2e1bc067f37e8b81453eae98
                             Email = "shaban@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "SHABAN@GMAIL.COM",
                             NormalizedUserName = "SHABAN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIlyRcIkBSabqoYKv5AI8yoDzxej4t1+y/t0739fRxWLrWw7lwvlztPX457OVT7DVQ==",
+<<<<<<< HEAD
+                            PasswordHash = "AQAAAAIAAYagAAAAEJoKi1HEnw66JANMtyX8uPRNoOa39sf3gsOhYK26TKZi2M5n98ivP7USCd/YDfe+gA==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d05ec512-32f8-4929-94f3-0517f9922e7e",
+                            SecurityStamp = "6157dcac-9325-4d73-82c6-0bb0b2a3f677",
+=======
+                            PasswordHash = "AQAAAAIAAYagAAAAEO+M/ggz1qc1AFOpl96gY+MqFkgvV+jYa8FS1Hqq3/9fGQ3r8xMAfrhPYaWaovXxsg==",
+                            PhoneNumber = "1234567890",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "2d77bd4b-6e0b-4c61-b89c-3b77563cd6eb",
+>>>>>>> e94a54fcfe3e90fc2e1bc067f37e8b81453eae98
                             TwoFactorEnabled = false,
                             UserName = "shaban",
                             FullName = "شعبان ابراهيم"
@@ -488,16 +568,27 @@ namespace BasstahalakMS.Migrations
                         {
                             Id = "325a3e6f-b33e-43d6-8cee-f6b0ad00f620",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5234aa90-321e-4706-a01b-979d4c713000",
+<<<<<<< HEAD
+                            ConcurrencyStamp = "3751af10-27b7-4e55-9fea-c8a8010b2b7f",
+=======
+                            ConcurrencyStamp = "cc69f0c9-35ed-4a67-bfd8-e8d8cf9c9923",
+>>>>>>> e94a54fcfe3e90fc2e1bc067f37e8b81453eae98
                             Email = "malek@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "MALEK@GMAIL.COM",
                             NormalizedUserName = "MALEK",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKaqe/rnNx18jF4/KcmgE5yVtkMbXtowgJqob3sWCFdnPqVPnCh1mr40LkGQuS3XEw==",
+<<<<<<< HEAD
+                            PasswordHash = "AQAAAAIAAYagAAAAEJ7WGV0bKol+7aNMG/jSJh2ceIxkO0EJhfsLD8ICdCohgZBpdcNUfTesjcYPIGHS2Q==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "36bc617f-1373-4a2d-9dd8-c8b60881fd40",
+                            SecurityStamp = "fa42aab9-0a71-41ff-8aa3-4637be848d0c",
+=======
+                            PasswordHash = "AQAAAAIAAYagAAAAEHg4Be/cfS9BUmlpp05JgnfA3//WyevP1rrPbbgtDyYR/JVgrb4OAseM4V/0gz6KaA==",
+                            PhoneNumber = "1234567890",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "5060c41f-8a9c-45e0-981e-27d7fca8bb1a",
+>>>>>>> e94a54fcfe3e90fc2e1bc067f37e8b81453eae98
                             TwoFactorEnabled = false,
                             UserName = "malek",
                             FullName = "مالك ايهاب"
@@ -523,6 +614,25 @@ namespace BasstahalakMS.Migrations
                     b.Navigation("User");
                 });
 
+<<<<<<< HEAD
+            modelBuilder.Entity("BasstahalakMS.Models.Library", b =>
+                {
+                    b.HasOne("BasstahalakMS.Models.PrintType", "PrintType")
+                        .WithMany("Library")
+                        .HasForeignKey("PrintTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BasstahalakMS.Models.ApplicationUser", "User")
+                        .WithMany("Libraries")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PrintType");
+
+                    b.Navigation("User");
+=======
             modelBuilder.Entity("BasstahalakMS.Models.FileBranch", b =>
                 {
                     b.HasOne("BasstahalakMS.Models.BFile", "BFile")
@@ -540,6 +650,7 @@ namespace BasstahalakMS.Migrations
                     b.Navigation("BFile");
 
                     b.Navigation("Branch");
+>>>>>>> e94a54fcfe3e90fc2e1bc067f37e8b81453eae98
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -593,14 +704,16 @@ namespace BasstahalakMS.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BasstahalakMS.Models.Book", b =>
+            modelBuilder.Entity("BasstahalakMS.Models.PrintType", b =>
                 {
-                    b.Navigation("BFiles");
+                    b.Navigation("Library");
                 });
 
             modelBuilder.Entity("BasstahalakMS.Models.ApplicationUser", b =>
                 {
                     b.Navigation("BFiles");
+
+                    b.Navigation("Libraries");
                 });
 #pragma warning restore 612, 618
         }

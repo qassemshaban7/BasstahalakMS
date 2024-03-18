@@ -1,10 +1,9 @@
-﻿@model IEnumerable<ApplicationUser>
+﻿@model IEnumerable<PrintType>
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/SuperAdmin/Views/Shared/_Layout.cshtml";
 }
-
 
 @section head {
     <!-- BEGIN PAGE LEVEL STYLES -->
@@ -14,14 +13,16 @@
 }
 
 <div class="br-pagetitle">
-    <i class="icon fas fa-light fa-building"></i>
+    <i class="icon fas fa-light fa-cog"></i>
     <div class="row">
-        <div class="col-lg-7 col-7">
-            <h3 class="text-info">قائمة المطابع</h3>
+        <div class="col-lg-10 col-10">
+            <h3 class="text-info">قائمة انواع المطبوعات</h3>
         </div>
-        <div class="col-lg-5 col-5">
-            <a asp-action="Create" asp-controller="Printing" class="btn btn-primary">اضافة مطبعة </a>
+
+        <div class="col-lg-2 col-2">
+            <a asp-action="Create" asp-controller="PrintType" class="btn btn-primary">اضافة نوع مطبوع </a>
         </div>
+
     </div>
 </div>
 
@@ -31,39 +32,21 @@
             <table id="deptsTable" class="table display responsive nowrap">
                 <thead>
                     <tr>
-                        <th>اسم المطبعة</th>
-                        <th>العنوان</th>
-                        <th>رقم الموبايل </th>
-                        <th>النوع </th>
+                        <th>نوع المطبوع</th>
                         <th>تعديل</th>
                         <th>حذف</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model)
+                    @foreach (var book in Model)
                     {
                         <tr>
-                            <td>@item.FullName</td>
-                            <td>@item.Address</td>
-                            <td>@item.PhoneNumber</td>
-                            @if(item.Type == 1){
-                                <td>اساسي</td>
-                            }
-                            else if(item.Type ==2)
-                            {
-                                <td>فرعي</td>
-                            }
-                                                      
+                            <td>@book.Name</td>
                             <td>
-                                <a asp-action="Edit" asp-controller="Printing" asp-route-id="@item.Id" class="btn btn-primary text-white">
-                                    <i class="fas fa-edit"></i>
-                                </a>
+                                <a asp-action="Edit" asp-controller="PrintType" asp-route-id="@book.Id" class=" btn btn-info">تعديل </a>
                             </td>
                             <td>
-@*                              <a asp-action="Delete" asp-controller="Printing" asp-route-id="@item.Id" onclick="return confirm('هل انت متأكد من الحذف')" class="btn btn-danger text-white"> *@
-                                <a asp-action="Delete" asp-controller="Printing" asp-route-id="@item.Id" class="btn btn-danger">
-                                    <i class="fas fa-trash-alt"></i>
-                                </a>
+                                <a asp-action="Delete" asp-controller="PrintType" asp-route-id="@book.Id" class="btn btn-danger">حذف </a>
                             </td>
                         </tr>
                     }
@@ -72,7 +55,7 @@
         </div>
     </div>
 </div>
-<input type="hidden" id="created" data-value="@ViewBag.created" />
+
 @section scripts {
     <!-- BEGIN PAGE LEVEL SCRIPTS -->
     <script src="~/lib/table/datatable/datatables.js"></script>
@@ -97,8 +80,8 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            var created = $("#created").data("value");
-            if (created == "True") {
+            var updated = $("#updated").data("value");
+            if (updated == "True") {
                 toastr.options = {
                     "closeButton": false,
                     "debug": false,
@@ -116,10 +99,9 @@
                     "showMethod": "fadeIn",
                     "hideMethod": "fadeOut"
                 }
-                toastr.success("تم اضافة المطبعة  بنجاح");
+                toastr.success("تم التعديل  بنجاح");
             }
         });
     </script>
     <!-- END PAGE LEVEL SCRIPTS -->
 }
-

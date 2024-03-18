@@ -25,8 +25,8 @@
 <body>
 
     <!-- ########## START: LEFT PANEL ########## -->
-    
-        <div class="br-logo d-flex justify-content-center"><a  asp-action="Index" asp-controller="Home" asp-area="SuperAdmin"> <img src="~/img/logo.png" class="img-thumbnail" /></a></div>
+
+    <div class="br-logo d-flex justify-content-center"><a asp-action="Index" asp-controller="Home" asp-area="Printing"> <img src="~/img/logo.png" class="img-thumbnail" /></a></div>
 
     
     <div class="br-sideleft sideleft-scrollbar">
@@ -39,80 +39,31 @@
                         <span class="menu-item-label">الرئيسية</span>
                     </a><!-- br-menu-link -->
                 </li><!-- br-menu-item -->
-
                 <li class="br-menu-item">
                     <a href="#" class="br-menu-link with-sub">
                         <i class="menu-item-icon icon fas fa-light fa-building tx-20"></i>
-                        <span class="menu-item-label">الكتب</span>
+                        <span class="menu-item-label">المطبوعات</span>
                     </a><!-- br-menu-link -->
                     <ul class="br-menu-sub">
-                        <li class="sub-item"><a asp-action="Create" asp-controller="Book" class="sub-link">اضافة كتاب جديد</a></li>
-                        <li class="sub-item"><a asp-action="Index" asp-controller="Book" class="sub-link">عرض الكتب</a></li>
+                        <li class="sub-item"><a asp-action="Create" asp-controller="Library" class="sub-link">اضافة مطبوعات جديده</a></li>
+                        <li class="sub-item"><a asp-action="Index" asp-controller="Library" class="sub-link">عرض المطبوعات</a></li>
                     </ul>
                 </li>
 
-                <li class="br-menu-item">
+               @* <li class="br-menu-item">
                     <a href="#" class="br-menu-link with-sub">
                         <i class="menu-item-icon icon fas fa-light fa-building tx-20"></i>
-                        <span class="menu-item-label">الفروع</span>
+                        <span class="menu-item-label">الأقسام</span>
                     </a><!-- br-menu-link -->
                     <ul class="br-menu-sub">
-                        <li class="sub-item"><a asp-action="Create" asp-controller="Branch" class="sub-link">اضافة فرع جديد</a></li>
-                        <li class="sub-item"><a asp-action="Index" asp-controller="Branch" class="sub-link">عرض الفروع</a></li>
-                    </ul>
-                </li>
-
-                <li class="br-menu-item">
-                    <a href="#" class="br-menu-link with-sub">
-                        <i class="menu-item-icon icon fas fa-light fa-building tx-20"></i>
-                        <span class="menu-item-label">المطابع</span>
-                    </a><!-- br-menu-link -->
-                    <ul class="br-menu-sub">
-                        <li class="sub-item"><a asp-action="Create" asp-controller="Printing" class="sub-link">اضافة مطبعة </a></li>
-                    <li class="sub-item"><a asp-action="Index" asp-controller="Printing" class="sub-link">عرض المطابع</a></li>
-                    </ul>
-                </li>
-                <li class="br-menu-item">
-                    <a href="#" class="br-menu-link with-sub">
-                        <i class="menu-item-icon icon fas fa-light fa-building tx-20"></i>
-                        <span class="menu-item-label">انواع المطبوعات</span>
-                    </a><!-- br-menu-link -->
-                    <ul class="br-menu-sub">
-                        <li class="sub-item"><a asp-action="Create" asp-controller="PrintType" class="sub-link">اضافة مطبوع جديد </a></li>
-                        <li class="sub-item"><a asp-action="Index" asp-controller="PrintType" class="sub-link">عرض انواع المطبوعات</a></li>
-                    </ul>
-                </li>
-            
-                @*<li class="br-menu-item">
-                    <a href="#" class="br-menu-link with-sub">
-                        <i class="menu-item-icon icon fas fa-light fa-user tx-20"></i>
-                    <span class="menu-item-label">المستخدمين</span>
-                    </a><!-- br-menu-link -->
-                    <ul class="br-menu-sub">
-                        <li class="sub-item"><a asp-action="Index" asp-controller="User" class="sub-link">عرض المتدربين</a></li>
+                        <li class="sub-item"><a asp-action="Create" asp-controller="Department" class="sub-link">اضافة قسم جديد</a></li>
+                        <li class="sub-item"><a asp-action="Index" asp-controller="Department" class="sub-link">عرض الاٌقسام</a></li>
                     </ul>
                 </li>*@
-                @*<li class="br-menu-item">
-                    <a href="#" class="br-menu-link with-sub">
-                        <i class="menu-item-icon icon fas fa-light fa-wrench tx-20"></i>
-                        <span class="menu-item-label">الخدمات</span>
-                    </a><!-- br-menu-link -->
-                    <ul class="br-menu-sub">
-                        <li class="sub-item"><a asp-action="Create" asp-controller="Services" class="sub-link">اضافة خدمة جديدة</a></li>
-                        <li class="sub-item"><a asp-action="Index" asp-controller="Services" class="sub-link">عرض الخدمات</a></li>
-                    </ul>
-                </li>*@
-
-                <li class="br-menu-item">
-                    <a href="#" class="br-menu-link with-sub">
-                        <i class="menu-item-icon icon fas fa-light fa-cog tx-20"></i>
-                        <span class="menu-item-label">اعدادات الموقع</span>
-                    </a><!-- br-menu-link -->
-                    <ul class="br-menu-sub">
-                        <li class="sub-item"><a asp-action="Index" asp-controller="Configs" class="sub-link">عرض الاعدادات</a></li>
-                    </ul>
-                </li>
-
+             
+               
+               
+               
                
                
 
@@ -146,7 +97,7 @@
                         <div class="tx-center">
                             <a href="#"><img src="~/img/avatar.png" class="wd-80 rounded-circle" alt=""></a>
                             <h6 class="logged-fullname">@User.Identity.Name </h6>
-                            <p>المدير العام  </p>
+                            <p>فريق الطباعة  </p>
                         </div>
                         <hr>
                         

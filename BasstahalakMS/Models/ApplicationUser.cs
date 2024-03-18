@@ -14,6 +14,7 @@ namespace BasstahalakMS.Models
 
         public int? Type { get; set; } // نوع المطبعة 
 
-        public ICollection<BFile> BFiles { get; set; }    
+        public ICollection<BFile> BFiles { get; set; }
+        public ICollection<Library> Libraries { get; set; }
     }
 }
