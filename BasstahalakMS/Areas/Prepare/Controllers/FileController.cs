@@ -71,10 +71,10 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
                         Name = name,
                         Description = description,
                         FilePath = Path.Combine(uploadsFolder, uniqueFileName),
-                        BookName = bookName,
-                        BranchName = branchName,
-                        UnitsCount = unitsCount,
-                        LessonsCount = lessonsCount,
+                        //BookName = bookName,
+                        //BranchName = branchName,
+                        //UnitsCount = unitsCount,
+                        //LessonsCount = lessonsCount,
                         UserId = userId
                     };
 
@@ -100,10 +100,10 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
                 Id = existingFile.Id,
                 Name = existingFile.Name,
                 Description = existingFile.Description,
-                BookName = existingFile.BookName,
-                BranchName = existingFile.BranchName,
-                UnitsCount = existingFile.UnitsCount,
-                LessonsCount = existingFile.LessonsCount
+                //BookName = existingFile.BookName,
+                //BranchName = existingFile.BranchName,
+                //UnitsCount = existingFile.UnitsCount,
+                //LessonsCount = existingFile.LessonsCount
             };
 
             var books = _context.Books.ToList(); 
@@ -156,10 +156,10 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
 
                 existingFile.Name = model.Name;
                 existingFile.Description = model.Description;
-                existingFile.BookName = model.BookName;
-                existingFile.BranchName = model.BranchName;
-                existingFile.UnitsCount = model.UnitsCount;
-                existingFile.LessonsCount = model.LessonsCount;
+                //existingFile.BookName = model.BookName;
+                //existingFile.BranchName = model.BranchName;
+                //existingFile.UnitsCount = model.UnitsCount;
+                //existingFile.LessonsCount = model.LessonsCount;
 
                 await _context.SaveChangesAsync();
 
