@@ -12,13 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BasstahalakMS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-<<<<<<<< HEAD:BasstahalakMS/Migrations/20240318020601_init.Designer.cs
-    [Migration("20240318020601_init")]
-    partial class init
-========
     [Migration("20240317195534_Add File Branches Table")]
     partial class AddFileBranchesTable
->>>>>>>> e94a54fcfe3e90fc2e1bc067f37e8b81453eae98:BasstahalakMS/Migrations/20240317195534_Add File Branches Table.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -108,7 +103,6 @@ namespace BasstahalakMS.Migrations
                     b.ToTable("Branches");
                 });
 
-<<<<<<<< HEAD:BasstahalakMS/Migrations/20240318020601_init.Designer.cs
             modelBuilder.Entity("BasstahalakMS.Models.Library", b =>
                 {
                     b.Property<int>("LibraryId")
@@ -146,9 +140,7 @@ namespace BasstahalakMS.Migrations
                 });
 
             modelBuilder.Entity("BasstahalakMS.Models.PrintType", b =>
-========
             modelBuilder.Entity("BasstahalakMS.Models.FileBranch", b =>
->>>>>>>> e94a54fcfe3e90fc2e1bc067f37e8b81453eae98:BasstahalakMS/Migrations/20240317195534_Add File Branches Table.Designer.cs
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -156,7 +148,6 @@ namespace BasstahalakMS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-<<<<<<<< HEAD:BasstahalakMS/Migrations/20240318020601_init.Designer.cs
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -164,7 +155,6 @@ namespace BasstahalakMS.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PrintTypes");
-========
                     b.Property<int>("BFileId")
                         .HasColumnType("int");
 
@@ -184,8 +174,7 @@ namespace BasstahalakMS.Migrations
                     b.HasIndex("BranchId");
 
                     b.ToTable("FileBranches");
->>>>>>>> e94a54fcfe3e90fc2e1bc067f37e8b81453eae98:BasstahalakMS/Migrations/20240317195534_Add File Branches Table.Designer.cs
-                });
+                }));
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -582,7 +571,6 @@ namespace BasstahalakMS.Migrations
                     b.Navigation("User");
                 });
 
-<<<<<<<< HEAD:BasstahalakMS/Migrations/20240318020601_init.Designer.cs
             modelBuilder.Entity("BasstahalakMS.Models.Library", b =>
                 {
                     b.HasOne("BasstahalakMS.Models.PrintType", "PrintType")
@@ -600,90 +588,89 @@ namespace BasstahalakMS.Migrations
                     b.Navigation("PrintType");
 
                     b.Navigation("User");
-========
-            modelBuilder.Entity("BasstahalakMS.Models.FileBranch", b =>
-                {
-                    b.HasOne("BasstahalakMS.Models.BFile", "BFile")
-                        .WithMany()
-                        .HasForeignKey("BFileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    modelBuilder.Entity("BasstahalakMS.Models.FileBranch", b =>
+                        {
+                            b.HasOne("BasstahalakMS.Models.BFile", "BFile")
+                                .WithMany()
+                                .HasForeignKey("BFileId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
 
-                    b.HasOne("BasstahalakMS.Models.Branch", "Branch")
-                        .WithMany()
-                        .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                            b.HasOne("BasstahalakMS.Models.Branch", "Branch")
+                                .WithMany()
+                                .HasForeignKey("BranchId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
 
-                    b.Navigation("BFile");
+                            b.Navigation("BFile");
 
-                    b.Navigation("Branch");
->>>>>>>> e94a54fcfe3e90fc2e1bc067f37e8b81453eae98:BasstahalakMS/Migrations/20240317195534_Add File Branches Table.Designer.cs
-                });
+                            b.Navigation("Branch");
+                        });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+                    modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                        {
+                            b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                                .WithMany()
+                                .HasForeignKey("RoleId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
+                        });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+                    modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                        {
+                            b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                                .WithMany()
+                                .HasForeignKey("UserId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
+                        });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+                    modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                        {
+                            b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                                .WithMany()
+                                .HasForeignKey("UserId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
+                        });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                        {
+                            b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                                .WithMany()
+                                .HasForeignKey("RoleId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+                            b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                                .WithMany()
+                                .HasForeignKey("UserId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
+                        });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+                    modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                        {
+                            b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                                .WithMany()
+                                .HasForeignKey("UserId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
+                        });
 
-            modelBuilder.Entity("BasstahalakMS.Models.PrintType", b =>
-                {
-                    b.Navigation("Library");
-                });
+                    modelBuilder.Entity("BasstahalakMS.Models.PrintType", b =>
+                        {
+                            b.Navigation("Library");
+                        });
 
-            modelBuilder.Entity("BasstahalakMS.Models.ApplicationUser", b =>
-                {
-                    b.Navigation("BFiles");
+                    modelBuilder.Entity("BasstahalakMS.Models.ApplicationUser", b =>
+                        {
+                            b.Navigation("BFiles");
 
-                    b.Navigation("Libraries");
-                });
+                            b.Navigation("Libraries");
+                        });
 #pragma warning restore 612, 618
+                });
         }
     }
 }
