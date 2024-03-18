@@ -63,7 +63,8 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                     UserName = model.UserName,
                     PhoneNumber = model.PhoneNumber,
                     Address = model.Address,
-                    Type = model.Type
+                    Type = model.Type,
+                    EmailConfirmed = true
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password!);
@@ -82,7 +83,92 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
             }
             return View(model);
         }
+        public async Task<IActionResult> Edit(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
+            var user = await _context.ApplicationUsers.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var editPrintingVM = new EditPrintingVM
+            {
+                Id = user.Id,
+                FullName = user.FullName,
+                UserName = user.UserName,
+                Address = user.Address,
+                PhoneNumber = user.PhoneNumber,
+                Type = user.Type
+            };
+
+            return View(editPrintingVM);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(string id, [Bind("Id,FullName,UserName,Password,Address,PhoneNumber,Type")] EditPrintingVM editPrintingVM)
+        {
+            if (id != editPrintingVM.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                 var user = await _context.ApplicationUsers.FindAsync(id);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                user.FullName = editPrintingVM.FullName;
+                user.UserName = editPrintingVM.UserName;
+                user.Address = editPrintingVM.Address;
+                user.PhoneNumber = editPrintingVM.PhoneNumber;
+                user.Type = editPrintingVM.Type;
+
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+                
+                return RedirectToAction(nameof(Index));
+            }
+            return View(editPrintingVM);
+        }
+
+        public async Task<IActionResult> Delete(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _context.ApplicationUsers.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(string id)
+        {
+            var user = await _context.ApplicationUsers.FindAsync(id);
+            _context.ApplicationUsers.Remove(user);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool UserExists(string id)
+        {
+            return _context.Users.Any(e => e.Id == id);
+        }
     }
-
 }

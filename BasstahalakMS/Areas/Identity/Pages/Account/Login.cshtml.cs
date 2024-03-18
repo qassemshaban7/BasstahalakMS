@@ -133,6 +133,10 @@ namespace BasstahalakMS.Areas.Identity.Pages.Account
                         return RedirectToAction(nameof(Review.Controllers.HomeController.Index),
                            nameof(Review.Controllers.HomeController).Replace("Controller", ""),
                            new { area = nameof(Review) });
+                    else if (roles.First() == StaticDetails.Printing)
+                        return RedirectToAction(nameof(Printing.Controllers.HomeController.Index),
+                           nameof(Printing.Controllers.HomeController).Replace("Controller", ""),
+                           new { area = nameof(Printing) });
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
