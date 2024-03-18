@@ -29,7 +29,17 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var files = await _context.BFiles.ToListAsync();
+            if (HttpContext.Session.GetString("created") != null)
+            {
+                ViewBag.created = true;
+                HttpContext.Session.Remove("created");
+            }
+            if (HttpContext.Session.GetString("Sent") != null)
+            {
+                ViewBag.Sent = true;
+                HttpContext.Session.Remove("Sent");
+            }
+            var files = await _context.BFiles.Include(x=>x.Book).ToListAsync();
             return View(files);
         }
 
@@ -44,9 +54,9 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Upload(string name, string description, string bookName, string branchName, int unitsCount, int lessonsCount, IFormFile uploadedFile)
+        public async Task<IActionResult> Upload(BFile bFile, IFormFile uploadedFile)
         {
-            if (ModelState.IsValid)
+           try
             {
                 if (uploadedFile != null)
                 {
@@ -68,10 +78,10 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
 
                     var file = new BFile
                     {
-                        Name = name,
-                        Description = description,
+                        Name = bFile.Name,
+                        Description = bFile.Description,
                         FilePath = Path.Combine(uploadsFolder, uniqueFileName),
-                        //BookName = bookName,
+                        BookId = bFile.BookId,
                         //BranchName = branchName,
                         //UnitsCount = unitsCount,
                         //LessonsCount = lessonsCount,
@@ -80,11 +90,51 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
 
                     _context.BFiles.Add(file);
                     await _context.SaveChangesAsync();
+                    var branchesInDB = await _context.Branches.ToListAsync();
+                    foreach (var branch in branchesInDB)
+                    {
+                        string name = "check_" + branch.Id;
+                        string chkValue = Request.Form[name].ToString();
+                        if(chkValue == "1")
+                        {
+                            string noOfUnitsName = "noUnits_" + @branch.Id;
+                            string noOfLessonsName = "noLessons_" + @branch.Id;
+                            string noOfUnits = Request.Form[noOfUnitsName].ToString();
+                            string noOfLessons = Request.Form[noOfLessonsName].ToString();
+                            var fileBranch = new FileBranch
+                            {
+                                BFileId = file.Id,
+                                BranchId = branch.Id,
+                                LessonsCount = Convert.ToInt32(noOfLessons),
+                                UnitsCount = Convert.ToInt32(noOfUnits),
 
+
+                            };
+                            _context.FileBranches.Add(fileBranch);
+                            await _context.SaveChangesAsync();
+                        }
+                    }
+                    HttpContext.Session.SetString("created", "true");
                     return RedirectToAction(nameof(Index));
                 }
+                else
+                {
+                    var books = _context.Books.ToList();
+                    ViewBag.Books = books;
+                    var branches = _context.Branches.ToList();
+                    ViewBag.Branches = branches;
+                    return View();
+                }
             }
-            return View();
+            catch (Exception ex)
+            {
+                var books = _context.Books.ToList();
+                ViewBag.Books = books;
+                var branches = _context.Branches.ToList();
+                ViewBag.Branches = branches;
+                return View();
+            }
+            
         }
 
         public async Task<IActionResult> Edit(int id)
@@ -168,5 +218,23 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> SendForReview(int? id)
+        {
+            try
+            {
+                var bFile = await _context.BFiles.FindAsync(id);
+                if (bFile == null)
+                    return NotFound();
+
+                bFile.status = 1; // Under Admin Review
+                await _context.SaveChangesAsync();
+                HttpContext.Session.SetString("Sent", "true");
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+        }
     }
 }

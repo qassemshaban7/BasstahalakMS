@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace BasstahalakMS.Areas.Prepare.Controllers
 {
@@ -26,7 +27,8 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View();
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return View(await _context.BFiles.Where(x=>x.UserId == userId).ToListAsync());
         }
     }
 }

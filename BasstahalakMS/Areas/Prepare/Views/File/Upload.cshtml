@@ -5,7 +5,7 @@
 }
 
 <div class="br-pagetitle">
-    <h3 class="text-info mr-3">إضافة ملف جديد</h3>
+    <h3 class="text-info mr-3">إضافة مادة جديدة</h3>
 </div><!-- d-flex -->
 
 <div class="br-pagebody">
@@ -42,42 +42,38 @@
                                 <span class="text-danger" asp-validation-for="BookId"></span>
                             </div>
                         </div><!-- row -->
-                       @* <div class="row mb-3">
-                            <label class="col-sm-4 form-control-label">اسم الفرع: <span class="tx-danger">*</span></label>
-                            <div class="col-sm-8 mg-t-10 mg-sm-t-0">
-                                <select asp-for="BranchName" class="form-control" required>
-                                    <option value="">اختر اسم الفرع</option>
-                                    @foreach (var branch in ViewBag.Branches)
-                                    {
-                                        <option value="@branch.Id">@branch.Name</option>
-                                    }
-                                </select>
-                                <span class="text-danger" asp-validation-for="BranchName"></span>
+                        @foreach (var branch in ViewBag.Branches)
+                        {
+                            <div class="row mb-3 mr-1">
+                                <div class="col-4">
+                                    <input class="form-check-input" type="checkbox" value="1" name="check_@branch.Id" id="check_@branch.Id">
+                                    <label class="form-check-label mr-3" for="flexCheckDefault">
+                                        @branch.Name
+                                    </label>
+                                </div>
+                                <div class="col-4">
+                                    <input type="number" name="noUnits_@branch.Id" readonly placeholder="عدد الوحدات" class="form-control input_@branch.Id" />
+                                </div>
+                                <div class="col-4">
+                                    <input type="number" name="noLessons_@branch.Id" readonly placeholder="عدد الدروس" class="form-control input_@branch.Id" />
+                                </div>
+                                
+                                
                             </div>
-                        </div><!-- row -->*@
-                       @* <div class="row mb-3">
-                            <label class="col-sm-4 form-control-label">عدد الوحدات: <span class="tx-danger">*</span></label>
-                            <div class="col-sm-8 mg-t-10 mg-sm-t-0">
-                                <input asp-for="UnitsCount" type="number" class="form-control" placeholder="عدد الوحدات" required>
-                                <span class="text-danger" asp-validation-for="UnitsCount"></span>
-                            </div>
-                        </div><!-- row -->
-                        <div class="row mb-3">
-                            <label class="col-sm-4 form-control-label">عدد الدروس: <span class="tx-danger">*</span></label>
-                            <div class="col-sm-8 mg-t-10 mg-sm-t-0">
-                                <input asp-for="LessonsCount" type="number" class="form-control" placeholder="عدد الدروس" required>
-                                <span class="text-danger" asp-validation-for="LessonsCount"></span>
-                            </div>
-                        </div><!-- row -->*@
+
+                            <!-- row -->
+                        }
+                      
+                       
                         <div class="row">
                             <label class="col-sm-4 form-control-label">الملف: <span class="tx-danger">*</span></label>
                             <div class="col-sm-8 mg-t-10 mg-sm-t-0">
-                                <input type="file" asp-for="UploadedFile" class="form-control" required>
+                                <input type="file" asp-for="UploadedFile" accept=".doc,.docx" class="form-control" required>
                                 <span class="text-danger" asp-validation-for="UploadedFile"></span>
                             </div>
                         </div><!-- row -->
                         <div class="form-layout-footer mg-t-30 text-center">
-                            <input type="submit" value="إضافة" class="btn btn-info">
+                            <input type="submit" value="إضافة" onclick="clicked(event)" class="btn btn-info">
                             <a asp-action="Index" asp-controller="File" class="btn btn-secondary">الرجوع</a>
                         </div><!-- form-layout-footer -->
                     </form>
@@ -86,69 +82,36 @@
         </div><!-- row -->
     </div><!-- br-section-wrapper -->
 </div><!-- br-pagebody -->
-
-@* 
-<div class="br-pagetitle">
-    <h3 class="text-info mr-3">إضافة ملف جديد</h3>
-</div><!-- d-flex -->
-
-<div class="br-pagebody">
-    <div class="br-section-wrapper">
-        <div class="row">
-            <div class="col-xl-12">
-                <div class="form-layout form-layout-4">
-                    <form method="post" asp-action="Upload" asp-controller="File" enctype="multipart/form-data">
-                        <div class="row mb-3">
-                            <label class="col-sm-4 form-control-label">اسم الملف: <span class="tx-danger">*</span></label>
-                            <div class="col-sm-8 mg-t-10 mg-sm-t-0">
-                                <input asp-for="Name" type="text" class="form-control" placeholder="اسم الملف" required>
-                                <span class="text-danger" asp-validation-for="Name"></span>
-                            </div>
-                        </div><!-- row -->
-                        <div class="row mb-3">
-                            <label class="col-sm-4 form-control-label">الوصف: <span class="tx-danger">*</span></label>
-                            <div class="col-sm-8 mg-t-10 mg-sm-t-0">
-                                <textarea asp-for="Description" rows="5" class="form-control"  required>
-                                 </textarea>
-                                <span class="text-danger" asp-validation-for="Description"></span>
-                            </div>
-                        </div><!-- row -->
-                        <div class="row mb-3">
-                            <label class="col-sm-4 form-control-label">اسم الكتاب: <span class="tx-danger">*</span></label>
-                            <div class="col-sm-8 mg-t-10 mg-sm-t-0">
-                                <input asp-for="BookName" type="text" class="form-control" placeholder="اسم الكتاب" required>
-                                <span class="text-danger" asp-validation-for="BookName"></span>
-                            </div>
-                        </div><!-- row -->
-                        <div class="row mb-3">
-                            <label class="col-sm-4 form-control-label">عدد الوحدات: <span class="tx-danger">*</span></label>
-                            <div class="col-sm-8 mg-t-10 mg-sm-t-0">
-                                <input asp-for="UnitsCount" type="number" class="form-control" placeholder="عدد الوحدات" required>
-                                <span class="text-danger" asp-validation-for="UnitsCount"></span>
-                            </div>
-                        </div><!-- row -->
-                        <div class="row mb-3">
-                            <label class="col-sm-4 form-control-label">عدد الدروس: <span class="tx-danger">*</span></label>
-                            <div class="col-sm-8 mg-t-10 mg-sm-t-0">
-                                <input asp-for="LessonsCount" type="number" class="form-control" placeholder="عدد الدروس" required>
-                                <span class="text-danger" asp-validation-for="LessonsCount"></span>
-                            </div>
-                        </div><!-- row -->
-                        <div class="row">
-                            <label class="col-sm-4 form-control-label">الملف: <span class="tx-danger">*</span></label>
-                            <div class="col-sm-8 mg-t-10 mg-sm-t-0">
-                                <input type="file" asp-for="UploadedFile" class="form-control" required>
-                                <span class="text-danger" asp-validation-for="UploadedFile"></span>
-                            </div>
-                        </div><!-- row -->
-                        <div class="form-layout-footer mg-t-30 text-center">
-                            <input type="submit" value="إضافة" class="btn btn-info">
-                            <a asp-action="Index" asp-controller="File" class="btn btn-secondary">الرجوع</a>
-                        </div><!-- form-layout-footer -->
-                    </form>
-                </div><!-- form-layout -->
-            </div>
-        </div><!-- row -->
-    </div><!-- br-section-wrapper -->
-</div><!-- br-pagebody -->
- *@
+@section scripts{
+        <script>
+            let chk = 0;
+        </script>
+        @foreach (var item in ViewBag.Branches)
+        {
+            <script>
+                $("#check_@item.Id").change(function () {
+                    if (this.checked) {
+                        $(".input_@item.Id").attr("readonly", false);
+                        $(".input_@item.Id").prop("required", true);
+                        chk++;
+                    }
+                    else{
+                        $(".input_@item.Id").attr("readonly", true);
+                        $(".input_@item.Id").prop("required", false);
+                        chk--;
+                    }
+                });
+            
+            </script>
+        }
+        <script>
+            function clicked(e) {
+                if (chk == 0) {
+                    alert("يجب اختيار قسم واحد علي الاقل")
+                    e.preventDefault();
+                }
+            }
+        </script>
+       
+    
+}

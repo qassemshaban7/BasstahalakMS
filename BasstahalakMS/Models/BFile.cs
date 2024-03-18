@@ -23,6 +23,7 @@ namespace BasstahalakMS.Models
         public Book Book { get; set; }
         public DateTime CreationDate { get; set; } = DateTime.Now;
 
+        public int status { get; set; } = 0;
         public string? UserId { get; set; }
         [ForeignKey("UserId")]
         public ApplicationUser User { get; set; }
