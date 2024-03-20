@@ -9,11 +9,11 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BasstahalakMS.Areas.Admin.Controllers
+namespace BasstahalakMS.Areas.SuperAdmin.Controllers
 {
-    [Authorize(Roles = StaticDetails.Admin)]
-    [Area("Admin")]
-    [Route(nameof(Admin) + "/[controller]/[action]")]
+    [Authorize(Roles = StaticDetails.SuperAdmin)]
+    [Area("SuperAdmin")]
+    [Route(nameof(SuperAdmin) + "/[controller]/[action]")]
     public class PaymentController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -23,7 +23,7 @@ namespace BasstahalakMS.Areas.Admin.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()    
+        public async Task<IActionResult> Index()
         {
             if (HttpContext.Session.GetString("Sent") != null)
             {
@@ -55,9 +55,9 @@ namespace BasstahalakMS.Areas.Admin.Controllers
 
                 if (file != null && file.Length > 0)
                 {
-                    var fileName = Guid.NewGuid().ToString() + System.IO.Path.GetExtension(file.FileName);
-                    var filePath = System.IO.Path.Combine("wwwroot", "Payment", fileName);
-                    using (var fileStream = new System.IO.FileStream(filePath, System.IO.FileMode.Create))
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    var filePath = Path.Combine("wwwroot", "Payment", fileName);
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
                         await file.CopyToAsync(fileStream);
                     }
@@ -66,6 +66,9 @@ namespace BasstahalakMS.Areas.Admin.Controllers
 
                 payment.PaymentTime = DateTime.Now;
                 _context.Payments.Add(payment);
+                var user = _context.ApplicationUsers.Find(payment.UserId);
+                if (user.TotalMoney == null) user.TotalMoney = 0;
+                user.TotalMoney -= payment.Money;
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }

@@ -42,7 +42,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
             var idsWithPermission = usersWithPermission.Select(u => u.Id);
 
             // Now get the users in our database with the same ids
-            var users = await _context.ApplicationUsers.Where(u => idsWithPermission.Contains(u.Id)).ToListAsync();
+            var users = await _context.ApplicationUsers.Where(u => u.Type != null).ToListAsync();
 
             return View(users);
         }

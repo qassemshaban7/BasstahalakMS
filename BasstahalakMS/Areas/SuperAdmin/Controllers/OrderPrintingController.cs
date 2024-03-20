@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
-namespace BasstahalakMS.Areas.Admin.Controllers
+namespace BasstahalakMS.Areas.SuperAdmin.Controllers
 {
-    [Authorize(Roles = StaticDetails.Admin)]
-    [Area(nameof(Admin))]
-    [Route(nameof(Admin) + "/[controller]/[action]")]
-    public class OrderPrintingController : Controller   
+    [Authorize(Roles = StaticDetails.SuperAdmin)]
+    [Area(nameof(SuperAdmin))]
+    [Route(nameof(SuperAdmin) + "/[controller]/[action]")]
+    public class OrderPrintingController : Controller
     {
 
         private readonly ApplicationDbContext _context;

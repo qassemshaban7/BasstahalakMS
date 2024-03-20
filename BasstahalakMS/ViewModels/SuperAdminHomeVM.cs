@@ -9,5 +9,7 @@ namespace BasstahalakMS.ViewModels
         public  IEnumerable<Branch>? Branches { get; set; }
         public  IEnumerable<PrintType>? PrintTypes { get; set; }
         public  IEnumerable<BFile>? BFiles { get; set; }
+        public  IEnumerable<Payment>? Payments { get; set; }
+        public  IEnumerable<Library>? Libraries { get; set; }
     }
 }

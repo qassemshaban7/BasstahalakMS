@@ -20,7 +20,8 @@
             <h3 class="text-info">قائمة المطابع</h3>
         </div>
         <div class="col-lg-5 col-5">
-            <a asp-action="Create" asp-controller="Printing" class="btn btn-primary">اضافة مطبعة </a>
+            <th><a asp-action="Create" asp-controller="Printing" class="btn btn-primary">اضافة مطبعة </a></th>
+            <th><a asp-action="Create" asp-controller="Payment" class="btn btn-primary">اضافة فاتورة جديدة </a></th>
         </div>
     </div>
 </div>
@@ -35,6 +36,7 @@
                         <th>العنوان</th>
                         <th>رقم الموبايل </th>
                         <th>النوع </th>
+                        <th>الضرائب</th>
                         <th>تعديل</th>
                         <th>حذف</th>
                     </tr>
@@ -53,7 +55,14 @@
                             {
                                 <td>فرعي</td>
                             }
-                                                      
+                            @if (item.TotalMoney > 0)
+                            {
+                                <td>@item.TotalMoney (مدين)</td>
+                            }
+                            else if (item.TotalMoney < 0)
+                            {
+                                <td>@item.TotalMoney (دائن)</td>
+                            }
                             <td>
                                 <a asp-action="Edit" asp-controller="Printing" asp-route-id="@item.Id" class="btn btn-primary text-white">
                                     <i class="fas fa-edit"></i>

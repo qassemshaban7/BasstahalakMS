@@ -91,8 +91,26 @@
                     <li class="sub-item"><a asp-action="Index" asp-controller="Printing" class="sub-link">عرض المطابع</a></li>
                     </ul>
                 </li>
-                
-            
+                <li class="br-menu-item">
+                    <a href="#" class="br-menu-link with-sub">
+                        <i class="menu-item-icon icon fas fa-light fa-building tx-20"></i>
+                        <span class="menu-item-label">طلبات المراجعة</span>
+                    </a><!-- br-menu-link -->
+                    <ul class="br-menu-sub">
+                        <li class="sub-item"><a asp-action="Index" asp-controller="OrderPrinting" class="sub-link">مراجعة الطلبات </a></li>
+                    </ul>
+                </li>
+                <li class="br-menu-item">
+                    <a href="#" class="br-menu-link with-sub">
+                        <i class="menu-item-icon icon fas fa-light fa-wrench tx-20"></i>
+                        <span class="menu-item-label">قائمة الفواتير</span>
+                    </a><!-- br-menu-link -->
+                    <ul class="br-menu-sub">
+                        <li class="sub-item"><a asp-action="Create" asp-controller="Payment" class="sub-link"> دفع فاتورة</a></li>
+                        <li class="sub-item"><a asp-action="Index" asp-controller="Payment" class="sub-link">عرض الفواتير</a></li>
+                    </ul>
+                </li>
+
                 @*<li class="br-menu-item">
                     <a href="#" class="br-menu-link with-sub">
                         <i class="menu-item-icon icon fas fa-light fa-user tx-20"></i>
