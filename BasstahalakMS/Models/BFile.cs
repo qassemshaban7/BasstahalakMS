@@ -18,6 +18,7 @@ namespace BasstahalakMS.Models
         public IFormFile UploadedFile { get; set; }
         public string? FilePath { get; set; }
 
+        public string? fileContent  { get; set; }
         public int BookId { get; set; }
         [ForeignKey("BookId")]
         public Book Book { get; set; }

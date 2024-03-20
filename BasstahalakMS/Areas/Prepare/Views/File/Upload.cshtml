@@ -15,9 +15,9 @@
                 <div class="form-layout form-layout-4">
                     <form method="post" asp-action="Upload" asp-controller="File" enctype="multipart/form-data">
                         <div class="row mb-3">
-                            <label class="col-sm-4 form-control-label">اسم الملف: <span class="tx-danger">*</span></label>
+                            <label class="col-sm-4 form-control-label">اسم المادة: <span class="tx-danger">*</span></label>
                             <div class="col-sm-8 mg-t-10 mg-sm-t-0">
-                                <input asp-for="Name" type="text" class="form-control" placeholder="اسم الملف" required>
+                                <input asp-for="Name" type="text" class="form-control" placeholder="اسم المادة" required>
                                 <span class="text-danger" asp-validation-for="Name"></span>
                             </div>
                         </div><!-- row -->
@@ -63,15 +63,25 @@
 
                             <!-- row -->
                         }
-                      
+                        <div class="row mb-3">
+                            <label class="col-sm-4 form-control-label">محتوي المادة: <span class="tx-danger">*</span></label>
+                            
+                        </div><!-- row -->
+                        <div class="row mb-3">
+                           
+                                <textarea asp-for="fileContent" id="fileContent" required>
+                                 </textarea>
+                                <span class="text-danger" asp-validation-for="fileContent"></span>
+                           
+                        </div><!-- row -->
                        
-                        <div class="row">
+                        @*<div class="row">
                             <label class="col-sm-4 form-control-label">الملف: <span class="tx-danger">*</span></label>
                             <div class="col-sm-8 mg-t-10 mg-sm-t-0">
                                 <input type="file" asp-for="UploadedFile" accept=".doc,.docx" class="form-control" required>
                                 <span class="text-danger" asp-validation-for="UploadedFile"></span>
                             </div>
-                        </div><!-- row -->
+                        </div><!-- row -->*@
                         <div class="form-layout-footer mg-t-30 text-center">
                             <input type="submit" value="إضافة" onclick="clicked(event)" class="btn btn-info">
                             <a asp-action="Index" asp-controller="File" class="btn btn-secondary">الرجوع</a>
@@ -83,8 +93,12 @@
     </div><!-- br-section-wrapper -->
 </div><!-- br-pagebody -->
 @section scripts{
+    <script type="text/javascript" src="~/lib/ckeditor/ckeditor.js"></script>
         <script>
             let chk = 0;
+        window.onload = function () {
+            CKEDITOR.replace('fileContent');
+        };
         </script>
         @foreach (var item in ViewBag.Branches)
         {

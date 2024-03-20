@@ -1,4 +1,5 @@
-﻿@{
+﻿@model BasstahalakMS.ViewModels.SuperAdminHomeVM
+@{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/SuperAdmin/Views/Shared/_Layout.cshtml";
 }
@@ -14,42 +15,29 @@
 
 <div class="br-pagebody">
     <div class="row row-sm">
+        
         <div class="col-sm-3 col-xl-3 mb-3">
-            <a asp-action="Index" asp-controller="Printing" >
-                <div class="bg-info rounded overflow-hidden">
+            <a asp-action="Index" asp-controller="Book">
+                <div class="bg-purple rounded overflow-hidden">
                     <div class="pd-x-20 pd-t-20 d-flex align-items-center">
-                        <i class="fas fa-light fa-building tx-60 lh-0 tx-white op-7"></i>
-                        <div class="mg-r-20">
-                            <p class="tx-20 tx-spacing-1 tx-mont tx-bold tx-uppercase tx-white-8 mg-b-10">المطابع</p>
-                            <p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1">0</p>
-                        </div>
+                    <i class="fas fa-light fa-file tx-60 lh-0 tx-white op-7"></i>
+                    <div class="mg-r-20">
+                        <p class="tx-20 tx-spacing-1 tx-mont tx-bold tx-uppercase tx-white-8 mg-b-10">الكتب</p>
+                        <p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1">@Model.Books.Count()</p>
+                    </div>
                     </div>
                     <div id="ch1" class="ht-50 tr-y-1"></div>
                 </div>
             </a>
         </div><!-- col-3 -->
-        <div class="col-sm-3 col-xl-3 mb-3">
-        <a asp-action="Index" asp-controller="Book">
-        <div class="bg-purple rounded overflow-hidden">
-        <div class="pd-x-20 pd-t-20 d-flex align-items-center">
-        <i class="fas fa-light fa-building tx-60 lh-0 tx-white op-7"></i>
-        <div class="mg-r-20">
-        <p class="tx-20 tx-spacing-1 tx-mont tx-bold tx-uppercase tx-white-8 mg-b-10">الكتب</p>
-        <p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1">0</p>
-        </div>
-        </div>
-        <div id="ch1" class="ht-50 tr-y-1"></div>
-        </div>
-        </a>
-        </div><!-- col-3 -->
         <div class="col-sm-3 col-xl-3 mg-t-20 mg-sm-t-0">
             <a asp-action="Index" asp-controller="Branch">
                 <div class="bg-info rounded overflow-hidden">
                     <div class="pd-x-20 pd-t-20 d-flex align-items-center">
-                        <i class="fas fa-light fa-wrench tx-60 lh-0 tx-white op-7"></i>
+                        <i class="fas fa-light fa-file tx-60 lh-0 tx-white op-7"></i>
                         <div class="mg-r-20">
                             <p class="tx-20 tx-spacing-1 tx-mont tx-bold tx-uppercase tx-white-8 mg-b-10">الفروع</p>
-                            <p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1">0</p>
+                            <p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1">@Model.Branches.Count()</p>
                         </div>
                     </div>
                     <div id="ch3" class="ht-50 tr-y-1"></div>
@@ -59,12 +47,12 @@
 
         <div class="col-sm-3 col-xl-3 mg-t-20 mg-sm-t-0">
             <a asp-action="Index" asp-controller="PrintType">
-                <div class="bg-info rounded overflow-hidden">
+                <div class="bg-purple rounded overflow-hidden">
                     <div class="pd-x-20 pd-t-20 d-flex align-items-center">
-                        <i class="fas fa-light fa-wrench tx-60 lh-0 tx-white op-7"></i>
+                        <i class="fas fa-light fa-file tx-60 lh-0 tx-white op-7"></i>
                         <div class="mg-r-20">
                             <p class="tx-20 tx-spacing-1 tx-mont tx-bold tx-uppercase tx-white-8 mg-b-10">انواع المطبوعات</p>
-                            <p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1">0</p>
+                            <p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1">@Model.PrintTypes.Count()</p>
                         </div>
                     </div>
                     <div id="ch3" class="ht-50 tr-y-1"></div>
@@ -73,23 +61,37 @@
         </div><!-- col-3 -->
 
         <div class="col-sm-3 col-xl-3 mg-t-20 mg-sm-t-0">
-            <a asp-action="Index" asp-controller="User">
-                <div class="bg-purple rounded overflow-hidden">
+            <a asp-action="Index" asp-controller="File">
+                <div class="bg-info rounded overflow-hidden">
                     <div class="pd-x-20 pd-t-20 d-flex align-items-center">
-                        <i class="fas fa-light fa-user tx-60 lh-0 tx-white op-7"></i>
+                        <i class="fas fa-light fa-file-word tx-60 lh-0 tx-white op-7"></i>
                         <div class="mg-r-20">
-                            <p class="tx-20 tx-spacing-1 tx-mont tx-bold tx-uppercase tx-white-8 mg-b-10">المستخدمين</p>
-                            <p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1">0</p>
+                            <p class="tx-20 tx-spacing-1 tx-mont tx-bold tx-uppercase tx-white-8 mg-b-10">المواد العلمية</p>
+                            <p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1">@Model.BFiles.Count()</p>
                         </div>
                     </div>
                     <div id="ch3" class="ht-50 tr-y-1"></div>
                 </div>
             </a>
 
+        </div><!-- col-3 -->
+        <div class="col-sm-3 col-xl-3 mb-3">
+            <a asp-action="Index" asp-controller="Printing">
+                <div class="bg-purple rounded overflow-hidden">
+                    <div class="pd-x-20 pd-t-20 d-flex align-items-center">
+                        <i class="fas fa-light fa-building tx-60 lh-0 tx-white op-7"></i>
+                        <div class="mg-r-20">
+                            <p class="tx-20 tx-spacing-1 tx-mont tx-bold tx-uppercase tx-white-8 mg-b-10">المطابع</p>
+                            <p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1">@Model.Users.Count()</p>
+                        </div>
+                    </div>
+                    <div id="ch1" class="ht-50 tr-y-1"></div>
+                </div>
+            </a>
         </div><!-- col-3 -->
         <div class="col-sm-3 col-xl-3 mg-t-20 mg-sm-t-0">
             <a asp-action="Index" asp-controller="Configs">
-                <div class="bg-purple rounded overflow-hidden">
+                <div class="bg-info rounded overflow-hidden">
                     <div class="pd-x-20 pd-t-20 d-flex align-items-center">
                         <i class="fas fa-light fa-cog tx-60 lh-0 tx-white op-7"></i>
                         <div class="mg-r-20">

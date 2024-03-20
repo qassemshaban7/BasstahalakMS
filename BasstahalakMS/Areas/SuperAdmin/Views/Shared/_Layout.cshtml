@@ -19,6 +19,7 @@
 
     <!-- Bracket CSS -->
     <link rel="stylesheet" href="~/css/bracket.css">
+    <script src="https://cdn.tiny.cloud/1/7c6ary05manxlt32d3zdisgrypyg3tlg03jjvjss6nko71di/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     @RenderSection("head",false)
 </head>
 
@@ -42,7 +43,7 @@
 
                 <li class="br-menu-item">
                     <a href="#" class="br-menu-link with-sub">
-                        <i class="menu-item-icon icon fas fa-light fa-building tx-20"></i>
+                        <i class="menu-item-icon icon fas fa-light fa-file tx-20"></i>
                         <span class="menu-item-label">الكتب</span>
                     </a><!-- br-menu-link -->
                     <ul class="br-menu-sub">
@@ -53,7 +54,7 @@
 
                 <li class="br-menu-item">
                     <a href="#" class="br-menu-link with-sub">
-                        <i class="menu-item-icon icon fas fa-light fa-building tx-20"></i>
+                        <i class="menu-item-icon icon fas fa-light fa-file tx-20"></i>
                         <span class="menu-item-label">الفروع</span>
                     </a><!-- br-menu-link -->
                     <ul class="br-menu-sub">
@@ -61,7 +62,25 @@
                         <li class="sub-item"><a asp-action="Index" asp-controller="Branch" class="sub-link">عرض الفروع</a></li>
                     </ul>
                 </li>
-
+            <li class="br-menu-item">
+                <a href="#" class="br-menu-link with-sub">
+                    <i class="menu-item-icon icon fas fa-light fa-file tx-20"></i>
+                    <span class="menu-item-label">انواع المطبوعات</span>
+                </a><!-- br-menu-link -->
+                <ul class="br-menu-sub">
+                    <li class="sub-item"><a asp-action="Create" asp-controller="PrintType" class="sub-link">اضافة مطبوع جديد </a></li>
+                    <li class="sub-item"><a asp-action="Index" asp-controller="PrintType" class="sub-link">عرض انواع المطبوعات</a></li>
+                </ul>
+            </li>
+            <li class="br-menu-item">
+                <a href="#" class="br-menu-link with-sub">
+                    <i class="menu-item-icon icon fas fa-light fa-file-word tx-20"></i>
+                    <span class="menu-item-label">المواد العلمية </span>
+                </a><!-- br-menu-link -->
+                <ul class="br-menu-sub">
+                    <li class="sub-item"><a asp-action="Index" asp-controller="File" class="sub-link">عرض المواد العلمية </a></li>
+                </ul>
+            </li>
                 <li class="br-menu-item">
                     <a href="#" class="br-menu-link with-sub">
                         <i class="menu-item-icon icon fas fa-light fa-building tx-20"></i>
@@ -72,16 +91,7 @@
                     <li class="sub-item"><a asp-action="Index" asp-controller="Printing" class="sub-link">عرض المطابع</a></li>
                     </ul>
                 </li>
-                <li class="br-menu-item">
-                    <a href="#" class="br-menu-link with-sub">
-                        <i class="menu-item-icon icon fas fa-light fa-building tx-20"></i>
-                        <span class="menu-item-label">انواع المطبوعات</span>
-                    </a><!-- br-menu-link -->
-                    <ul class="br-menu-sub">
-                        <li class="sub-item"><a asp-action="Create" asp-controller="PrintType" class="sub-link">اضافة مطبوع جديد </a></li>
-                        <li class="sub-item"><a asp-action="Index" asp-controller="PrintType" class="sub-link">عرض انواع المطبوعات</a></li>
-                    </ul>
-                </li>
+                
             
                 @*<li class="br-menu-item">
                     <a href="#" class="br-menu-link with-sub">

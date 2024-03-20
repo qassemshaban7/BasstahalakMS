@@ -1,6 +1,7 @@
 using BasstahalakMS.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using TXTextControl.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +36,12 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+// enable Web Sockets
+app.UseWebSockets();
+
+// attach the Text Control WebSocketHandler middleware
+app.UseTXWebSocketMiddleware();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

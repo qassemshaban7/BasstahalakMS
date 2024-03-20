@@ -19,6 +19,7 @@ namespace BasstahalakMS.Data
         public DbSet<Library> Libraries { get; set; }
         public DbSet<PrintType> PrintTypes { get; set; }
         public DbSet<FileBranch> FileBranches { get; set; }
+        public DbSet<BfileNote> BfileNotes { get; set; }
 
         //protected override void OnModelCreating(ModelBuilder builder)
         //{

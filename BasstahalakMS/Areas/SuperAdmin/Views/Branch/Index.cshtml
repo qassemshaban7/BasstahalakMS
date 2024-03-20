@@ -43,10 +43,10 @@
                         <tr>
                             <td>@book.Name</td>
                             <td>
-                                <a asp-action="Edit" asp-controller="Branch" asp-route-id="@book.Id" class=" btn btn-info">تعديل </a>
+                                <a asp-action="Edit" asp-controller="Branch" asp-route-id="@book.Id" class=" btn btn-warning"><i class="fas fa-edit"></i>  </a>
                             </td>
                             <td>
-                                <a asp-action="Delete" asp-controller="Branch" asp-route-id="@book.Id" class="btn btn-danger">حذف </a>
+                                <a asp-action="Delete" asp-controller="Branch" asp-route-id="@book.Id" class="btn btn-danger"><i class="fas fa-trash-alt"></i> </a>
                             </td>
                         </tr>
                     }

@@ -39,7 +39,8 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
                 ViewBag.Sent = true;
                 HttpContext.Session.Remove("Sent");
             }
-            var files = await _context.BFiles.Include(x=>x.Book).ToListAsync();
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var files = await _context.BFiles.Include(x=>x.Book).Where(x=>x.UserId == userId).ToListAsync();
             return View(files);
         }
 
@@ -54,25 +55,25 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Upload(BFile bFile, IFormFile uploadedFile)
+        public async Task<IActionResult> Upload(BFile bFile/*, IFormFile uploadedFile*/)
         {
            try
             {
-                if (uploadedFile != null)
-                {
-                    string uploadsFolder = Path.Combine("files");
-                    string uploadsFolderPath = Path.Combine(_hostingEnvironment.WebRootPath, uploadsFolder);
-                    if (!Directory.Exists(uploadsFolderPath))
-                    {
-                        Directory.CreateDirectory(uploadsFolderPath);
-                    }
+                //if (uploadedFile != null)
+                //{
+                    //string uploadsFolder = Path.Combine("files");
+                    //string uploadsFolderPath = Path.Combine(_hostingEnvironment.WebRootPath, uploadsFolder);
+                    //if (!Directory.Exists(uploadsFolderPath))
+                    //{
+                    //    Directory.CreateDirectory(uploadsFolderPath);
+                    //}
 
-                    string uniqueFileName = Guid.NewGuid().ToString() + "_" + uploadedFile.FileName;
-                    string filePath = Path.Combine(uploadsFolderPath, uniqueFileName);
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await uploadedFile.CopyToAsync(stream);
-                    }
+                    //string uniqueFileName = Guid.NewGuid().ToString() + "_" + uploadedFile.FileName;
+                    //string filePath = Path.Combine(uploadsFolderPath, uniqueFileName);
+                    //using (var stream = new FileStream(filePath, FileMode.Create))
+                    //{
+                    //    await uploadedFile.CopyToAsync(stream);
+                    //}
 
                     string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
@@ -80,7 +81,8 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
                     {
                         Name = bFile.Name,
                         Description = bFile.Description,
-                        FilePath = Path.Combine(uploadsFolder, uniqueFileName),
+                        fileContent = bFile.fileContent,
+                        //FilePath = Path.Combine(uploadsFolder, uniqueFileName),
                         BookId = bFile.BookId,
                         //BranchName = branchName,
                         //UnitsCount = unitsCount,
@@ -116,15 +118,15 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
                     }
                     HttpContext.Session.SetString("created", "true");
                     return RedirectToAction(nameof(Index));
-                }
-                else
-                {
-                    var books = _context.Books.ToList();
-                    ViewBag.Books = books;
-                    var branches = _context.Branches.ToList();
-                    ViewBag.Branches = branches;
-                    return View();
-                }
+                //}
+                //else
+                //{
+                //    var books = _context.Books.ToList();
+                //    ViewBag.Books = books;
+                //    var branches = _context.Branches.ToList();
+                //    ViewBag.Branches = branches;
+                //    return View();
+                //}
             }
             catch (Exception ex)
             {
@@ -145,76 +147,84 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
                 return NotFound();
             }
 
-            var editViewModel = new EditBFileViewModel
-            {
-                Id = existingFile.Id,
-                Name = existingFile.Name,
-                Description = existingFile.Description,
-                //BookName = existingFile.BookName,
-                //BranchName = existingFile.BranchName,
-                //UnitsCount = existingFile.UnitsCount,
-                //LessonsCount = existingFile.LessonsCount
-            };
+           
 
             var books = _context.Books.ToList(); 
             ViewBag.Books = books;
 
             var branches = _context.Branches.ToList();
+            var currentBranches = await _context.FileBranches.Include(x => x.Branch).Where(x => x.BFileId == existingFile.Id).ToListAsync();
+
+            foreach (var item in branches.ToList())
+            {
+                foreach (var item1 in currentBranches)
+                {
+                    if (item.Id == item1.BranchId)
+                        branches.Remove(item);
+                }
+            }
             ViewBag.Branches = branches;
 
-            return View(editViewModel);
+            ViewBag.currentBranches = currentBranches;
+
+            var bfileNote = await _context.BfileNotes.Include(x=>x.BFile)
+                .Include(x=>x.User)
+                .FirstOrDefaultAsync(x => x.status == existingFile.status);
+
+            ViewBag.bfileNote = bfileNote;
+            return View(existingFile);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditBFileViewModel model)
         {
-            if (ModelState.IsValid)
-            {
-                var existingFile = await _context.BFiles.FindAsync(model.Id);
-                if (existingFile == null)
-                {
-                    return NotFound();
-                }
+            //if (ModelState.IsValid)
+            //{
+            //    var existingFile = await _context.BFiles.FindAsync(model.Id);
+            //    if (existingFile == null)
+            //    {
+            //        return NotFound();
+            //    }
 
-                if (model.UploadedFile != null)
-                {
-                    if (System.IO.File.Exists(existingFile.FilePath))
-                    {
-                        System.IO.File.Delete(existingFile.FilePath);
-                    }
+            //    if (model.UploadedFile != null)
+            //    {
+            //        if (System.IO.File.Exists(existingFile.FilePath))
+            //        {
+            //            System.IO.File.Delete(existingFile.FilePath);
+            //        }
 
-                    string uploadsFolder = "files";
-                    string uploadsFolderPath = Path.Combine(_hostingEnvironment.WebRootPath, uploadsFolder);
-                    if (!Directory.Exists(uploadsFolderPath))
-                    {
-                        Directory.CreateDirectory(uploadsFolderPath);
-                    }
+            //        string uploadsFolder = "files";
+            //        string uploadsFolderPath = Path.Combine(_hostingEnvironment.WebRootPath, uploadsFolder);
+            //        if (!Directory.Exists(uploadsFolderPath))
+            //        {
+            //            Directory.CreateDirectory(uploadsFolderPath);
+            //        }
 
-                    string uniqueFileName = Guid.NewGuid().ToString() + "_" + model.UploadedFile.FileName;
-                    string filePath = Path.Combine(uploadsFolderPath, uniqueFileName);
+            //        string uniqueFileName = Guid.NewGuid().ToString() + "_" + model.UploadedFile.FileName;
+            //        string filePath = Path.Combine(uploadsFolderPath, uniqueFileName);
 
-                    string wwwRootPath = Path.GetFullPath(_hostingEnvironment.WebRootPath);
+            //        string wwwRootPath = Path.GetFullPath(_hostingEnvironment.WebRootPath);
 
-                    existingFile.FilePath = Path.GetRelativePath(wwwRootPath, filePath);
+            //        existingFile.FilePath = Path.GetRelativePath(wwwRootPath, filePath);
 
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await model.UploadedFile.CopyToAsync(stream);
-                    }
-                }
+            //        using (var stream = new FileStream(filePath, FileMode.Create))
+            //        {
+            //            await model.UploadedFile.CopyToAsync(stream);
+            //        }
+            //    }
 
-                existingFile.Name = model.Name;
-                existingFile.Description = model.Description;
-                //existingFile.BookName = model.BookName;
-                //existingFile.BranchName = model.BranchName;
-                //existingFile.UnitsCount = model.UnitsCount;
-                //existingFile.LessonsCount = model.LessonsCount;
+            //    existingFile.Name = model.Name;
+            //    existingFile.Description = model.Description;
+            //    //existingFile.BookName = model.BookName;
+            //    //existingFile.BranchName = model.BranchName;
+            //    //existingFile.UnitsCount = model.UnitsCount;
+            //    //existingFile.LessonsCount = model.LessonsCount;
 
-                await _context.SaveChangesAsync();
+            //    await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index));
-            }
+            //    return RedirectToAction(nameof(Index));
+            //}
             return View(model);
         }
 
@@ -236,5 +246,7 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
                 return RedirectToAction(nameof(Index));
             }
         }
+
+       
     }
 }
