@@ -1,0 +1,85 @@
+﻿@model Payment
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="br-pagetitle">
+    <div>
+        <h4>إضافة فاتورة جديدة</h4>
+    </div>
+</div>
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="form-layout form-layout-4">
+                    <form method="post" asp-action="Create" asp-controller="Payment" enctype="multipart/form-data">
+                        <div class="form-group row">
+                            <label for="UserId" class="col-sm-2 col-form-label">المطبعة:</label>
+                            <div class="col-sm-10">
+                                <select asp-for="UserId" class="form-control" id="UserId" name="UserId">
+                                    <option value="">اختر المطبعة</option>
+                                    @foreach (var user in ViewBag.Users)
+                                    {
+                                        <option value="@user.Id">@user.FullName</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="UserId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="Money" class="col-sm-2 col-form-label">المبلغ:</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="Money" name="Money" placeholder="المبلغ" min="0" required>
+                                <span asp-validation-for="Money" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="Type" class="col-sm-2 col-form-label">النوع:</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="Type" name="Type" onchange="toggleFileInput()">
+                                    <option value="1">فوري</option>
+                                    <option value="2">كاش</option>
+                                    <option value="3">فودافون كاش</option>
+                                    <option value="4">اتصالات كاش</option>
+                                    <option value="5">فيزا</option>
+                                </select>
+                                <span asp-validation-for="Type" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row" id="fileInputDiv">
+                            <label for="Photo" class="col-sm-2 col-form-label">الصورة:<span class="tx-danger">*</span></label>
+                            <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                                <input type="file" class="photo" id="Photo" name="file" accept="image/*, .pdf" class="form-control" required>
+                                <span asp-validation-for="Photo" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-layout-footer mg-t-30 text-center">
+                            <input type="submit" value="إضافة" class="btn btn-info">
+                            <a asp-action="Index" asp-controller="Payment" class="btn btn-secondary">الغاء</a>
+                        </div><!-- form-layout-footer -->
+                    </form>
+                </div><!-- form-layout -->
+            </div>
+        </div><!-- row -->
+    </div><!-- br-section-wrapper -->
+</div><!-- br-pagebody -->
+
+<script>
+    function toggleFileInput() {
+        var typeSelect = document.getElementById("Type");
+        var fileInputDiv = document.getElementById("fileInputDiv");
+        var fileInput = document.getElementById("Photo");
+
+        if (typeSelect.value === "2") {
+            fileInputDiv.style.display = "none";
+            fileInput.removeAttribute("required");
+        } else {
+            fileInputDiv.style.display = "block";
+            fileInput.setAttribute("required", "required");
+        }
+    }
+</script>

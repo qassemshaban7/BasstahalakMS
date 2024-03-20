@@ -8,6 +8,6 @@ namespace BasstahalakMS.Models
         [Required(ErrorMessage = "يرجى إدخال اسم الكتاب")]
         [MaxLength(200)]
         public string Name { get; set; }
-        public ICollection<BFile> BFiles { get; set; }
+        public ICollection<BFile>? BFiles { get; set; }
     }
 }

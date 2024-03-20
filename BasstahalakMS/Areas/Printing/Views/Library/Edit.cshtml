@@ -6,7 +6,7 @@
 }
 
 <div class="br-pagetitle">
-    <h3 class="text-info mr-3">تعديل المطبوعات @Model.LibraryId</h3>
+    <h3 class="text-info mr-3">تعديل المطبوعات</h3>
 </div><!-- d-flex -->
 
 <div class="br-pagebody">
@@ -16,6 +16,23 @@
                 <div class="form-layout form-layout-4">
                     <form method="post" asp-action="Edit" asp-controller="Library">
                         <input type="hidden" asp-for="LibraryId" />
+                        <div class="row mb-3">
+                            <label class="col-sm-4 form-control-label">الملاحظات: <span class="tx-danger">*</span></label>
+                            <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                                <textarea asp-for="Notes" class="form-control" placeholder="الملاحظات" readonly></textarea>
+                                <span class="text-danger" asp-validation-for="Notes"></span>
+                            </div>
+                        </div><!-- row -->
+
+                        <div class="row mb-3">
+                            <label class="col-sm-4 form-control-label">نوع الطباعة: <span class="tx-danger">*</span></label>
+                            <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                                <select asp-for="PrintTypeId" asp-items="@ViewBag.PrintTypeId" class="form-control" required>
+                                    <option value="">اختر نوع الطباعة</option>
+                                </select>
+                                <span class="text-danger" asp-validation-for="PrintTypeId"></span>
+                            </div>
+                        </div><!-- row -->
                         <div class="row mb-3">
                             <label class="col-sm-4 form-control-label">عدد الألوان: <span class="tx-danger">*</span></label>
                             <div class="col-sm-8 mg-t-10 mg-sm-t-0">
@@ -43,12 +60,9 @@
                             </div>
                         </div><!-- row -->
                         <div class="row mb-3">
-                            <label class="col-sm-4 form-control-label">نوع الطباعة: <span class="tx-danger">*</span></label>
+                            <label class="col-sm-4 form-control-label"> إجمالي السعر: <span class="tx-danger">*</span></label>
                             <div class="col-sm-8 mg-t-10 mg-sm-t-0">
-                                <select asp-for="PrintTypeId" asp-items="@ViewBag.PrintTypeId" class="form-control" required>
-                                    <option value="">اختر نوع الطباعة</option>
-                                </select>
-                                <span class="text-danger" asp-validation-for="PrintTypeId"></span>
+                                <div class="col-sm-8 mg-t-10 mg-sm-t-0" id="totalOutput">@Model.Total.ToString("0.00")</div>
                             </div>
                         </div><!-- row -->
                         <input type="hidden" asp-for="LibraryId" />
@@ -62,3 +76,24 @@
         </div><!-- row -->
     </div><!-- br-section-wrapper -->
 </div><!-- br-pagebody -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var priceInput = document.getElementById("PriceOfUnit");
+        var countInput = document.getElementById("Count");
+        var totalOutput = document.getElementById("totalOutput");
+
+        function calculateTotal() {
+            var price = parseFloat(priceInput.value);
+            var count = parseInt(countInput.value);
+            var total = price * count;
+            if (!isNaN(total)) {
+                totalOutput.textContent = total.toFixed(2);
+            }
+        }
+
+        priceInput.addEventListener("change", calculateTotal);
+        countInput.addEventListener("change", calculateTotal);
+
+        calculateTotal();
+    });
+</script>

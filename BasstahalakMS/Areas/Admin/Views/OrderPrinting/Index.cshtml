@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Areas/Printing/Views/Shared/_Layout.cshtml";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
 @section head {
@@ -19,10 +19,6 @@
             <h3 class="text-info">قائمة المطبوعات</h3>
         </div>
 
-        <div class="col-lg-2 col-2">
-            <a asp-action="Create" asp-controller="Library" class="btn btn-primary">اضافة مطبوعات</a>
-        </div>
-
     </div>
 </div>
 
@@ -32,19 +28,21 @@
             <table id="libraryTable" class="table display responsive nowrap">
                 <thead>
                     <tr>
+                        <th>اسم المطبعة</th>
                         <th>نوع الطباعة</th>
                         <th>عدد الالوان</th>
                         <th>عدد الوحدات</th>
                         <th>سعر الوحدة</th>
                         <th>اجمالي السعر</th>
                         <th>حالة الطلب</th>
-                        <th>تعديل</th>
+                        <th>مراجعة</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var library in Model)
                     {
                         <tr>
+                            <td>@library.User.FullName</td>
                             <td>@library.PrintType.Name</td>
                             <td>@library.Color</td>
                             <td>@library.Count</td>
@@ -53,7 +51,7 @@
                             <td>
                                 @if (library.Status == 1)
                                 {
-                                    <span class="text-info"><i class="fas fa-exclamation-circle"></i> يحتاج الي مراجعة الادمن</span>
+                                    <span class="text-info"><i class="fas fa-exclamation-circle"></i> يحتاج الي المراجعة</span>
                                 }
                                 else if (library.Status == 2)
                                 {
@@ -69,8 +67,8 @@
                                 }
                             </td>
                             <td>
-                                <a asp-action="Edit" asp-controller="Library" asp-route-id="@library.LibraryId" class="btn btn-info">
-                                    <i class="fas fa-edit"></i>
+                                <a asp-action="Request" asp-controller="OrderPrinting" asp-route-id="@library.LibraryId" class="btn btn-info">
+                                    مراجعة
                                 </a>
                             </td>
                         </tr>

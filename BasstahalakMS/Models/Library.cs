@@ -7,12 +7,13 @@ namespace BasstahalakMS.Models
     public class Library
     {
         [Key]
-        public int LibraryId { get; set; }  
+        public int LibraryId { get; set; }
         public int Color { get; set; }
         public int Count { get; set; }
-        public int PriceOfUnit { get; set; }
-        public int Total { get; set; }
-
+        public double PriceOfUnit { get; set; }
+        public double Total { get; set; }
+        public int Status { get; set; }
+        public string? Notes { get; set; }
         public int PrintTypeId { get; set; }
         [ForeignKey("PrintTypeId")]
         public PrintType? PrintType { get; set; }

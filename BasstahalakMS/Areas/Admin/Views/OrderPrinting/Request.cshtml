@@ -1,0 +1,80 @@
+﻿@model Library
+
+@{
+    ViewData["Title"] = "Request";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="br-pagetitle">
+    <i class="icon fas fa-light fa-cog"></i>
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="text-info"> مراجعة الطلب</h3>
+        </div>
+    </div>
+</div>
+
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 class="text-info">تعديل حالة الطلب</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>اسم المطبعة</th>
+                            <th>نوع الطباعة</th>
+                            <th>عدد الألوان</th>
+                            <th>عدد الوحدات</th>
+                            <th>سعر الوحدة</th>
+                            <th>اجمالي السعر</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@Model.User.FullName</td>
+                            <td>@Model.PrintType.Name</td>
+                            <td>@Model.Color</td>
+                            <td>@Model.Count</td>
+                            <td>@Model.PriceOfUnit</td>
+                            <td>@Model.Total</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <form asp-action="Request" method="post" class="mg-b-20">
+                    <input type="hidden" asp-for="LibraryId" />
+                    <div class="form-group">
+                        <label class="form-control-label">الملاحظات:</label>
+                        <textarea class="form-control" asp-for="Notes"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control-label">حالة الطلب:</label><br>
+                        <input type="radio" id="status1" name="Status" value="2" checked>
+                        <label for="status1">يحتاج إلى تعديل</label><br>
+                        <input type="radio" id="status2" name="Status" value="3">
+                        <label for="status2"> قبول الطلب</label><br>
+                        <input type="radio" id="status3" name="Status" value="4">
+                        <label for="status3"> رفض الطلب</label>
+                    </div>
+                    <div class="form-layout-footer mg-t-30 text-center">
+                        <button type="submit" class="btn btn-info">حفظ التغييرات</button>
+                        <a asp-action="Index" asp-controller="OrderPrinting" class="btn btn-secondary">إلغاء</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .form-group label {
+        font-family: Arial, sans-serif;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .form-group input[type="radio"] {
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+    }
+</style>

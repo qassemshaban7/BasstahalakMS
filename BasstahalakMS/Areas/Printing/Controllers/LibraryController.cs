@@ -56,6 +56,7 @@ namespace BasstahalakMS.Areas.Printing.Controllers
                     return View(library);
                 }
 
+                library.Status = 1;
                 library.Total = library.Count * library.PriceOfUnit;
                 _context.Add(library);
                 await _context.SaveChangesAsync();
@@ -90,65 +91,58 @@ namespace BasstahalakMS.Areas.Printing.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("LibraryId,Color,Count,PriceOfUnit,PrintTypeId")] Library library)
         {
-            if (id != library.LibraryId)
+            try
             {
-                return NotFound();
-            }
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                library.UserId = userId;
+                library.Total = library.Count * library.PriceOfUnit;
+                library.Status = 1;
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    library.UserId = userId;
-                    library.Total = library.Count * library.PriceOfUnit;
-                    _context.Update(library);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!LibraryExists(library.LibraryId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _context.Update(library);
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewBag.PrintTypeId = new SelectList(_context.PrintTypes, "Id", "Name", library.PrintTypeId);
-            return View(library);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!LibraryExists(library.LibraryId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
 
-        //public async Task<IActionResult> Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
+            //public async Task<IActionResult> Delete(int? id)
+            //{
+            //    if (id == null)
+            //    {
+            //        return NotFound();
+            //    }
 
-        //    var library = await _context.Libraries
-        //        .Include(l => l.PrintType)
-        //        .FirstOrDefaultAsync(m => m.LibraryId == id);
-        //    if (library == null)
-        //    {
-        //        return NotFound();
-        //    }
+            //    var library = await _context.Libraries
+            //        .Include(l => l.PrintType)
+            //        .FirstOrDefaultAsync(m => m.LibraryId == id);
+            //    if (library == null)
+            //    {
+            //        return NotFound();
+            //    }
 
-        //    return View(library);
-        //}
+            //    return View(library);
+            //}
 
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    var library = await _context.Libraries.FindAsync(id);
-        //    _context.Libraries.Remove(library);
-        //    await _context.SaveChangesAsync();
-        //    return RedirectToAction(nameof(Index));
-        //}
+            //[HttpPost, ActionName("Delete")]
+            //[ValidateAntiForgeryToken]
+            //public async Task<IActionResult> DeleteConfirmed(int id)
+            //{
+            //    var library = await _context.Libraries.FindAsync(id);
+            //    _context.Libraries.Remove(library);
+            //    await _context.SaveChangesAsync();
+            //    return RedirectToAction(nameof(Index));
+            //}
 
         private bool LibraryExists(int id)
         {

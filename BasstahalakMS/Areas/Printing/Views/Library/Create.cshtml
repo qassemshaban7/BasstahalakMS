@@ -16,6 +16,15 @@
                 <div class="form-layout form-layout-4">
                     <form method="post" asp-action="Create" asp-controller="Library">
                         <div class="row mb-3">
+                            <label class="col-sm-4 form-control-label">نوع الطباعة: <span class="tx-danger">*</span></label>
+                            <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                                <select asp-for="PrintTypeId" asp-items="@ViewBag.PrintTypeId" class="form-control" required>
+                                    <option value="">اختر نوع الطباعة</option>
+                                </select>
+                                <span class="text-danger" asp-validation-for="PrintTypeId"></span>
+                            </div>
+                        </div><!-- row -->
+                        <div class="row mb-3">
                             <label class="col-sm-4 form-control-label">عدد الألوان: <span class="tx-danger">*</span></label>
                             <div class="col-sm-8 mg-t-10 mg-sm-t-0">
                                 <select asp-for="Color" class="form-control" required>
@@ -30,24 +39,21 @@
                         <div class="row mb-3">
                             <label class="col-sm-4 form-control-label">عدد الوحدات: <span class="tx-danger">*</span></label>
                             <div class="col-sm-8 mg-t-10 mg-sm-t-0">
-                                <input asp-for="Count" type="number" class="form-control" placeholder="عدد الوحدات" required>
+                                <input id="Count" asp-for="Count" type="number" class="form-control" placeholder="عدد الوحدات" required>
                                 <span class="text-danger" asp-validation-for="Count"></span>
                             </div>
                         </div><!-- row -->
                         <div class="row mb-3">
                             <label class="col-sm-4 form-control-label">سعر الوحدة: <span class="tx-danger">*</span></label>
                             <div class="col-sm-8 mg-t-10 mg-sm-t-0">
-                                <input asp-for="PriceOfUnit" type="number" class="form-control" placeholder="سعر الوحدة" required>
+                                <input id="PriceOfUnit" asp-for="PriceOfUnit" type="number" class="form-control" placeholder="سعر الوحدة" required>
                                 <span class="text-danger" asp-validation-for="PriceOfUnit"></span>
                             </div>
                         </div><!-- row -->
                         <div class="row mb-3">
-                            <label class="col-sm-4 form-control-label">نوع الطباعة: <span class="tx-danger">*</span></label>
+                            <label class="col-sm-4 form-control-label"> إجمالي السعر: <span class="tx-danger">*</span></label>
                             <div class="col-sm-8 mg-t-10 mg-sm-t-0">
-                                <select asp-for="PrintTypeId" asp-items="@ViewBag.PrintTypeId" class="form-control" required>
-                                    <option value="">اختر نوع الطباعة</option>
-                                </select>
-                                <span class="text-danger" asp-validation-for="PrintTypeId"></span>
+                                <div class="col-sm-8 mg-t-10 mg-sm-t-0" id="totalOutput">0.00</div>
                             </div>
                         </div><!-- row -->
                         <div class="form-layout-footer mg-t-30 text-center">
@@ -60,3 +66,23 @@
         </div><!-- row -->
     </div><!-- br-section-wrapper -->
 </div><!-- br-pagebody -->
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var priceInput = document.getElementById("PriceOfUnit");
+        var countInput = document.getElementById("Count");
+        var totalOutput = document.getElementById("totalOutput");
+
+        function calculateTotal() {
+            var price = parseFloat(priceInput.value);
+            var count = parseInt(countInput.value);
+            var total = price * count;
+            if (!isNaN(total)) {
+                totalOutput.textContent = total.toFixed(2); 
+            }
+        }
+
+        priceInput.addEventListener("change", calculateTotal); 
+        countInput.addEventListener("change", calculateTotal); 
+    });
+</script>
