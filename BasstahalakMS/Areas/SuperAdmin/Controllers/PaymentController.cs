@@ -34,6 +34,14 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
             return View(payments);
         }
 
+        [HttpGet]
+        public IActionResult GetTotalMoney(string userId)
+        {
+            var user = _context.ApplicationUsers.Find(userId);
+            var totalMoney = user.TotalMoney;
+
+            return Json(totalMoney);
+        }
         public async Task<IActionResult> Create()
         {
             var users = await _context.ApplicationUsers.Where(u => u.Type != null).ToListAsync();
