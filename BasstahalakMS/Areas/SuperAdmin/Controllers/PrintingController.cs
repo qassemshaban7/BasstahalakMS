@@ -72,6 +72,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, StaticDetails.Printing);
+                    await _context.SaveChangesAsync();
 
                     HttpContext.Session.SetString("created", "true");
                     return RedirectToAction("Index", "Printing", new { area = "SuperAdmin" });
