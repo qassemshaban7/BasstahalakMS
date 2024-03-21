@@ -28,6 +28,7 @@
                             <th>عدد الوحدات</th>
                             <th>سعر الوحدة</th>
                             <th>اجمالي السعر</th>
+                            <th>تاريخ الطلب</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -38,6 +39,7 @@
                             <td>@Model.Count</td>
                             <td>@Model.PriceOfUnit</td>
                             <td>@Model.Total</td>
+                            <td>@string.Format("{0:dd/MM/yyyy HH:mm}", Model.SendTime)</td>
                         </tr>
                     </tbody>
                 </table>

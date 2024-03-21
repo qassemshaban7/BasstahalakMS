@@ -57,6 +57,7 @@ namespace BasstahalakMS.Areas.Printing.Controllers
                 }
 
                 library.Status = 1;
+                library.SendTime = DateTime.Now;
                 library.Total = library.Count * library.PriceOfUnit;
                 _context.Add(library);
                 await _context.SaveChangesAsync();
@@ -97,6 +98,7 @@ namespace BasstahalakMS.Areas.Printing.Controllers
                 library.UserId = userId;
                 library.Total = library.Count * library.PriceOfUnit;
                 library.Status = 1;
+                library.SendTime = DateTime.Now;
 
                 _context.Update(library);
                 await _context.SaveChangesAsync();

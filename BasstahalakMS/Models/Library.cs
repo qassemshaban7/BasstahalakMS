@@ -14,6 +14,7 @@ namespace BasstahalakMS.Models
         public double Total { get; set; }
         public int Status { get; set; }
         public string? Notes { get; set; }
+        public DateTime? SendTime { get; set; }      
         public int PrintTypeId { get; set; }
         [ForeignKey("PrintTypeId")]
         public PrintType? PrintType { get; set; }

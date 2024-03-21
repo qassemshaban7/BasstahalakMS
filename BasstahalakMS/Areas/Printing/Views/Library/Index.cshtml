@@ -69,9 +69,16 @@
                                 }
                             </td>
                             <td>
-                                <a asp-action="Edit" asp-controller="Library" asp-route-id="@library.LibraryId" class="btn btn-info">
-                                    <i class="fas fa-edit"></i>
-                                </a>
+                                @if(library.Status != 3)
+                                {
+                                    <a asp-action="Edit" asp-controller="Library" asp-route-id="@library.LibraryId" class="btn btn-info">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="text-danger"><i class="fas fa-ban"></i> لا يمكن التعديل</span>
+                                }
                             </td>
                         </tr>
                     }

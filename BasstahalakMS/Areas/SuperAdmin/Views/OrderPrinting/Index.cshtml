@@ -33,7 +33,8 @@
                         <th>عدد الالوان</th>
                         <th>عدد الوحدات</th>
                         <th>سعر الوحدة</th>
-                        <th>اجمالي السعر</th>
+                        <th>السعر</th>
+                        <th>تاريخ الطلب</th>
                         <th>حالة الطلب</th>
                         <th>مراجعة</th>
                     </tr>
@@ -48,6 +49,7 @@
                             <td>@library.Count</td>
                             <td>@library.PriceOfUnit</td>
                             <td>@library.Total</td>
+                            <td>@string.Format("{0:dd/MM/yyyy}", library.SendTime)</td>
                             <td>
                                 @if (library.Status == 1)
                                 {
@@ -67,9 +69,16 @@
                                 }
                             </td>
                             <td>
-                                <a asp-action="Request" asp-controller="OrderPrinting" asp-route-id="@library.LibraryId" class="btn btn-info">
-                                    مراجعة
-                                </a>
+                                @if (library.Status != 3)
+                                {
+                                    <a asp-action="Request" asp-controller="OrderPrinting" asp-route-id="@library.LibraryId" class="btn btn-info">
+                                        مراجعة
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="text-danger"><i class="fas fa-ban"></i> لا يمكن المراجعة</span>
+                                }
                             </td>
                         </tr>
                     }
