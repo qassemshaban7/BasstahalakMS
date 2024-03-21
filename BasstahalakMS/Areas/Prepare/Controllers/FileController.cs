@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Elfie.Serialization;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using static Azure.Core.HttpHeader;
 
 
 namespace BasstahalakMS.Areas.Prepare.Controllers
@@ -34,6 +36,7 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
                 ViewBag.created = true;
                 HttpContext.Session.Remove("created");
             }
+
             if (HttpContext.Session.GetString("Sent") != null)
             {
                 ViewBag.Sent = true;
@@ -146,8 +149,8 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
             {
                 return NotFound();
             }
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-           
 
             var books = _context.Books.ToList(); 
             ViewBag.Books = books;
@@ -166,10 +169,12 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
             ViewBag.Branches = branches;
 
             ViewBag.currentBranches = currentBranches;
+            ViewBag.currentBranchesCount = currentBranches.Count();
 
             var bfileNote = await _context.BfileNotes.Include(x=>x.BFile)
                 .Include(x=>x.User)
-                .FirstOrDefaultAsync(x => x.status == existingFile.status);
+                .OrderBy(e => e.CreationDate)
+                .LastOrDefaultAsync(x => x.status == existingFile.status && x.UserId != userId);
 
             ViewBag.bfileNote = bfileNote;
             return View(existingFile);
@@ -177,55 +182,86 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(EditBFileViewModel model)
+        public async Task<IActionResult> Edit(BFile bFile)
         {
-            //if (ModelState.IsValid)
-            //{
-            //    var existingFile = await _context.BFiles.FindAsync(model.Id);
-            //    if (existingFile == null)
-            //    {
-            //        return NotFound();
-            //    }
+            try
+            {
+                string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var existingFile = await _context.BFiles.FindAsync(bFile.Id);
+                if(existingFile != null)
+                {
+                    existingFile.Name = bFile.Name;
+                    existingFile.Description = bFile.Description;
+                    existingFile.fileContent = Request.Form["fileContent"].ToString();
+                    existingFile.BookId = bFile.BookId;
+                    if(existingFile.status == 2) {
+                        existingFile.status = 1;
+                        BfileNote bfileNote = new BfileNote
+                        {
+                            BfileId = bFile.Id,
+                            CurrentFileContent = Request.Form["fileContent"].ToString(),
+                            Notes = "",
+                            UserId = userId,
+                            status = 1 // Back to Admin
+                        };
+                        _context.BfileNotes.Add(bfileNote);
+                    }  
+                    else if(existingFile.status == 4)
+                    {
+                        existingFile.status = 3;
+                        BfileNote bfileNote = new BfileNote
+                        {
+                            BfileId = bFile.Id,
+                            CurrentFileContent = Request.Form["fileContent"].ToString(),
+                            Notes = "",
+                            UserId = userId,
+                            status = 3 // Back to Review
+                        };
+                        _context.BfileNotes.Add(bfileNote);
+                    }  
+                    await _context.SaveChangesAsync();
 
-            //    if (model.UploadedFile != null)
-            //    {
-            //        if (System.IO.File.Exists(existingFile.FilePath))
-            //        {
-            //            System.IO.File.Delete(existingFile.FilePath);
-            //        }
+                    var currentBranches = await _context.FileBranches.Include(x => x.Branch).Where(x => x.BFileId == existingFile.Id).ToListAsync();
+                    foreach (var item in currentBranches)
+                    {
+                        _context.FileBranches.Remove(item);
+                    }
+                    await _context.SaveChangesAsync();
+                    var branchesInDB = await _context.Branches.ToListAsync();
+                    foreach (var branch in branchesInDB)
+                    {
+                        string name = "check_" + branch.Id;
+                        string chkValue = Request.Form[name].ToString();
+                        if (chkValue == "1")
+                        {
+                            string noOfUnitsName = "noUnits_" + @branch.Id;
+                            string noOfLessonsName = "noLessons_" + @branch.Id;
+                            string noOfUnits = Request.Form[noOfUnitsName].ToString();
+                            string noOfLessons = Request.Form[noOfLessonsName].ToString();
+                            var fileBranch = new FileBranch
+                            {
+                                BFileId = bFile.Id,
+                                BranchId = branch.Id,
+                                LessonsCount = Convert.ToInt32(noOfLessons),
+                                UnitsCount = Convert.ToInt32(noOfUnits),
 
-            //        string uploadsFolder = "files";
-            //        string uploadsFolderPath = Path.Combine(_hostingEnvironment.WebRootPath, uploadsFolder);
-            //        if (!Directory.Exists(uploadsFolderPath))
-            //        {
-            //            Directory.CreateDirectory(uploadsFolderPath);
-            //        }
 
-            //        string uniqueFileName = Guid.NewGuid().ToString() + "_" + model.UploadedFile.FileName;
-            //        string filePath = Path.Combine(uploadsFolderPath, uniqueFileName);
+                            };
+                            _context.FileBranches.Add(fileBranch);
+                            await _context.SaveChangesAsync();
+                        }
+                    }
+                    HttpContext.Session.SetString("Sent", "true");
+                    return RedirectToAction(nameof(Index));
+                }
 
-            //        string wwwRootPath = Path.GetFullPath(_hostingEnvironment.WebRootPath);
-
-            //        existingFile.FilePath = Path.GetRelativePath(wwwRootPath, filePath);
-
-            //        using (var stream = new FileStream(filePath, FileMode.Create))
-            //        {
-            //            await model.UploadedFile.CopyToAsync(stream);
-            //        }
-            //    }
-
-            //    existingFile.Name = model.Name;
-            //    existingFile.Description = model.Description;
-            //    //existingFile.BookName = model.BookName;
-            //    //existingFile.BranchName = model.BranchName;
-            //    //existingFile.UnitsCount = model.UnitsCount;
-            //    //existingFile.LessonsCount = model.LessonsCount;
-
-            //    await _context.SaveChangesAsync();
-
-            //    return RedirectToAction(nameof(Index));
-            //}
-            return View(model);
+                return RedirectToAction(nameof(Index));
+                
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         public async Task<IActionResult> SendForReview(int? id)

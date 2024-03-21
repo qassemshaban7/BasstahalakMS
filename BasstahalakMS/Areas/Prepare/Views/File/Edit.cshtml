@@ -17,40 +17,42 @@
                         @if(Model.status != 0)
                         {
                             <div class="row mb-3">
-                            <div class="col-4 mt-2">
-                                <label class="form-label text-dark font-weight-bold" for="flexCheckDefault">
-                                    اسم المراجع
-                                </label>
+                                <div class="col-4 mt-2">
+                                    <label class="form-label text-dark font-weight-bold" for="flexCheckDefault">
+                                        اسم المراجع
+                                    </label>
+                                </div>
+                                <div class="col-4">
+                                    <input type="text" readonly class="form-control " value=" @ViewBag.bfileNote.User.FullName" />
+                                </div>
+
+
+
                             </div>
-                            <div class="col-4">
-                                <input type="text" readonly class="form-control " value=" @ViewBag.bfileNote.User.FullName" />
+                            <hr />
+                            <div class="row mb-3">
+                                <div class="col-4 mt-2">
+                                    <label class="form-label text-dark font-weight-bold" for="flexCheckDefault">
+                                        تاريخ المراجعة
+                                    </label>
+                                </div>
+                                <div class="col-4">
+                                    <input type="text" readonly class="form-control " value=" @ViewBag.bfileNote.CreationDate" />
+                                </div>
+
+
+
+                            </div>
+                            <hr />
+                            <div class="row mb-3">
+                                <label class="col-sm-4 form-control-label  text-dark font-weight-bold">ملاحظات </label>
                             </div>
 
-
-
-                        </div>
-                        <hr />
-                        <div class="row mb-3">
-                            <div class="col-4 mt-2">
-                                <label class="form-label text-dark font-weight-bold" for="flexCheckDefault">
-                                    تاريخ المراجعة
-                                </label>
+                            <!-- row -->
+                            <div class="row mb-3 mr-1">
+                                <textarea id="Notes" name="Notes" readonly class="form-control" rows="8">@ViewBag.bfileNote.Notes</textarea>
                             </div>
-                            <div class="col-4">
-                                <input type="text" readonly class="form-control " value=" @ViewBag.bfileNote.CreationDate" />
-                            </div>
-
-
-
-                        </div>
-                        <hr />
-                        <div class="row mb-3">
-                            <label class="col-sm-4 form-control-label  text-dark font-weight-bold">ملاحظات </label>
-                        </div><!-- row -->
-                        <div class="row mb-3 mr-1">
-                            <textarea id="Notes" name="Notes" readonly class="form-control" rows="8">@ViewBag.bfileNote.Notes</textarea>
-                        </div>
-                        <hr />
+                            <hr />
                         }
                         
 
@@ -143,7 +145,7 @@
                         </div><!-- row -->
                         <div class="row mb-3">
 
-                            <textarea id="fileContent" required>
+                            <textarea id="fileContent" name="fileContent" required>
                                 @ViewBag.bfileNote.CurrentFileContent
                             </textarea>
                             <span class="text-danger" asp-validation-for="fileContent"></span>
@@ -154,7 +156,15 @@
                         
                         <input type="hidden" asp-for="Id" />
                         <div class="form-layout-footer mg-t-30 text-center">
-                            <input type="submit" value="حفظ التعديلات" onclick="clicked(event)" class="btn btn-info">
+                            @if(Model.status == 2){
+                                <input type="submit" value="حفظ وارسال الي المدير" onclick="clicked(event)" class="btn btn-info">
+
+                            }
+                            else if(Model.status == 4)
+                            {
+                                <input type="submit" value="حفظ وارسال الي المراجعة" onclick="clicked(event)" class="btn btn-info">
+
+                            }
                             <a asp-action="Index" asp-controller="File" class="btn btn-secondary">الرجوع</a>
                         </div><!-- form-layout-footer -->
                     </form>
@@ -166,7 +176,7 @@
 @section scripts{
     <script type="text/javascript" src="~/lib/ckeditor/ckeditor.js"></script>
     <script>
-        let chk = 0;
+        let chk = @ViewBag.currentBranchesCount;
         window.onload = function () {
             CKEDITOR.replace('fileContent');
         };
@@ -192,15 +202,15 @@
     @foreach (var item in ViewBag.currentBranches)
     {
         <script>
-            $("#check_@item.Id").change(function () {
+            $("#check_@item.Branch.Id").change(function () {
                 if (this.checked) {
-                    $(".input_@item.Id").attr("readonly", false);
-                    $(".input_@item.Id").prop("required", true);
+                    $(".input_@item.Branch.Id").attr("readonly", false);
+                    $(".input_@item.Branch.Id").prop("required", true);
                     chk++;
                 }
                 else {
-                    $(".input_@item.Id").attr("readonly", true);
-                    $(".input_@item.Id").prop("required", false);
+                    $(".input_@item.Branch.Id").attr("readonly", true);
+                    $(".input_@item.Branch.Id").prop("required", false);
                     chk--;
                 }
             });
