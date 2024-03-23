@@ -171,5 +171,63 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
         {
             return _context.Users.Any(e => e.Id == id);
         }
+
+        // دفع فاتورة
+        public async Task<IActionResult> CreatePayment(string Id)
+        {
+            var user = await _context.ApplicationUsers.FindAsync(Id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var payment = new Payment
+            {
+                UserId = Id,
+                User = user
+            };
+
+            return View(payment);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreatePayment(Payment payment, IFormFile file, string UserId) 
+        {
+            try
+            {
+                payment.UserId = UserId;
+
+                if (file != null && file.Length > 0)
+                {
+                    var extension = Path.GetExtension(file.FileName).ToLower();
+                    if (extension != ".jpg" && extension != ".jpeg" && extension != ".png" && extension != ".gif")
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
+
+                    var fileName = Guid.NewGuid().ToString() + extension;
+                    var filePath = Path.Combine("wwwroot", "Payment", fileName);
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileStream);
+                    }
+                    payment.PhotoPath = fileName;
+                }
+
+                payment.PaymentTime = DateTime.Now;
+                _context.Payments.Add(payment);
+                var user = _context.ApplicationUsers.Find(UserId);
+                if (user.TotalMoney == null) user.TotalMoney = 0;
+                user.TotalMoney -= payment.Money;
+                await _context.SaveChangesAsync();
+                return RedirectToAction( "Index", "Payment");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "حدث خطا اعد المحاولة");
+                return View(payment);
+            }
+        }
     }
 }

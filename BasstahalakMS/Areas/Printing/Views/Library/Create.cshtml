@@ -66,7 +66,6 @@
         </div><!-- row -->
     </div><!-- br-section-wrapper -->
 </div><!-- br-pagebody -->
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         var priceInput = document.getElementById("PriceOfUnit");
@@ -78,11 +77,11 @@
             var count = parseInt(countInput.value);
             var total = price * count;
             if (!isNaN(total)) {
-                totalOutput.textContent = total.toFixed(2); 
+                totalOutput.textContent = total.toFixed(2);
             }
         }
 
-        priceInput.addEventListener("change", calculateTotal); 
-        countInput.addEventListener("change", calculateTotal); 
+        priceInput.addEventListener("input", calculateTotal);
+        countInput.addEventListener("input", calculateTotal);
     });
 </script>

@@ -14,22 +14,14 @@
 }
 
 <div class="br-pagetitle">
-    <i class="icon fas fa-light fa-building"></i>
+    <i class="icon fas fa-light fa-cog"></i>
     <div class="row">
-        <div class="col-lg-7 col-7">
+        <div class="col-lg-10 col-10">
             <h3 class="text-info">قائمة المطابع</h3>
         </div>
-        <div class="col-lg-12 col-12">
-            <div class="row">
-                <div class="col-lg-5 col-5">
-                    <h2><a asp-action="Create" asp-controller="Printing" class="btn btn-primary">اضافة مطبعة </a></h2>
-                </div>
-                <div class="col-lg-5 col-5">
-                    <h2><a asp-action="Create" asp-controller="Payment" class="btn btn-primary">اضافة فاتورة جديدة </a></h2>
-                </div>
-            </div>
+        <div class="col-lg-2 col-2">
+           <h2><a asp-action="Create" asp-controller="Printing" class="btn btn-primary">اضافة مطبعة </a></h2>
         </div>
-
     </div>
 </div>
 
@@ -43,9 +35,10 @@
                         <th>العنوان</th>
                         <th>رقم الموبايل </th>
                         <th>النوع </th>
-                        <th>الضرائب</th>
+                        <th>الخزنة</th>
                         <th>تعديل</th>
                         <th>حذف</th>
+                        <th>اضافة فاتورة</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -83,6 +76,11 @@
 @*                              <a asp-action="Delete" asp-controller="Printing" asp-route-id="@item.Id" onclick="return confirm('هل انت متأكد من الحذف')" class="btn btn-danger text-white"> *@
                                 <a asp-action="Delete" asp-controller="Printing" asp-route-id="@item.Id" class="btn btn-danger">
                                     <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <a asp-action="CreatePayment" asp-controller="Printing" asp-route-id="@item.Id" class="btn btn-primary">
+                                    اضافة فاتورة
                                 </a>
                             </td>
                         </tr>

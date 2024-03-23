@@ -51,35 +51,36 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Request(Library library)
         {
-            var order = await _context.Libraries.FindAsync(library.LibraryId);
-            if (order != null)
+            if (library.Status != 1)
             {
-                order.Status = library.Status;
-                order.Notes = library.Notes;
-
-                _context.Update(order);
-                await _context.SaveChangesAsync();
-
-                if (order.Status == 3 && order.UserId != null)
+                var order = await _context.Libraries.FindAsync(library.LibraryId);
+                if (order != null)
                 {
-                    var user = await _context.ApplicationUsers.FirstOrDefaultAsync(u => u.Id == order.UserId);
-                    if (user != null)
-                    {
-                        if (user.TotalMoney == null) user.TotalMoney = 0;
+                    order.Status = library.Status;
+                    order.Notes = library.Notes;
 
-                        user.TotalMoney += order.Total;
-                        _context.Update(user);
-                        await _context.SaveChangesAsync();
+                    _context.Update(order);
+                    await _context.SaveChangesAsync();
+
+                    if (order.Status == 3 && order.UserId != null)
+                    {
+                        var user = await _context.ApplicationUsers.FirstOrDefaultAsync(u => u.Id == order.UserId);
+                        if (user != null)
+                        {
+                            if (user.TotalMoney == null) user.TotalMoney = 0;
+
+                            user.TotalMoney += order.Total;
+                            _context.Update(user);
+                            await _context.SaveChangesAsync();
+                        }
                     }
+
+                    return RedirectToAction(nameof(Index));
                 }
 
                 return RedirectToAction(nameof(Index));
             }
-
             return RedirectToAction(nameof(Index));
         }
-
-
-
     }
 }

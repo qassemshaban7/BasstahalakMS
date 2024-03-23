@@ -92,30 +92,33 @@ namespace BasstahalakMS.Areas.Printing.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("LibraryId,Color,Count,PriceOfUnit,PrintTypeId")] Library library)
         {
-            try
-            {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                library.UserId = userId;
-                library.Total = library.Count * library.PriceOfUnit;
-                library.Status = 1;
-                library.SendTime = DateTime.Now;
-
-                _context.Update(library);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!LibraryExists(library.LibraryId))
+            if (library.Status != 2) { 
+                try
                 {
-                    return NotFound();
+                    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    library.UserId = userId;
+                    library.Total = library.Count * library.PriceOfUnit;
+                    library.Status = 1;
+                    library.SendTime = DateTime.Now;
+
+                    _context.Update(library);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
                 }
-                else
+                catch (DbUpdateConcurrencyException)
                 {
-                    throw;
+                    if (!LibraryExists(library.LibraryId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
             }
+            return RedirectToAction(nameof(Index));
         }
 
             //public async Task<IActionResult> Delete(int? id)

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace BasstahalakMS.Areas.SuperAdmin.Controllers
 {
@@ -34,14 +35,6 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
             return View(payments);
         }
 
-        [HttpGet]
-        public IActionResult GetTotalMoney(string userId)
-        {
-            var user = _context.ApplicationUsers.Find(userId);
-            var totalMoney = user.TotalMoney;
-
-            return Json(totalMoney);
-        }
         public async Task<IActionResult> Create()
         {
             var users = await _context.ApplicationUsers.Where(u => u.Type != null).ToListAsync();
@@ -63,7 +56,13 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
 
                 if (file != null && file.Length > 0)
                 {
-                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    var extension = Path.GetExtension(file.FileName).ToLower();
+                    if (extension != ".jpg" && extension != ".jpeg" && extension != ".png" && extension != ".gif")
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
+
+                    var fileName = Guid.NewGuid().ToString() + extension;
                     var filePath = Path.Combine("wwwroot", "Payment", fileName);
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {

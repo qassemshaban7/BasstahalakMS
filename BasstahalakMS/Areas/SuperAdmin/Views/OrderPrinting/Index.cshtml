@@ -15,7 +15,7 @@
 <div class="br-pagetitle">
     <i class="icon fas fa-light fa-cog"></i>
     <div class="row">
-        <div class="col-lg-10 col-10">
+        <div class="col-lg-12 col-12">
             <h3 class="text-info">قائمة المطبوعات</h3>
         </div>
 
@@ -69,7 +69,7 @@
                                 }
                             </td>
                             <td>
-                                @if (library.Status != 3)
+                                @if (library.Status == 1)
                                 {
                                     <a asp-action="Request" asp-controller="OrderPrinting" asp-route-id="@library.LibraryId" class="btn btn-info">
                                         مراجعة
@@ -77,7 +77,7 @@
                                 }
                                 else
                                 {
-                                    <span class="text-danger"><i class="fas fa-ban"></i> لا يمكن المراجعة</span>
+                                    <span class="text-danger"><i class="fas fa-ban"></i> غير متاح</span>
                                 }
                             </td>
                         </tr>

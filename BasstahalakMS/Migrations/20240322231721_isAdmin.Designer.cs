@@ -4,6 +4,7 @@ using BasstahalakMS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BasstahalakMS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240322231721_isAdmin")]
+    partial class isAdmin
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,11 +89,9 @@ namespace BasstahalakMS.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SendUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("status")
                         .HasColumnType("int");
@@ -99,7 +100,7 @@ namespace BasstahalakMS.Migrations
 
                     b.HasIndex("BfileId");
 
-                    b.HasIndex("SendUserId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("BfileNotes");
                 });
@@ -553,7 +554,9 @@ namespace BasstahalakMS.Migrations
 
                     b.HasOne("BasstahalakMS.Models.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("SendUserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("BFile");
 

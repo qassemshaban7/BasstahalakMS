@@ -11,6 +11,8 @@ namespace BasstahalakMS.Models
 
         public string? UserId { get; set; }
         [ForeignKey("UserId")]
+        public string? SendUserId { get; set; }
+        [ForeignKey("SendUserId")]
         public ApplicationUser User { get; set; }
 
         public DateTime CreationDate { get; set; } = DateTime.Now;

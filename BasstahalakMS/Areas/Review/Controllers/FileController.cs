@@ -7,21 +7,24 @@ using System.Data;
 using Syncfusion.EJ2.Navigations;
 using System.Security.Claims;
 using BasstahalakMS.Models;
+using Microsoft.AspNetCore.Identity;
 
-namespace BasstahalakMS.Areas.SuperAdmin.Controllers
+namespace BasstahalakMS.Areas.Review.Controllers
 {
-    [Authorize(Roles = StaticDetails.SuperAdmin)]
-    [Area(nameof(SuperAdmin))]
-    [Route(nameof(SuperAdmin) + "/[controller]/[action]")]
+    [Authorize(Roles = StaticDetails.Review)]
+    [Area(nameof(Review))]
+    [Route(nameof(Review) + "/[controller]/[action]")]
     public class FileController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public FileController(ApplicationDbContext context, IWebHostEnvironment hostingEnvironment)
+        public FileController(ApplicationDbContext context, IWebHostEnvironment hostingEnvironment, UserManager<IdentityUser> userManager)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment;
+            _userManager = userManager;
         }
         public async Task<IActionResult> Index()
         {
@@ -35,7 +38,12 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                 ViewBag.Sent = true;
                 HttpContext.Session.Remove("Sent");
             }
-            var files = await _context.BFiles.Include(x => x.Book).Include(c=>c.User).ToListAsync();
+
+
+            var files = await _context.BFiles.Include(x => x.Book).Include(c=>c.User).Where(f=>f.status == 3).ToListAsync();
+
+            //string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;    
+            
             return View(files);
         }
 		public async Task<IActionResult> ShowFile(int id)
@@ -46,7 +54,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
 				return NotFound();
 			}
 
-            if(existingFile.status == 1 || existingFile.status == 5)
+            if(existingFile.status == 3)
             {
                 var branches = await _context.FileBranches.Include(x => x.Branch).Where(x => x.BFileId == existingFile.Id).ToListAsync();
                 ViewBag.branches = branches;
@@ -65,7 +73,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                 
                 string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-                if(Prepare == 1)
+                if(Prepare == 3)
                 {
                     BfileNote bfileNote = new BfileNote
                     {
@@ -73,28 +81,11 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                         CurrentFileContent = fileContent,
                         Notes = Notes,
                         UserId = userId,
-                        status = 2 // Back to Prepare
+                        status = 4 // Back to Prepare
                     };
                     _context.BfileNotes.Add(bfileNote);
                     var bfile = await _context.BFiles.FindAsync(BfileId);
-                    bfile.status = 2;
-                    await _context.SaveChangesAsync();
-                    HttpContext.Session.SetString("Sent", "true");
-                    return RedirectToAction(nameof(Index));
-                }
-                else if (Prepare == 5)
-                {
-                    BfileNote bfileNote = new BfileNote
-                    {
-                        BfileId = BfileId,
-                        CurrentFileContent = fileContent,
-                        Notes = Notes,
-                        UserId = userId,
-                        status = 3 // Back to Review
-                    };
-                    _context.BfileNotes.Add(bfileNote);
-                    var bfile = await _context.BFiles.FindAsync(BfileId);
-                    bfile.status = 3;
+                    bfile.status = 4;
                     await _context.SaveChangesAsync();
                     HttpContext.Session.SetString("Sent", "true");
                     return RedirectToAction(nameof(Index));
@@ -107,28 +98,92 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                         CurrentFileContent = fileContent,
                         Notes = Notes,
                         UserId = userId,
-                        status = 3 // Sent to Review
+                        status = 7 // Sent to Admin
                     };
                     _context.BfileNotes.Add(bfileNote);
                     var bfile = await _context.BFiles.FindAsync(BfileId);
-                    bfile.status = 3;
+                    bfile.status = 7;
                     await _context.SaveChangesAsync();
                     HttpContext.Session.SetString("Sent", "true");
                     return RedirectToAction(nameof(Index));
                 }
-              
-
-
-
-
             }
             catch (Exception ex)
             {
                 
                 return RedirectToAction(nameof(Index));
             }
-
         }
 
+        public async Task<IActionResult> SendForTeam(int id)  
+        {
+            //if (HttpContext.Session.GetString("created") != null)
+            //{
+            //    ViewBag.created = true;
+            //    HttpContext.Session.Remove("created");
+            //}
+            if (HttpContext.Session.GetString("Sent") != null)
+            {
+                ViewBag.Sent = true;
+                HttpContext.Session.Remove("Sent");
+            }
+
+            var existingFile = await _context.BFiles.Include(c => c.Book).Include(c => c.User).FirstOrDefaultAsync(x => x.Id == id);
+            if (existingFile == null)
+            {
+                return NotFound();
+            }
+
+            var usersWithPermission = _userManager.GetUsersInRoleAsync(StaticDetails.Review).Result;
+            var idsWithPermission = usersWithPermission.Select(u => u.Id);
+            var users = await _context.ApplicationUsers.Where(u => idsWithPermission.Contains(u.Id) && u.IsAdmin == 0).ToListAsync();
+
+            var files = await _context.BFiles.Include(x => x.Book).Include(c => c.User).Where(f => f.status == 3).ToListAsync();
+
+            var model = new Tuple<List<ApplicationUser>, List<BFile>>(users, files);
+
+            var branches = await _context.FileBranches.Include(x => x.Branch).Where(x => x.BFileId == existingFile.Id).ToListAsync();
+            ViewBag.branches = branches;
+            
+            ViewBag.Users = users;
+            return View(model);
+
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SendForTeam(String sendUserId, string fileContent, string Notes, int Prepare, int BfileId)
+        {
+            try
+            {
+
+                string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                if (Prepare == 3)
+                {
+                    BfileNote bfileNote = new BfileNote
+                    {
+                        BfileId = BfileId,
+                        CurrentFileContent = fileContent,
+                        Notes = Notes,
+                        UserId = userId,
+                        SendUserId = sendUserId,
+                        status = 4 // Send For Team
+                    };
+                    _context.BfileNotes.Add(bfileNote);
+                    var bfile = await _context.BFiles.FindAsync(BfileId);
+                    bfile.status = 4;
+                    await _context.SaveChangesAsync();
+                    HttpContext.Session.SetString("Sent", "true");
+                    return RedirectToAction(nameof(Index));
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+
+                return RedirectToAction(nameof(Index));
+            }
+
+        }
     }
 }

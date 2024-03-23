@@ -1,6 +1,9 @@
-﻿using BasstahalakMS.Utility;
+﻿using BasstahalakMS.Data;
+using BasstahalakMS.Utility;
+using BasstahalakMS.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace BasstahalakMS.Areas.Printing.Controllers  
@@ -10,9 +13,21 @@ namespace BasstahalakMS.Areas.Printing.Controllers
     [Route(nameof(Printing) + "/[controller]")] 
     public class HomeController : Controller
     {
-        public IActionResult Index()
+
+        private readonly ApplicationDbContext _context;
+
+        public HomeController(ApplicationDbContext _context)
         {
-            return View();
+            this._context = _context;
+        }
+        public async Task<IActionResult> Index()
+        {
+            SuperAdminHomeVM homeVM = new SuperAdminHomeVM
+            {
+                Libraries = await _context.Libraries.ToListAsync()
+            };
+
+            return View(homeVM);
         }
     }
 }

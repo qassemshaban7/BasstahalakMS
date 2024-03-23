@@ -1,6 +1,9 @@
-﻿using BasstahalakMS.Utility;
+﻿using BasstahalakMS.Data;
+using BasstahalakMS.Utility;
+using BasstahalakMS.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace BasstahalakMS.Areas.Review.Controllers
@@ -10,9 +13,19 @@ namespace BasstahalakMS.Areas.Review.Controllers
     [Route(nameof(Review) + "/[controller]")]
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly ApplicationDbContext _context;
+
+        public HomeController(ApplicationDbContext context)
         {
-            return View();
+            _context = context;
+        }
+        public async Task<IActionResult> Index()
+        {
+            SuperAdminHomeVM homeVM = new SuperAdminHomeVM
+            {
+                BFiles = await _context.BFiles.Where(f=>f.status == 3).ToListAsync()
+            };
+            return View(homeVM);
         }
     }
 }

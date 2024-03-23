@@ -64,6 +64,14 @@
                                 {
                                     <span class="text-info">تم الارسال للمراجعة</span>
                                 }
+                                else if (file.status == 4)
+                                {
+                                    <span class="text-info">تم الارسال للاعداد</span>
+                                }
+                                else if (file.status == 5)
+                                {
+                                    <span class="text-info">يحتاج مراجعة المدير</span>
+                                }
                             </td>
                             <td>
                                 <a asp-action="ShowFile" asp-route-id="@file.Id" class=" btn btn-info">

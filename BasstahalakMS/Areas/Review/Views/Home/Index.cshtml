@@ -1,4 +1,5 @@
-﻿@{
+﻿@model BasstahalakMS.ViewModels.SuperAdminHomeVM
+@{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Review/Views/Shared/_Layout.cshtml";
 }
@@ -15,13 +16,13 @@
 <div class="br-pagebody">
     <div class="row row-sm">
         <div class="col-sm-3 col-xl-3 mb-3">
-            <a asp-action="Index" asp-controller="Department">
+            <a asp-action="Index" asp-controller="File">
                 <div class="bg-info rounded overflow-hidden">
                     <div class="pd-x-20 pd-t-20 d-flex align-items-center">
                         <i class="fas fa-light fa-building tx-60 lh-0 tx-white op-7"></i>
                         <div class="mg-r-20">
                             <p class="tx-20 tx-spacing-1 tx-mont tx-bold tx-uppercase tx-white-8 mg-b-10">مراجعة المواد العلمية</p>
-                            <p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1">0</p>
+                            <p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1">@Model.BFiles.Count()</p>
                         </div>
                     </div>
                     <div id="ch1" class="ht-50 tr-y-1"></div>

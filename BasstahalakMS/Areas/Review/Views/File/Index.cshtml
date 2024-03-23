@@ -1,8 +1,8 @@
-﻿@model IEnumerable<Library>
+﻿@model IEnumerable<BFile>
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Areas/Printing/Views/Shared/_Layout.cshtml";
+    Layout = "~/Areas/Review/Views/Shared/_Layout.cshtml";
 }
 
 @section head {
@@ -13,14 +13,10 @@
 }
 
 <div class="br-pagetitle">
-    <i class="icon fas fa-light fa-cog"></i>
+    <i class="icon fas fa-light fa-file-word"></i>
     <div class="row">
-        <div class="col-lg-10 col-10">
-            <h3 class="text-info">قائمة المطبوعات</h3>
-        </div>
-
-        <div class="col-lg-2 col-2">
-            <a asp-action="Create" asp-controller="Library" class="btn btn-primary">اضافة مطبوعات</a>
+        <div class="col-lg-12 col-12">
+            <h3 class="text-info">قائمة المواد العلمية</h3>
         </div>
 
     </div>
@@ -29,57 +25,72 @@
 <div class="br-pagebody">
     <div class="br-section-wrapper">
         <div class="table-wrapper">
-            <table id="libraryTable" class="table display responsive nowrap">
+            <table id="deptsTable" class="table display responsive nowrap">
                 <thead>
                     <tr>
-                        <th>نوع الطباعة</th>
-                        <th>عدد الالوان</th>
-                        <th>عدد الوحدات</th>
-                        <th>سعر الوحدة</th>
-                        <th>اجمالي السعر</th>
-                        <th>حالة الطلب</th>
-                        <th>تعديل</th>
+                        <th>اسم الملف</th>
+                        <th>اسم الكتاب</th>
+                         <th>اسم المعد</th>
+                        
+                        <th>الحالة </th>
+                        <th>عرض</th>
+                        <th>ارسال للفريق</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var library in Model)
+                    @foreach (var file in Model)
                     {
                         <tr>
-                            <td>@library.PrintType.Name</td>
-                            <td>@library.Color</td>
-                            <td>@library.Count</td>
-                            <td>@library.PriceOfUnit</td>
-                            <td>@library.Total</td>
+                            <td>@file.Name</td>
+                            <td>@file.Book.Name</td>
+                            <td>@file.User.FullName</td>
+                           
                             <td>
-                                @if (library.Status == 1)
+                                @if (file.status == 3)
                                 {
-                                    <span class="text-info"><i class="fas fa-exclamation-circle"></i> يحتاج الي مراجعة الادمن</span>
+                                    <span class="text-info" ><i class="fas fa-search text-info"></i> يحتاج الي مراجعة</span>
                                 }
-                                else if (library.Status == 2)
+                                else if (file.status == 6)
                                 {
-                                    <span class="text-warning"><i class="fas fa-pen"></i> يحتاج الي تعديل</span>
+                                    <span class="text-info"><i class="fas fa-search text-info"></i>يحتاج الي لمراجعة</span>
                                 }
-                                else if (library.Status == 3)
+                                else if (file.status == 4)
                                 {
-                                    <span class="text-success"><i class="fas fa-check-circle"></i> تم قبول الطلب</span>
+                                    <span class="text-info"><i class="fas fa-tools text-info"></i>يحتاج مراجعة الاعداد</span>
                                 }
-                                else if (library.Status == 4)
+                                else if (file.status == 5)
                                 {
-                                    <span class="text-danger"><i class="fas fa-times-circle"></i> تم رفض الطلب</span>
+                                    <span class="text-info"><i class="fas fa-tools text-info"></i>يحتاج مراجعة الاعداد</span>
+                                }
+                                else if (file.status == 7)
+                                {
+                                    <span class="text-info"><i class="fas fa-chart-bar text-info"></i> يحتاج مراجعة المدير</span>
                                 }
                             </td>
-                            <td>
-                                @if(library.Status == 2)
-                                {
-                                    <a asp-action="Edit" asp-controller="Library" asp-route-id="@library.LibraryId" class="btn btn-info">
-                                        <i class="fas fa-edit"></i>
+                            @if (file.status == 3 || file.status == 6)
+                            {
+                                <td>
+                                    <a asp-action="ShowFile" asp-route-id="@file.Id" class=" btn btn-info">
+                                        <i class="fas fa-file-word"></i>
                                     </a>
-                                }
-                                else
-                                {
-                                    <span class="text-danger"><i class="fas fa-ban"></i> لا يمكن التعديل</span>
-                                }
-                            </td>
+                                </td>
+                            }
+                            else
+                            {
+                                <span class="text-danger"><i class="fas fa-ban"></i> غير متاح</span>
+                            }
+                            @if (file.status == 3 || file.status == 6)
+                            {
+                                <td>
+                                    <a asp-action="SendForTeam" asp-route-id="@file.Id" class=" btn btn-info">
+                                        <i class="fas fa-plane">
+                                    </a>
+                                </td>
+                            }
+                            else
+                            {
+                                <span class="text-danger"><i class="fas fa-ban"></i> غير متاح</span>
+                            }
                         </tr>
                     }
                 </tbody>
@@ -87,12 +98,13 @@
         </div>
     </div>
 </div>
+<input type="hidden" id="Sent" data-value="@ViewBag.Sent" />
 
 @section scripts {
     <!-- BEGIN PAGE LEVEL SCRIPTS -->
     <script src="~/lib/table/datatable/datatables.js"></script>
     <script>
-        $('#libraryTable').DataTable({
+        $('#deptsTable').DataTable({
             "oLanguage": {
                 "oPaginate": { "sPrevious": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>', "sNext": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>' },
                 "sInfo": "عدد النتائج   _TOTAL_",
@@ -112,8 +124,10 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            var updated = $("#updated").data("value");
-            if (updated == "True") {
+            
+           
+            var Sent = $("#Sent").data("value");
+            if (Sent == "True") {
                 toastr.options = {
                     "closeButton": false,
                     "debug": false,
@@ -131,7 +145,7 @@
                     "showMethod": "fadeIn",
                     "hideMethod": "fadeOut"
                 }
-                toastr.success("تم التعديل  بنجاح");
+                toastr.success("تم الارسال بنجاح");
             }
         });
     </script>

@@ -45,10 +45,20 @@
                 </table>
                 <form asp-action="Request" method="post" class="mg-b-20">
                     <input type="hidden" asp-for="LibraryId" />
-                    <div class="form-group">
-                        <label class="form-control-label">الملاحظات:</label>
-                        <textarea class="form-control" asp-for="Notes"></textarea>
-                    </div>
+                    @if (Model.Status == 2)
+                    {
+                        <div class="form-group">
+                            <label class="form-control-label">الملاحظات:</label>
+                            <textarea class="form-control" asp-for="Notes" required></textarea>
+                            <span class="text-danger" asp-validation-for="Notes"></span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div>
+                            <textarea class="form-control" asp-for="Notes"></textarea>
+                        </div>
+                    }
                     <div class="form-group">
                         <label class="form-control-label">حالة الطلب:</label><br>
                         <input type="radio" id="status1" name="Status" value="2" checked>
@@ -80,3 +90,22 @@
         margin-right: 5px;
     }
 </style>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var statusRadios = document.getElementsByName("Status");
+        var notesTextArea = document.getElementById("Notes");
+
+        function toggleNotesRequired() {
+            if (statusRadios[0].checked) { 
+                notesTextArea.required = true; 
+            } else {
+                notesTextArea.required = false; 
+            }
+        }
+
+        for (var i = 0; i < statusRadios.length; i++) {
+            statusRadios[i].addEventListener("change", toggleNotesRequired);
+        }
+        toggleNotesRequired();
+    });
+</script>

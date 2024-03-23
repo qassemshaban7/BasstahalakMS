@@ -16,6 +16,7 @@ namespace BasstahalakMS.Models
 
         public double? TotalMoney { get; set; }  //الخزنة 
 
+        public int IsAdmin { get; set; }    // 1- Super  0- not Super
         public ICollection<BFile> BFiles { get; set; }
         public ICollection<Library> Libraries { get; set; }
     }
