@@ -35,6 +35,16 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                 ViewBag.created = true;
                 HttpContext.Session.Remove("created");
             }
+            if (HttpContext.Session.GetString("updated") != null)
+            {
+                ViewBag.updated = true;
+                HttpContext.Session.Remove("updated");
+            }
+            if (HttpContext.Session.GetString("deleted") != null)
+            {
+                ViewBag.deleted = true;
+                HttpContext.Session.Remove("deleted");
+            }
             // Get a list of users in the role
             var usersWithPermission = _userManager.GetUsersInRoleAsync(StaticDetails.Printing).Result;
 
@@ -135,7 +145,8 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
 
                 _context.Update(user);
                 await _context.SaveChangesAsync();
-                
+                HttpContext.Session.SetString("updated", "true");
+
                 return RedirectToAction(nameof(Index));
             }
             return View(editPrintingVM);
@@ -164,6 +175,8 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
             var user = await _context.ApplicationUsers.FindAsync(id);
             _context.ApplicationUsers.Remove(user);
             await _context.SaveChangesAsync();
+            HttpContext.Session.SetString("deleted", "true");
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -221,6 +234,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                 if (user.TotalMoney == null) user.TotalMoney = 0;
                 user.TotalMoney -= payment.Money;
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction( "Index", "Payment");
             }
             catch (Exception ex)

@@ -13,7 +13,7 @@
 }
 
 <div class="br-pagetitle">
-    <i class="icon fas fa-light fa-cog"></i>
+    <i class="icon fas fa-light fa-file"></i>
     <div class="row">
         <div class="col-lg-10 col-10">
             <h3 class="text-info">قائمة الكتب</h3>
@@ -55,7 +55,9 @@
         </div>
     </div>
 </div>
-
+<input type="hidden" id="created" data-value="@ViewBag.created" />
+<input type="hidden" id="updated" data-value="@ViewBag.updated" />
+<input type="hidden" id="deleted" data-value="@ViewBag.deleted" />
 @section scripts {
     <!-- BEGIN PAGE LEVEL SCRIPTS -->
     <script src="~/lib/table/datatable/datatables.js"></script>
@@ -80,6 +82,28 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+            var created = $("#created").data("value");
+            if (created == "True") {
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": true,
+                    "positionClass": "toast-top-left",
+                    "preventDuplicates": true,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "12000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+                toastr.success("تمت الاضافة بنجاح");
+            }
+
             var updated = $("#updated").data("value");
             if (updated == "True") {
                 toastr.options = {
@@ -99,7 +123,29 @@
                     "showMethod": "fadeIn",
                     "hideMethod": "fadeOut"
                 }
-                toastr.success("تم التعديل  بنجاح");
+                toastr.success("تم التعديل بنجاح");
+            }
+
+            var deleted = $("#deleted").data("value");
+            if (deleted == "True") {
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": true,
+                    "positionClass": "toast-top-left",
+                    "preventDuplicates": true,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "12000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+                toastr.success("تم الحذف بنجاح");
             }
         });
     </script>

@@ -21,6 +21,21 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
 
         public async Task<IActionResult> Index()
         {
+            if (HttpContext.Session.GetString("created") != null)
+            {
+                ViewBag.created = true;
+                HttpContext.Session.Remove("created");
+            }
+            if (HttpContext.Session.GetString("updated") != null)
+            {
+                ViewBag.updated = true;
+                HttpContext.Session.Remove("updated");
+            }
+            if (HttpContext.Session.GetString("deleted") != null)
+            {
+                ViewBag.deleted = true;
+                HttpContext.Session.Remove("deleted");
+            }
             var books = await _context.Books.ToListAsync();
             return View(books);
         }
@@ -38,6 +53,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
             {
                 _context.Add(book);
                 await _context.SaveChangesAsync();
+                HttpContext.Session.SetString("created", "true");
                 return RedirectToAction(nameof(Index));
             }
             return View(book);
@@ -69,6 +85,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                 {
                     _context.Update(book);
                     await _context.SaveChangesAsync();
+                    HttpContext.Session.SetString("updated", "true");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -104,6 +121,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
             var book = await _context.Books.FindAsync(id);
             _context.Books.Remove(book);
             await _context.SaveChangesAsync();
+            HttpContext.Session.SetString("deleted", "true");
             return RedirectToAction(nameof(Index));
         }
 

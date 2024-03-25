@@ -23,6 +23,21 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
 
         public async Task<IActionResult> Index()
         {
+            if (HttpContext.Session.GetString("created") != null)
+            {
+                ViewBag.created = true;
+                HttpContext.Session.Remove("created");
+            }
+            if (HttpContext.Session.GetString("updated") != null)
+            {
+                ViewBag.updated = true;
+                HttpContext.Session.Remove("updated");
+            }
+            if (HttpContext.Session.GetString("deleted") != null)
+            {
+                ViewBag.deleted = true;
+                HttpContext.Session.Remove("deleted");
+            }
             var printTypes = await _context.PrintTypes.ToListAsync();
             return View(printTypes);
         }
@@ -40,6 +55,8 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
             {
                 _context.Add(printType);
                 await _context.SaveChangesAsync();
+                HttpContext.Session.SetString("created", "true");
+
                 return RedirectToAction(nameof(Index));
             }
             return View(printType);
@@ -71,6 +88,8 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                 {
                     _context.Update(printType);
                     await _context.SaveChangesAsync();
+                    HttpContext.Session.SetString("updated", "true");
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -106,6 +125,8 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
             var printType = await _context.PrintTypes.FindAsync(id);
             _context.PrintTypes.Remove(printType);
             await _context.SaveChangesAsync();
+            HttpContext.Session.SetString("deleted", "true");
+
             return RedirectToAction(nameof(Index));
         }
 

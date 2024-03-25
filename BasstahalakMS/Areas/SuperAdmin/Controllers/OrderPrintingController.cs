@@ -24,6 +24,11 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
 
         public async Task<IActionResult> Index()
         {
+            if (HttpContext.Session.GetString("created") != null)
+            {
+                ViewBag.created = true;
+                HttpContext.Session.Remove("created");
+            }
             var libraries = await _context.Libraries
                 .Include(l => l.PrintType)
                 .Include(l => l.User)
@@ -74,7 +79,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                             await _context.SaveChangesAsync();
                         }
                     }
-
+                    HttpContext.Session.SetString("created", "true");
                     return RedirectToAction(nameof(Index));
                 }
 

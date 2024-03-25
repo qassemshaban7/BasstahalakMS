@@ -38,13 +38,30 @@ namespace BasstahalakMS.Areas.Review.Controllers
                 ViewBag.Sent = true;
                 HttpContext.Session.Remove("Sent");
             }
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var user = await _context.ApplicationUsers.FindAsync(userId);
+            var bFileNotes = await _context.BfileNotes.Where(x => x.UserId == userId && x.status == 3 || x.status == 4).ToListAsync();
+            var bFiles = await _context.BFiles.Include(x=>x.Book).Include(x=>x.User).Where(x => x.status == 3 || x.status == 4).ToListAsync();
+            if (bFileNotes.Count() == 0)
+            {
+                bFiles.RemoveAll(x => x.UserId != null);
+            }
+            else
+            {
+                foreach (var item in bFiles.ToList())
+                {
+                    foreach (var item1 in bFileNotes)
+                    {
+                        if (item.Id != item1.BfileId)
+                            bFiles.Remove(item);
+                    }
+                }
+            }
 
-
-            var files = await _context.BFiles.Include(x => x.Book).Include(c=>c.User).Where(f=>f.status == 3).ToListAsync();
 
             //string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;    
             
-            return View(files);
+            return View(bFiles);
         }
 		public async Task<IActionResult> ShowFile(int id)
 		{

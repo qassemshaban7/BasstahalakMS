@@ -28,7 +28,9 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
         public async Task<IActionResult> Index()
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            return View(await _context.BFiles.Where(x=>x.UserId == userId).ToListAsync());
+            var files = await _context.BFiles.Include(x => x.Book).Where(x => x.UserId == userId ).ToListAsync();
+
+            return View(files);
         }
     }
 }

@@ -31,6 +31,12 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                 ViewBag.Sent = true;
                 HttpContext.Session.Remove("Sent");
             }
+            if (HttpContext.Session.GetString("created") != null)
+            {
+                ViewBag.created = true;
+                HttpContext.Session.Remove("created");
+            }
+
             var payments = await _context.Payments.Include(c => c.User).ToListAsync();
             return View(payments);
         }
@@ -77,6 +83,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                 if (user.TotalMoney == null) user.TotalMoney = 0;
                 user.TotalMoney -= payment.Money;
                 await _context.SaveChangesAsync();
+                HttpContext.Session.SetString("created", "true");
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

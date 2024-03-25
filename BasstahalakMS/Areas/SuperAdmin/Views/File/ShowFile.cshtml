@@ -86,30 +86,118 @@
         }
         <hr/>
         <form method="post" asp-action="SendForReview" asp-controller="File">
-            <div class="row mb-3">
-                <label class="col-sm-4 form-control-label  text-dark font-weight-bold">محتوي المادة</label>
-            </div><!-- row -->
-            <div class="row mb-3 mr-1">
-                <textarea id="fileContent" rows="12" cols="50" name="fileContent" asp-for="@Model.fileContent">@Model.fileContent</textarea>
-            </div>
-            <hr />
-            <div class="row mb-3">
-                <label class="col-sm-4 form-control-label  text-dark font-weight-bold">ملاحظات </label>
-            </div><!-- row -->
-            <div class="row mb-3 mr-1">
-                <textarea id="Notes" name="Notes" class="form-control" rows="8"></textarea>
-            </div>
-            <input type="hidden"  name="BfileId" value="@Model.Id" />
-            <input type="hidden" id="Prepare" name="Prepare" value="0" />
-            <div class="form-layout-footer mg-t-30 text-center">
-                <input type="submit" value="ارسال للاعداد" onclick="clicked(event)" class="btn btn-danger">
-                <input type="submit" value="ارسال للمراجعة"  class="btn btn-success">
-                <a asp-action="Index" asp-controller="File" class="btn btn-secondary">الرجوع</a>
-            </div><!-- form-layout-footer -->
+            @if(Model.status == 1)
+            {
+                <div class="row mb-3">
+                    <label class="col-sm-4 form-control-label  text-dark font-weight-bold">محتوي المادة</label>
+                </div>
+
+                <!-- row -->
+                <div class="row mb-3 mr-1">
+                    <textarea id="fileContent" rows="12" cols="50" name="fileContent" asp-for="@Model.fileContent">@Model.fileContent</textarea>
+                </div>
+                <hr />
+                <div class="row mb-3">
+                    <label class="col-sm-4 form-control-label  text-dark font-weight-bold">ملاحظات </label>
+                </div>
+
+                <!-- row -->
+                <div class="row mb-3 mr-1">
+                    <textarea id="Notes" name="Notes" class="form-control" rows="8"></textarea>
+                </div>
+                <input type="hidden" name="BfileId" value="@Model.Id" />
+                <input type="hidden" id="Prepare" name="Prepare" value="0" />
+                <div class="form-layout-footer mg-t-30 text-center">
+                    <input type="submit" value="ارسال للاعداد" onclick="clicked(event)" class="btn btn-danger">
+                    @* <input type="submit" value="ارسال للمراجعة" class="btn btn-success">*@
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">
+                        ارسال للمراجعة
+                    </button>
+                    <a asp-action="Index" asp-controller="File" class="btn btn-secondary">الرجوع</a>
+                </div>
+
+                <!-- form-layout-footer -->
+            }
+            else
+            {
+                <div class="row mb-3">
+                    <label class="col-sm-4 form-control-label  text-dark font-weight-bold">محتوي المادة</label>
+                </div>
+
+                <!-- row -->
+                <div class="row mb-3 mr-1">
+                    <textarea id="fileContent" rows="12" cols="50" readonly name="fileContent" asp-for="@Model.fileContent">@Model.fileContent</textarea>
+                </div>
+                <hr />
+               
+       
+                <div class="form-layout-footer mg-t-30 text-center">
+                  
+                    <a asp-action="Index" asp-controller="File" class="btn btn-secondary">الرجوع</a>
+                </div>
+
+                <!-- form-layout-footer -->
+            }
+           
         </form>
        
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">ارسال للمراجعة</h5>
+               
+            </div>
+            <div class="modal-body">
+                 <form method="post" asp-action="SendForReviewTeam" asp-controller="File">
+                    <div class="row mb-3">
+                        <label class="col-sm-4 form-control-label  text-dark font-weight-bold mt-2">المشرف</label>
+                        <select class="col-sm-7 form-control" required name="ReviewSupervisor">
+                            <option value="">اختر مشرف...</option>
+                            @foreach (var item in ViewBag.ReviewAdmins)
+                            {
+                                <option value="@item.Id">@item.FullName</option>
+                            }
+                           
+                        </select>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="col-sm-4 form-control-label  text-dark font-weight-bold mt-2">المراجعين</label>
+                        <div class="form-group">
+                            <input type="radio" id="status1" name="Reviewers" value="0" checked>
+                            <label for="status1">بلا مراجعين</label><br>
+                            <input type="radio" id="status2" name="Reviewers" value="1">
+                            <label for="status2"> كل المراجعين</label><br>
+                            <input type="radio" id="status3" name="Reviewers" value="2">
+                            <label for="status3"> تحديد المراجعين</label>
+                        </div>
+                       
+                    </div>
+                    <div class="row mb-3">
+                       
+                        <select class="m-3 form-control d-none reviewersClass" multiple name="ReviewUsers[]">
+                            @foreach (var item in ViewBag.ReviewUsers)
+                            {
+                                <option value="@item.Id">@item.FullName</option>
+                            }
+                        </select>
+                    </div>
+                    <input type="hidden" name="BfileId" value="@Model.Id" />
+                    <div class="form-layout-footer mg-t-30 text-center">
+                        <input type="submit" value="ارسال للمراجعة" class="btn btn-success">                       
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section scripts{
     <script type="text/javascript" src="~/lib/ckeditor/ckeditor.js"></script>
    
@@ -125,6 +213,19 @@
             }
             $('#Prepare').val('1');
         }
+        $('input[name=Reviewers]').change(function () {
+            var value = $('input[name=Reviewers]:checked').val();
+            if(value == 2){
+
+                $('.reviewersClass').removeClass('d-none');
+                $(".reviewersClass").prop("required", true);
+            }
+            else{
+
+                $('.reviewersClass').addClass('d-none');
+                $(".reviewersClass").prop("required", false);
+            }
+        });
         //tinymce.init({
         //    selector: 'textarea#tiny'
         //});

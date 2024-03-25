@@ -40,7 +40,18 @@
                         <span class="menu-item-label">الرئيسية</span>
                     </a><!-- br-menu-link -->
                 </li><!-- br-menu-item -->
-
+            <li class="br-menu-item">
+                <a href="#" class="br-menu-link with-sub">
+                    <i class="menu-item-icon icon fas fa-light fa-user tx-20"></i>
+                    <span class="menu-item-label">المستخدمين</span>
+                </a><!-- br-menu-link -->
+                <ul class="br-menu-sub">
+                    <li class="sub-item"><a asp-action="Index" asp-controller="PrepareUsers" class="sub-link">فريق الاعداد </a></li>
+                    <li class="sub-item"><a asp-action="Index" asp-controller="ReviewUsers" class="sub-link">فريق المراجعة </a></li>
+                    <li class="sub-item"><a asp-action="Index" asp-controller="ReviewUsers" class="sub-link">الاشراف العلمي  </a></li>
+                    <li class="sub-item"><a asp-action="Index" asp-controller="ReviewUsers" class="sub-link">فريق الميديا </a></li>
+                </ul>
+            </li>
                 <li class="br-menu-item">
                     <a href="#" class="br-menu-link with-sub">
                         <i class="menu-item-icon icon fas fa-light fa-file tx-20"></i>
@@ -64,6 +75,15 @@
                 </li>
             <li class="br-menu-item">
                 <a href="#" class="br-menu-link with-sub">
+                    <i class="menu-item-icon icon fas fa-light fa-file-word tx-20"></i>
+                    <span class="menu-item-label">المواد العلمية </span>
+                </a><!-- br-menu-link -->
+                <ul class="br-menu-sub">
+                    <li class="sub-item"><a asp-action="Index" asp-controller="File" class="sub-link">عرض المواد العلمية </a></li>
+                </ul>
+            </li>
+            <li class="br-menu-item">
+                <a href="#" class="br-menu-link with-sub">
                     <i class="menu-item-icon icon fas fa-light fa-file tx-20"></i>
                     <span class="menu-item-label">انواع المطبوعات</span>
                 </a><!-- br-menu-link -->
@@ -72,15 +92,7 @@
                     <li class="sub-item"><a asp-action="Index" asp-controller="PrintType" class="sub-link">عرض انواع المطبوعات</a></li>
                 </ul>
             </li>
-            <li class="br-menu-item">
-                <a href="#" class="br-menu-link with-sub">
-                    <i class="menu-item-icon icon fas fa-light fa-file-word tx-20"></i>
-                    <span class="menu-item-label">المواد العلمية </span>
-                </a><!-- br-menu-link -->
-                <ul class="br-menu-sub">
-                    <li class="sub-item"><a asp-action="Index" asp-controller="File" class="sub-link">عرض المواد العلمية </a></li>
-                </ul>
-            </li>
+           
                 <li class="br-menu-item">
                     <a href="#" class="br-menu-link with-sub">
                         <i class="menu-item-icon icon fas fa-light fa-building tx-20"></i>
@@ -93,8 +105,8 @@
                 </li>
                 <li class="br-menu-item">
                     <a href="#" class="br-menu-link with-sub">
-                        <i class="menu-item-icon icon fas fa-light fa-building tx-20"></i>
-                        <span class="menu-item-label">طلبات المراجعة</span>
+                        <i class="menu-item-icon icon fas fa-light fa-file-invoice tx-20"></i>
+                        <span class="menu-item-label">طلبات الطباعة</span>
                     </a><!-- br-menu-link -->
                     <ul class="br-menu-sub">
                         <li class="sub-item"><a asp-action="Index" asp-controller="OrderPrinting" class="sub-link">مراجعة الطلبات </a></li>
@@ -102,7 +114,7 @@
                 </li>
                 <li class="br-menu-item">
                     <a href="#" class="br-menu-link with-sub">
-                        <i class="menu-item-icon icon fas fa-light fa-wrench tx-20"></i>
+                        <i class="menu-item-icon icon fas fa-light fa-receipt tx-20"></i>
                         <span class="menu-item-label">قائمة الفواتير</span>
                     </a><!-- br-menu-link -->
                     <ul class="br-menu-sub">
@@ -131,15 +143,7 @@
                     </ul>
                 </li>*@
 
-                <li class="br-menu-item">
-                    <a href="#" class="br-menu-link with-sub">
-                        <i class="menu-item-icon icon fas fa-light fa-cog tx-20"></i>
-                        <span class="menu-item-label">اعدادات الموقع</span>
-                    </a><!-- br-menu-link -->
-                    <ul class="br-menu-sub">
-                        <li class="sub-item"><a asp-action="Index" asp-controller="Configs" class="sub-link">عرض الاعدادات</a></li>
-                    </ul>
-                </li>
+              
 
                
                

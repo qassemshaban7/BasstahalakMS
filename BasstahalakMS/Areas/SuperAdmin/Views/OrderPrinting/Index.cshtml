@@ -13,10 +13,10 @@
 }
 
 <div class="br-pagetitle">
-    <i class="icon fas fa-light fa-cog"></i>
+    <i class="icon fas fa-light fa-file-invoice"></i>
     <div class="row">
         <div class="col-lg-12 col-12">
-            <h3 class="text-info">قائمة المطبوعات</h3>
+            <h3 class="text-info">قائمة الطلبات</h3>
         </div>
 
     </div>
@@ -87,6 +87,7 @@
         </div>
     </div>
 </div>
+<input type="hidden" id="created" data-value="@ViewBag.created" />
 
 @section scripts {
     <!-- BEGIN PAGE LEVEL SCRIPTS -->
@@ -104,6 +105,7 @@
             "stripeClasses": [],
             "lengthMenu": [7, 10, 20, 50],
             "pageLength": 20,
+            "scrollX": true,
             drawCallback: function () { $('.dataTables_paginate > .pagination').addClass(' pagination-style-13 pagination-bordered mb-5'); }
         });
     </script>
@@ -112,8 +114,8 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            var updated = $("#updated").data("value");
-            if (updated == "True") {
+            var created = $("#created").data("value");
+            if (created == "True") {
                 toastr.options = {
                     "closeButton": false,
                     "debug": false,
@@ -131,7 +133,7 @@
                     "showMethod": "fadeIn",
                     "hideMethod": "fadeOut"
                 }
-                toastr.success("تم التعديل  بنجاح");
+                toastr.success("تم الحفظ بنجاح");
             }
         });
     </script>

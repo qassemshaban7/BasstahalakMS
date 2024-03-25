@@ -34,7 +34,7 @@
                         
                         <th>الحالة </th>
                         <th>عرض</th>
-                        <th>ارسال للفريق</th>
+                        @*<th>ارسال للفريق</th>*@
                     </tr>
                 </thead>
                 <tbody>
@@ -48,23 +48,23 @@
                             <td>
                                 @if (file.status == 3)
                                 {
-                                    <span class="text-info" ><i class="fas fa-search text-info"></i> يحتاج الي مراجعة</span>
+                                    <span class="text-info" >يحتاج الي مراجعة</span>
                                 }
                                 else if (file.status == 6)
                                 {
-                                    <span class="text-info"><i class="fas fa-search text-info"></i>يحتاج الي لمراجعة</span>
+                                    <span class="text-info">يحتاج الي لمراجعة</span>
                                 }
                                 else if (file.status == 4)
                                 {
-                                    <span class="text-info"><i class="fas fa-tools text-info"></i>يحتاج مراجعة الاعداد</span>
+                                    <span class="text-info">يحتاج مراجعة الاعداد</span>
                                 }
                                 else if (file.status == 5)
                                 {
-                                    <span class="text-info"><i class="fas fa-tools text-info"></i>يحتاج مراجعة الاعداد</span>
+                                    <span class="text-info">يحتاج مراجعة الاعداد</span>
                                 }
                                 else if (file.status == 7)
                                 {
-                                    <span class="text-info"><i class="fas fa-chart-bar text-info"></i> يحتاج مراجعة المدير</span>
+                                    <span class="text-info">يحتاج مراجعة المدير</span>
                                 }
                             </td>
                             @if (file.status == 3 || file.status == 6)
@@ -77,20 +77,25 @@
                             }
                             else
                             {
-                                <span class="text-danger"><i class="fas fa-ban"></i> غير متاح</span>
+                                <td>
+                                    <span class="text-danger"> غير متاح</span>
+                                </td>
                             }
-                            @if (file.status == 3 || file.status == 6)
+                           @* @if (file.status == 3 || file.status == 6)
                             {
                                 <td>
                                     <a asp-action="SendForTeam" asp-route-id="@file.Id" class=" btn btn-info">
-                                        <i class="fas fa-plane">
+                                        <i class="fas fa-plane"></i>
                                     </a>
                                 </td>
                             }
                             else
                             {
-                                <span class="text-danger"><i class="fas fa-ban"></i> غير متاح</span>
-                            }
+                                <td>
+                                    <span class="text-danger">غير متاح</span>
+                                </td>
+                                
+                            }*@
                         </tr>
                     }
                 </tbody>

@@ -6,33 +6,103 @@
 
 
 <div class="br-pagetitle">
-    <i class="icon fas fa-light fa-house"></i>
+    <i class="icon fas fa-light fa-user"></i>
     <div>
-        <h4>الرئيسية</h4>
-        <p class="mg-b-0">نظام ادارة بسطتهالك</p>
+        <h4>المستخدمين</h4>
     </div>
 </div><!-- d-flex -->
 
 <div class="br-pagebody">
     <div class="row row-sm">
-        
         <div class="col-sm-3 col-xl-3 mb-3">
-            <a asp-action="Index" asp-controller="Book">
-                <div class="bg-purple rounded overflow-hidden">
+            <a asp-action="Index" asp-controller="PrepareUsers">
+                <div class="bg-info rounded overflow-hidden">
                     <div class="pd-x-20 pd-t-20 d-flex align-items-center">
-                    <i class="fas fa-light fa-file tx-60 lh-0 tx-white op-7"></i>
-                    <div class="mg-r-20">
-                        <p class="tx-20 tx-spacing-1 tx-mont tx-bold tx-uppercase tx-white-8 mg-b-10">الكتب</p>
-                        <p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1">@Model.Books.Count()</p>
-                    </div>
+                        <i class="fas fa-light fa-user tx-60 lh-0 tx-white op-7"></i>
+                        <div class="mg-r-20">
+                            <p class="tx-20 tx-spacing-1 tx-mont tx-bold tx-uppercase tx-white-8 mg-b-10">فريق الاعداد</p>
+                            <p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1">@Model.PrepareTeam.Count()</p>
+                        </div>
                     </div>
                     <div id="ch1" class="ht-50 tr-y-1"></div>
                 </div>
             </a>
         </div><!-- col-3 -->
-        <div class="col-sm-3 col-xl-3 mg-t-20 mg-sm-t-0">
-            <a asp-action="Index" asp-controller="Branch">
+        <div class="col-sm-3 col-xl-3 mb-3">
+            <a asp-action="Index" asp-controller="ReviewUsers">
+                <div class="bg-purple rounded overflow-hidden">
+                    <div class="pd-x-20 pd-t-20 d-flex align-items-center">
+                        <i class="fas fa-light fa-user tx-60 lh-0 tx-white op-7"></i>
+                        <div class="mg-r-20">
+                            <p class="tx-20 tx-spacing-1 tx-mont tx-bold tx-uppercase tx-white-8 mg-b-10">فريق المراجعة</p>
+                            <p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1">@Model.ReviewTeam.Count()</p>
+                        </div>
+                    </div>
+                    <div id="ch1" class="ht-50 tr-y-1"></div>
+                </div>
+            </a>
+        </div><!-- col-3 -->
+        <div class="col-sm-3 col-xl-3 mb-3">
+            <a asp-action="Index" asp-controller="ReviewUsers">
                 <div class="bg-info rounded overflow-hidden">
+                    <div class="pd-x-20 pd-t-20 d-flex align-items-center">
+                        <i class="fas fa-light fa-user tx-60 lh-0 tx-white op-7"></i>
+                        <div class="mg-r-20">
+                            <p class="tx-20 tx-spacing-1 tx-mont tx-bold tx-uppercase tx-white-8 mg-b-10">الاشراف العلمي </p>
+                            <p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1">0</p>
+                        </div>
+                    </div>
+                    <div id="ch1" class="ht-50 tr-y-1"></div>
+                </div>
+            </a>
+        </div><!-- col-3 -->
+        <div class="col-sm-3 col-xl-3 mb-3">
+            <a asp-action="Index" asp-controller="ReviewUsers">
+                <div class="bg-purple rounded overflow-hidden">
+                    <div class="pd-x-20 pd-t-20 d-flex align-items-center">
+                        <i class="fas fa-light fa-user tx-60 lh-0 tx-white op-7"></i>
+                        <div class="mg-r-20">
+                            <p class="tx-20 tx-spacing-1 tx-mont tx-bold tx-uppercase tx-white-8 mg-b-10">فريق الميديا </p>
+                            <p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1">0</p>
+                        </div>
+                    </div>
+                    <div id="ch1" class="ht-50 tr-y-1"></div>
+                </div>
+            </a>
+        </div><!-- col-3 -->
+    </div>
+   
+
+</div><!-- br-pagebody -->
+<hr />
+<div class="br-pagetitle">
+    <i class="icon fas fa-light fa-file-word"></i>
+    <div>
+        <h4>المواد العلمية</h4>
+    </div>
+</div><!-- d-flex -->
+
+<div class="br-pagebody">
+    
+
+    <div class="row row-sm">
+        <div class="col-sm-4 col-xl-4 mb-3">
+            <a asp-action="Index" asp-controller="Book">
+                <div class="bg-info rounded overflow-hidden">
+                    <div class="pd-x-20 pd-t-20 d-flex align-items-center">
+                        <i class="fas fa-light fa-file tx-60 lh-0 tx-white op-7"></i>
+                        <div class="mg-r-20">
+                            <p class="tx-20 tx-spacing-1 tx-mont tx-bold tx-uppercase tx-white-8 mg-b-10">الكتب</p>
+                            <p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1">@Model.Books.Count()</p>
+                        </div>
+                    </div>
+                    <div id="ch1" class="ht-50 tr-y-1"></div>
+                </div>
+            </a>
+        </div><!-- col-3 -->
+        <div class="col-sm-4 col-xl-4 mg-t-20 mg-sm-t-0">
+            <a asp-action="Index" asp-controller="Branch">
+                <div class="bg-purple rounded overflow-hidden">
                     <div class="pd-x-20 pd-t-20 d-flex align-items-center">
                         <i class="fas fa-light fa-file tx-60 lh-0 tx-white op-7"></i>
                         <div class="mg-r-20">
@@ -45,22 +115,7 @@
             </a>
         </div><!-- col-3 -->
 
-        <div class="col-sm-3 col-xl-3 mg-t-20 mg-sm-t-0">
-            <a asp-action="Index" asp-controller="PrintType">
-                <div class="bg-purple rounded overflow-hidden">
-                    <div class="pd-x-20 pd-t-20 d-flex align-items-center">
-                        <i class="fas fa-light fa-file tx-60 lh-0 tx-white op-7"></i>
-                        <div class="mg-r-20">
-                            <p class="tx-20 tx-spacing-1 tx-mont tx-bold tx-uppercase tx-white-8 mg-b-10">انواع المطبوعات</p>
-                            <p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1">@Model.PrintTypes.Count()</p>
-                        </div>
-                    </div>
-                    <div id="ch3" class="ht-50 tr-y-1"></div>
-                </div>
-            </a>
-        </div><!-- col-3 -->
-
-        <div class="col-sm-3 col-xl-3 mg-t-20 mg-sm-t-0">
+        <div class="col-sm-4 col-xl-4 mg-t-20 mg-sm-t-0">
             <a asp-action="Index" asp-controller="File">
                 <div class="bg-info rounded overflow-hidden">
                     <div class="pd-x-20 pd-t-20 d-flex align-items-center">
@@ -75,6 +130,41 @@
             </a>
 
         </div><!-- col-3 -->
+    </div>
+
+
+
+
+</div><!-- br-pagebody -->
+<hr />
+<div class="br-pagetitle">
+    <i class="icon fas fa-light fa-building"></i>
+    <div>
+        <h4>المطابع </h4>
+    </div>
+</div><!-- d-flex -->
+
+<div class="br-pagebody mb-3">
+
+
+    <div class="row row-sm">
+
+        <div class="col-sm-3 col-xl-3 mg-t-20 mg-sm-t-0">
+            <a asp-action="Index" asp-controller="PrintType">
+                <div class="bg-info rounded overflow-hidden">
+                    <div class="pd-x-20 pd-t-20 d-flex align-items-center">
+                        <i class="fas fa-light fa-file tx-60 lh-0 tx-white op-7"></i>
+                        <div class="mg-r-20">
+                            <p class="tx-20 tx-spacing-1 tx-mont tx-bold tx-uppercase tx-white-8 mg-b-10">انواع المطبوعات</p>
+                            <p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1">@Model.PrintTypes.Count()</p>
+                        </div>
+                    </div>
+                    <div id="ch3" class="ht-50 tr-y-1"></div>
+                </div>
+            </a>
+        </div><!-- col-3 -->
+
+
         <div class="col-sm-3 col-xl-3 mb-3">
             <a asp-action="Index" asp-controller="Printing">
                 <div class="bg-purple rounded overflow-hidden">
@@ -93,7 +183,7 @@
             <a asp-action="Index" asp-controller="OrderPrinting">
                 <div class="bg-info rounded overflow-hidden">
                     <div class="pd-x-20 pd-t-20 d-flex align-items-center">
-                        <i class="fas fa-light fa-building tx-60 lh-0 tx-white op-7"></i>
+                        <i class="fas fa-light fa-file-invoice tx-60 lh-0 tx-white op-7"></i>
                         <div class="mg-r-20">
                             <p class="tx-20 tx-spacing-1 tx-mont tx-bold tx-uppercase tx-white-8 mg-b-10">مراجعة الطلبات</p>
                             <p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1">@Model.Libraries.Count()</p>
@@ -105,9 +195,9 @@
         </div><!-- col-3 -->
         <div class="col-sm-3 col-xl-3 mb-3">
             <a asp-action="Index" asp-controller="Payment">
-                <div class="bg-info rounded overflow-hidden">
+                <div class="bg-purple rounded overflow-hidden">
                     <div class="pd-x-20 pd-t-20 d-flex align-items-center">
-                        <i class="fas fa-light fa-building tx-60 lh-0 tx-white op-7"></i>
+                        <i class="fas fa-light fa-receipt tx-60 lh-0 tx-white op-7"></i>
                         <div class="mg-r-20">
                             <p class="tx-20 tx-spacing-1 tx-mont tx-bold tx-uppercase tx-white-8 mg-b-10">قائمة الفواتير </p>
                             <p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1">@Model.Payments.Count()</p>
@@ -117,22 +207,7 @@
                 </div>
             </a>
         </div><!-- col-3 -->
-        <div class="col-sm-3 col-xl-3 mg-t-20 mg-sm-t-0">
-            <a asp-action="Index" asp-controller="Configs">
-                <div class="bg-info rounded overflow-hidden">
-                    <div class="pd-x-20 pd-t-20 d-flex align-items-center">
-                        <i class="fas fa-light fa-cog tx-60 lh-0 tx-white op-7"></i>
-                        <div class="mg-r-20">
-                            <p class="tx-20 tx-spacing-1 tx-mont tx-bold tx-uppercase tx-white-8 mg-b-10">اعدادات الموقع</p>
-                            <p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1">0</p>
-                        </div>
-                    </div>
-                    <div id="ch3" class="ht-50 tr-y-1"></div>
-                </div>
-            </a>
 
-        </div><!-- col-3 -->
-        
     </div><!-- row -->
 
 

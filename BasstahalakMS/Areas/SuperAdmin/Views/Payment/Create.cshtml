@@ -19,7 +19,7 @@
                         <div class="form-group row">
                             <label for="UserId" class="col-sm-2 col-form-label">المطبعة:</label>
                             <div class="col-sm-10">
-                                <select asp-for="UserId" class="form-control" id="UserId" name="UserId">
+                                <select asp-for="UserId" class="form-control" id="UserId" name="UserId" required>
                                     <option value="">اختر المطبعة</option>
                                     @foreach (var user in ViewBag.Users)
                                     {

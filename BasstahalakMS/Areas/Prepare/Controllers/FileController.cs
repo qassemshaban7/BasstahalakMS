@@ -42,9 +42,17 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
                 ViewBag.Sent = true;
                 HttpContext.Session.Remove("Sent");
             }
+            if (HttpContext.Session.GetString("updated") != null)
+            {
+                ViewBag.updated = true;
+                HttpContext.Session.Remove("updated");
+            }
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var files = await _context.BFiles.Include(x=>x.Book).Where(x=>x.UserId == userId).ToListAsync();
+            var user = await _context.ApplicationUsers.FindAsync(userId);
+           
+            var files = await _context.BFiles.Include(x => x.Book).Where(x => x.UserId == userId ).ToListAsync();
             return View(files);
+            
         }
 
         public IActionResult Upload()
@@ -194,6 +202,7 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
                     existingFile.Description = bFile.Description;
                     existingFile.fileContent = Request.Form["fileContent"].ToString();
                     existingFile.BookId = bFile.BookId;
+                    bool updated = true;
                     if(existingFile.status == 2) {
                         existingFile.status = 1;
                         BfileNote bfileNote = new BfileNote
@@ -205,6 +214,7 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
                             status = 1 // Back to Admin
                         };
                         _context.BfileNotes.Add(bfileNote);
+                        updated = false;
                     }  
                     else if(existingFile.status == 4)
                     {
@@ -218,6 +228,7 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
                             status = 3 // Back to Review
                         };
                         _context.BfileNotes.Add(bfileNote);
+                        updated = false;
                     }  
                     await _context.SaveChangesAsync();
 
@@ -251,7 +262,10 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
                             await _context.SaveChangesAsync();
                         }
                     }
-                    HttpContext.Session.SetString("Sent", "true");
+                    if(updated == false)
+                        HttpContext.Session.SetString("Sent", "true");
+                    else
+                        HttpContext.Session.SetString("updated", "true");
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -272,7 +286,12 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
                 if (bFile == null)
                     return NotFound();
 
-                bFile.status = 1; // Under Admin Review
+                if(bFile.status == 0)
+                    bFile.status = 1; // Under Super Admin Review
+                else if(bFile.status == 2)
+                    bFile.status = 1; // back to  Super Admin Review
+                else if(bFile.status == 4)
+                    bFile.status = 3; // back to  Review
                 await _context.SaveChangesAsync();
                 HttpContext.Session.SetString("Sent", "true");
                 return RedirectToAction(nameof(Index));

@@ -23,7 +23,7 @@
                                     </label>
                                 </div>
                                 <div class="col-4">
-                                    <input type="text" readonly class="form-control " value=" @ViewBag.bfileNote.User.FullName" />
+                                    <input type="text" readonly class="form-control " value="@ViewBag.bfileNote.User.FullName" />
                                 </div>
 
 
@@ -143,14 +143,31 @@
                             <label class="col-sm-4 form-control-label">محتوي المادة: <span class="tx-danger">*</span></label>
 
                         </div><!-- row -->
-                        <div class="row mb-3">
+                        @if(Model.status !=0){
+                            <div class="row mb-3">
 
-                            <textarea id="fileContent" name="fileContent" required>
-                                @ViewBag.bfileNote.CurrentFileContent
-                            </textarea>
-                            <span class="text-danger" asp-validation-for="fileContent"></span>
+                                <textarea id="fileContent" name="fileContent" required>
+                                    @ViewBag.bfileNote.CurrentFileContent
+                                </textarea>
+                                <span class="text-danger" asp-validation-for="fileContent"></span>
 
-                        </div><!-- row -->
+                            </div>
+
+                            <!-- row -->
+                        }
+                        else
+                        {
+                            <div class="row mb-3">
+
+                                <textarea id="fileContent" name="fileContent" asp-for="fileContent" required>
+                                </textarea>
+                                <span class="text-danger" asp-validation-for="fileContent"></span>
+
+                            </div>
+
+                            <!-- row -->
+                        }
+                      
                         <hr />
                         
                         
@@ -163,6 +180,11 @@
                             else if(Model.status == 4)
                             {
                                 <input type="submit" value="حفظ وارسال الي المراجعة" onclick="clicked(event)" class="btn btn-info">
+
+                            }
+                            else if(Model.status == 0)
+                            {
+                                <input type="submit" value="حفظ التعديلات" onclick="clicked(event)" class="btn btn-info">
 
                             }
                             <a asp-action="Index" asp-controller="File" class="btn btn-secondary">الرجوع</a>

@@ -21,6 +21,21 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
 
         public async Task<IActionResult> Index()
         {
+            if (HttpContext.Session.GetString("created") != null)
+            {
+                ViewBag.created = true;
+                HttpContext.Session.Remove("created");
+            }
+            if (HttpContext.Session.GetString("updated") != null)
+            {
+                ViewBag.updated = true;
+                HttpContext.Session.Remove("updated");
+            }
+            if (HttpContext.Session.GetString("deleted") != null)
+            {
+                ViewBag.deleted = true;
+                HttpContext.Session.Remove("deleted");
+            }
             var branches = await _context.Branches.ToListAsync();
             return View(branches);
         }
@@ -38,6 +53,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
             {
                 _context.Add(branch);
                 await _context.SaveChangesAsync();
+                HttpContext.Session.SetString("created", "true");
                 return RedirectToAction(nameof(Index));
             }
             return View(branch);
@@ -69,6 +85,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                 {
                     _context.Update(branch);
                     await _context.SaveChangesAsync();
+                    HttpContext.Session.SetString("updated", "true");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -104,6 +121,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
             var branch = await _context.Branches.FindAsync(id);
             _context.Branches.Remove(branch);
             await _context.SaveChangesAsync();
+            HttpContext.Session.SetString("deleted", "true");
             return RedirectToAction(nameof(Index));
         }
 
