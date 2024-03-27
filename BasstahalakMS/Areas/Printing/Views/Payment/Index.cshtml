@@ -1,5 +1,4 @@
-﻿@model IEnumerable<BFile>
-
+﻿@model IEnumerable<Payment>
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/SuperAdmin/Views/Shared/_Layout.cshtml";
@@ -13,15 +12,34 @@
 }
 
 <div class="br-pagetitle">
-    <i class="icon fas fa-light fa-file-word"></i>
+    <i class="icon fas fa-light fa-receipt"></i>
     <div class="row">
-        <div class="col-lg-12 col-12">
-            <h3 class="text-info">قائمة المواد العلمية</h3>
+        <div class="col-lg-10 col-10">
+            <h3 class="text-info">قائمة الفواتير</h3>
         </div>
-
-       @* <div class="col-lg-2 col-2">
-            <a asp-action="Upload" asp-controller="File" class="btn btn-primary">اضافة ماده علمية </a>
-        </div>*@
+        <div class="col-lg-2 col-2 text-left">
+            @if (ViewBag.ThisUser.TotalMoney > 0)
+            {
+                <div>
+                    <h4>الخزنة:</h4>
+                    <h4>@ViewBag.ThisUser.TotalMoney (دائن)</h4>
+                </div>
+            }
+            else if (ViewBag.ThisUser.TotalMoney < 0)
+            {
+                <div>
+                    <h4>الخزنة:</h4> 
+                    <h4>@Math.Abs(ViewBag.ThisUser.TotalMoney) (مدين)</h4>
+                </div>
+            }
+            else
+            {
+                <div>
+                    <h4>الخزنة:</h4> 
+                    <h4>(لا يوجد)</h4> 
+                </div>
+            }
+        </div>
 
     </div>
 </div>
@@ -29,61 +47,57 @@
 <div class="br-pagebody">
     <div class="br-section-wrapper">
         <div class="table-wrapper">
-            <table id="deptsTable" class="table display responsive nowrap">
+            <i class="fas fa-file-pdf"></i>
+            <table id="paymentTable" class="table display responsive nowrap">
                 <thead>
                     <tr>
-                        <th>اسم الملف</th>
-                        <th>اسم الكتاب</th>
-                         <th>اسم المعد</th>
-                        
-                        @*<th>تحميل</th>*@
-                        @*<th>تعديل</th>*@
-                        <th>الحالة </th>
-                        <th>عرض</th>
+                        <th>اسم المطبعة</th>
+                        <th>المبلغ</th>
+                        <th>نوع الدفع</th>
+                        <th>وقت الدفع</th>
+                        <th>دليل الدفع</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var file in Model)
+                    @foreach (var payment in Model)
                     {
                         <tr>
-                            <td>@file.Name</td>
-                            <td>@file.Book.Name</td>
-                            <td>@file.User.FullName</td>
-
-                           
+                            <td>@payment.User.FullName</td>
+                            <td>@payment.Money</td>
+                            @if (payment.Type == 1)
+                            {
+                                <td>فوري</td>
+                            }
+                            else if (payment.Type == 2)
+                            {
+                                <td>كاش</td>
+                            }
+                            else if (payment.Type == 3)
+                            {
+                                <td>فودافون كاش</td>
+                            }
+                            else if (payment.Type == 4)
+                            {
+                                <td>اتصالات كاش</td>
+                            }
+                            else if (payment.Type == 5)
+                            {
+                                <td>فيزا</td>
+                            }
+                            <td>@payment.PaymentTime</td>
                             <td>
-                               
-                                @if (file.status == 1)
+                                @if (!string.IsNullOrEmpty(payment.PhotoPath))
                                 {
-                                    <span class="text-info">يحتاج مراجعة المدير  </span>
+                                    <a class="image-receipt" href="~/Payment/@payment.PhotoPath">
+                                        <img src="~/Payment/@payment.PhotoPath" alt="فاتورة" width="50" height="50" />
+                                    </a>
+
                                 }
-                                else if (file.status == 2)
+                                else
                                 {
-                                    <span class="text-info">تم الارسال للاعداد</span>
-                                }
-                                else if (file.status == 3)
-                                {
-                                    <span class="text-info">تم الارسال للمراجعة</span>
-                                }
-                                else if (file.status == 4)
-                                {
-                                    <span class="text-info">تم الارسال للمراجعة</span>
-                                }
-                                else if (file.status == 5)
-                                {
-                                    <span class="text-info">تم الارسال للاعداد</span>
-                                }
-                                else if (file.status == 6)
-                                {
-                                    <span class="text-info">يحتاج مراجعة المدير</span>
+                                    <span>كاش</span>
                                 }
                             </td>
-                            <td>
-                                <a asp-action="ShowFile" asp-route-id="@file.Id" class=" btn btn-info">
-                                    <i class="fas fa-file-word"></i>
-                                </a>
-                            </td>
-
                         </tr>
                     }
                 </tbody>
@@ -91,13 +105,13 @@
         </div>
     </div>
 </div>
-<input type="hidden" id="Sent" data-value="@ViewBag.Sent" />
+<input type="hidden" id="created" data-value="@ViewBag.created" />
 
 @section scripts {
     <!-- BEGIN PAGE LEVEL SCRIPTS -->
     <script src="~/lib/table/datatable/datatables.js"></script>
     <script>
-        $('#deptsTable').DataTable({
+        $('#paymentTable').DataTable({
             "oLanguage": {
                 "oPaginate": { "sPrevious": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>', "sNext": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>' },
                 "sInfo": "عدد النتائج   _TOTAL_",
@@ -114,13 +128,14 @@
     </script>
     <link href="~/lib/toaster/toaster.css" rel="stylesheet" />
     <script src="~/lib/toaster/toaster.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.css" integrity="sha512-WEQNv9d3+sqyHjrqUZobDhFARZDko2wpWdfcpv44lsypsSuMO0kHGd3MQ8rrsBn/Qa39VojphdU6CMkpJUmDVw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js" integrity="sha512-IsNh5E3eYy3tr/JiX2Yx4vsCujtkhwl7SLqgnwLNgf04Hrt9BT9SXlLlZlWx+OK4ndzAoALhsMNcCmkggjZB1w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script type="text/javascript">
+        $('.image-receipt').magnificPopup({ type: 'image' });
         $(document).ready(function () {
-            
-           
-            var Sent = $("#Sent").data("value");
-            if (Sent == "True") {
+            var created = $("#created").data("value");
+            if (created == "True") {
                 toastr.options = {
                     "closeButton": false,
                     "debug": false,
@@ -138,8 +153,12 @@
                     "showMethod": "fadeIn",
                     "hideMethod": "fadeOut"
                 }
-                toastr.success("تم الارسال بنجاح");
+                toastr.success("تم الحفظ بنجاح");
             }
+
+
+
+
         });
     </script>
     <!-- END PAGE LEVEL SCRIPTS -->

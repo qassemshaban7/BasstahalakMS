@@ -136,105 +136,108 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
         {
             try
             {
-
+                
                 string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 var bfile = await _context.BFiles.FindAsync(BfileId);
 
-                BfileNote bfileNote = new BfileNote
+                if (bfile.status == 1 || bfile.status == 6)
                 {
-                    BfileId = BfileId,
-                    CurrentFileContent = bfile.fileContent,
-                    Notes = "",
-                    UserId = ReviewSupervisor,
-                    SendUserId = userId,
-                    status = 3 // Sent to Review
-                };
-                _context.BfileNotes.Add(bfileNote);
-                bfile.status = 3;
-                if (Reviewers == 1)
-                {
-                    var reviewers = await (from x in _context.ApplicationUsers
-                                           join userRole in _context.UserRoles
-                                           on x.Id equals userRole.UserId
-                                           join role in _context.Roles
-                                           on userRole.RoleId equals role.Id
-                                           where role.Name == StaticDetails.Review
-                                           where x.IsAdmin != 1
-                                           select x)
-                                  .ToListAsync();
-                    foreach (var reviewer in reviewers)
+                    BfileNote bfileNote = new BfileNote
                     {
-                        if (reviewer.IsAdmin != 1)
+                        BfileId = BfileId,
+                        CurrentFileContent = bfile.fileContent,
+                        Notes = "",
+                        UserId = ReviewSupervisor,
+                        SendUserId = userId,
+                        status = 3 // Sent to Review
+                    };
+                    _context.BfileNotes.Add(bfileNote);
+                    bfile.status = 3;
+                    if (Reviewers == 1)
+                    {
+                        var reviewers = await (from x in _context.ApplicationUsers
+                                               join userRole in _context.UserRoles
+                                               on x.Id equals userRole.UserId
+                                               join role in _context.Roles
+                                               on userRole.RoleId equals role.Id
+                                               where role.Name == StaticDetails.Review
+                                               where x.IsAdmin != 1
+                                               select x)
+                                      .ToListAsync();
+                        foreach (var reviewer in reviewers)
                         {
-                            BfileNote bfileNote1 = new BfileNote
+                            if (reviewer.IsAdmin != 1)
                             {
-                                BfileId = BfileId,
-                                CurrentFileContent = bfile.fileContent,
-                                Notes = "",
-                                UserId = reviewer.Id,
-                                SendUserId = userId,
-                                status = 4 // Sent to Team Review
-                            };
-                            _context.BfileNotes.Add(bfileNote1);
-                            bfile.status = 4;
-                        }
-                        else
-                        {
-                            BfileNote bfileNote1 = new BfileNote
+                                BfileNote bfileNote1 = new BfileNote
+                                {
+                                    BfileId = BfileId,
+                                    CurrentFileContent = bfile.fileContent,
+                                    Notes = "",
+                                    UserId = reviewer.Id,
+                                    SendUserId = userId,
+                                    status = 4 // Sent to Team Review
+                                };
+                                _context.BfileNotes.Add(bfileNote1);
+                                bfile.status = 4;
+                            }
+                            else
                             {
-                                BfileId = BfileId,
-                                CurrentFileContent = bfile.fileContent,
-                                Notes = "",
-                                UserId = reviewer.Id,
-                                SendUserId = userId,
-                                status = 3 // Sent to Supervisor of Reviews Team
-                            };
-                            _context.BfileNotes.Add(bfileNote1);
-                            bfile.status = 3;
+                                BfileNote bfileNote1 = new BfileNote
+                                {
+                                    BfileId = BfileId,
+                                    CurrentFileContent = bfile.fileContent,
+                                    Notes = "",
+                                    UserId = reviewer.Id,
+                                    SendUserId = userId,
+                                    status = 3 // Sent to Supervisor of Reviews Team
+                                };
+                                _context.BfileNotes.Add(bfileNote1);
+                                bfile.status = 3;
+                            }
                         }
                     }
-                }
-                else if (Reviewers == 2)
-                {
-                    for (int i = 0; i < ReviewUsers.Count(); i++)
+                    else if (Reviewers == 2)
                     {
-                        var reviewer = await _context.ApplicationUsers.FindAsync(ReviewUsers.GetValue(i));
+                        for (int i = 0; i < ReviewUsers.Count(); i++)
+                        {
+                            var reviewer = await _context.ApplicationUsers.FindAsync(ReviewUsers.GetValue(i));
 
-                        if (reviewer.IsAdmin != 1)
-                        {
-                            BfileNote bfileNote2 = new BfileNote
+                            if (reviewer.IsAdmin != 1)
                             {
-                                BfileId = BfileId,
-                                CurrentFileContent = bfile.fileContent,
-                                Notes = "",
-                                UserId = reviewer.Id,
-                                SendUserId = userId,
-                                status = 4 // Sent to Team Review
-                            };
-                            _context.BfileNotes.Add(bfileNote2);
-                            bfile.status = 4;
-                        }
-                        else
-                        {
-                            BfileNote bfileNote2 = new BfileNote
+                                BfileNote bfileNote2 = new BfileNote
+                                {
+                                    BfileId = BfileId,
+                                    CurrentFileContent = bfile.fileContent,
+                                    Notes = "",
+                                    UserId = reviewer.Id,
+                                    SendUserId = userId,
+                                    status = 4 // Sent to Team Review
+                                };
+                                _context.BfileNotes.Add(bfileNote2);
+                                bfile.status = 4;
+                            }
+                            else
                             {
-                                BfileId = BfileId,
-                                CurrentFileContent = bfile.fileContent,
-                                Notes = "",
-                                UserId = reviewer.Id,
-                                SendUserId = userId,
-                                status = 3 // Sent to Supervisor of Reviews Team
-                            };
-                            _context.BfileNotes.Add(bfileNote2);
-                            bfile.status = 3;
+                                BfileNote bfileNote2 = new BfileNote
+                                {
+                                    BfileId = BfileId,
+                                    CurrentFileContent = bfile.fileContent,
+                                    Notes = "",
+                                    UserId = reviewer.Id,
+                                    SendUserId = userId,
+                                    status = 3 // Sent to Supervisor of Reviews Team
+                                };
+                                _context.BfileNotes.Add(bfileNote2);
+                                bfile.status = 3;
+                            }
                         }
                     }
-                }
 
-                await _context.SaveChangesAsync();
-                HttpContext.Session.SetString("Sent", "true");
+                    await _context.SaveChangesAsync();
+                    HttpContext.Session.SetString("Sent", "true");
+                    return RedirectToAction(nameof(Index));
+                }
                 return RedirectToAction(nameof(Index));
-
             }
             catch (Exception ex)
             {

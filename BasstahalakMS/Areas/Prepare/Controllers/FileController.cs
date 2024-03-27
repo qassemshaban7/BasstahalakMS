@@ -49,8 +49,13 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
             }
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var user = await _context.ApplicationUsers.FindAsync(userId);
-           
-            var files = await _context.BFiles.Include(x => x.Book).Where(x => x.UserId == userId ).ToListAsync();
+
+            var files = await _context.BFiles
+                .Include(x => x.Book)
+                .Where(x => x.UserId == userId && (x.status == 0 || x.status == 1 || x.status == 2 || x.status == 5))
+                .ToListAsync();
+
+
             return View(files);
             
         }
@@ -290,8 +295,8 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
                     bFile.status = 1; // Under Super Admin Review
                 else if(bFile.status == 2)
                     bFile.status = 1; // back to  Super Admin Review
-                else if(bFile.status == 4)
-                    bFile.status = 3; // back to  Review
+                //else if(bFile.status == 4)
+                //    bFile.status = 3; // back to  Review
                 await _context.SaveChangesAsync();
                 HttpContext.Session.SetString("Sent", "true");
                 return RedirectToAction(nameof(Index));
