@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 
-namespace BasstahalakMS.Areas.Admin.Controllers
+namespace BasstahalakMS.Areas.Media.Controllers
 {
-    [Authorize(Roles = StaticDetails.Admin)]
-    [Area(nameof(Admin))]
-    [Route(nameof(Admin) + "/[controller]")]
+    [Authorize(Roles = StaticDetails.Media)]
+    [Area(nameof(Media))]
+    [Route(nameof(Media) + "/[controller]")]
     public class HomeController : Controller
     {
             public IActionResult Index()

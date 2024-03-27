@@ -166,34 +166,18 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                                       .ToListAsync();
                         foreach (var reviewer in reviewers)
                         {
-                            if (reviewer.IsAdmin != 1)
+                            BfileNote bfileNote1 = new BfileNote
                             {
-                                BfileNote bfileNote1 = new BfileNote
-                                {
-                                    BfileId = BfileId,
-                                    CurrentFileContent = bfile.fileContent,
-                                    Notes = "",
-                                    UserId = reviewer.Id,
-                                    SendUserId = userId,
-                                    status = 4 // Sent to Team Review
-                                };
-                                _context.BfileNotes.Add(bfileNote1);
-                                bfile.status = 4;
-                            }
-                            else
-                            {
-                                BfileNote bfileNote1 = new BfileNote
-                                {
-                                    BfileId = BfileId,
-                                    CurrentFileContent = bfile.fileContent,
-                                    Notes = "",
-                                    UserId = reviewer.Id,
-                                    SendUserId = userId,
-                                    status = 3 // Sent to Supervisor of Reviews Team
-                                };
-                                _context.BfileNotes.Add(bfileNote1);
-                                bfile.status = 3;
-                            }
+                                BfileId = BfileId,
+                                CurrentFileContent = bfile.fileContent,
+                                Notes = "",
+                                UserId = reviewer.Id,
+                                SendUserId = userId,
+                                status = 3 // Sent to Team Review
+                            };
+                            _context.BfileNotes.Add(bfileNote1);
+                            bfile.status = 3;
+                           
                         }
                     }
                     else if (Reviewers == 2)
@@ -202,34 +186,18 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                         {
                             var reviewer = await _context.ApplicationUsers.FindAsync(ReviewUsers.GetValue(i));
 
-                            if (reviewer.IsAdmin != 1)
+                            BfileNote bfileNote2 = new BfileNote
                             {
-                                BfileNote bfileNote2 = new BfileNote
-                                {
-                                    BfileId = BfileId,
-                                    CurrentFileContent = bfile.fileContent,
-                                    Notes = "",
-                                    UserId = reviewer.Id,
-                                    SendUserId = userId,
-                                    status = 4 // Sent to Team Review
-                                };
-                                _context.BfileNotes.Add(bfileNote2);
-                                bfile.status = 4;
-                            }
-                            else
-                            {
-                                BfileNote bfileNote2 = new BfileNote
-                                {
-                                    BfileId = BfileId,
-                                    CurrentFileContent = bfile.fileContent,
-                                    Notes = "",
-                                    UserId = reviewer.Id,
-                                    SendUserId = userId,
-                                    status = 3 // Sent to Supervisor of Reviews Team
-                                };
-                                _context.BfileNotes.Add(bfileNote2);
-                                bfile.status = 3;
-                            }
+                                BfileId = BfileId,
+                                CurrentFileContent = bfile.fileContent,
+                                Notes = "",
+                                UserId = reviewer.Id,
+                                SendUserId = userId,
+                                status = 3 // Sent to Team Review
+                            };
+                            _context.BfileNotes.Add(bfileNote2);
+                            bfile.status = 3;
+                            
                         }
                     }
 

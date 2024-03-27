@@ -121,10 +121,10 @@ namespace BasstahalakMS.Areas.Identity.Pages.Account
                         return RedirectToAction(nameof(SuperAdmin.Controllers.HomeController.Index),
                             nameof(SuperAdmin.Controllers.HomeController).Replace("Controller", ""),
                             new { area = nameof(SuperAdmin) });
-                    else if (roles.First() == StaticDetails.Admin)
-                        return RedirectToAction(nameof(Admin.Controllers.HomeController.Index),
-                           nameof(Admin.Controllers.HomeController).Replace("Controller", ""),
-                           new { area = nameof(Admin) });
+                    else if (roles.First() == StaticDetails.Media)
+                        return RedirectToAction(nameof(Media.Controllers.HomeController.Index),
+                           nameof(Media.Controllers.HomeController).Replace("Controller", ""),
+                           new { area = nameof(Media) });
                     else if (roles.First() == StaticDetails.Prepare)
                         return RedirectToAction(nameof(Prepare.Controllers.HomeController.Index),
                            nameof(Prepare.Controllers.HomeController).Replace("Controller", ""),

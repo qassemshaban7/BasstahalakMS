@@ -41,6 +41,15 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                                      where role.Name == StaticDetails.Prepare
                                      select x)
                                   .ToListAsync(),
+                MediaTeam = await (from x in _context.ApplicationUsers
+                                   join userRole in _context.UserRoles
+                                   on x.Id equals userRole.UserId
+                                   join role in _context.Roles
+                                   on userRole.RoleId equals role.Id
+                                   where role.Name == StaticDetails.Media
+                                   select x)
+                                  .ToListAsync(),
+
                 BFiles = await _context.BFiles.Where(x=>x.status!=0).ToListAsync(),
                 Books = await _context.Books.ToListAsync(),
                 Branches = await _context.Branches.ToListAsync(),

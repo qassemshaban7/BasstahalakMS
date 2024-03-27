@@ -26,6 +26,8 @@ namespace BasstahalakMS.Models
 
         public ICollection<FileBranch> FileBranches { get; set; }
         public int status { get; set; } = 0;
+
+        public int? TeamStatus { get; set; }  // -1 For Supervisor   -2 For Member of Team   
         public string? UserId { get; set; }
         [ForeignKey("UserId")]
         public ApplicationUser User { get; set; }
