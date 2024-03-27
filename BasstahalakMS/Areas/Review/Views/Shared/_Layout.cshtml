@@ -100,8 +100,14 @@
                         <hr>
                         
                         <ul class="list-unstyled user-profile-nav">
-
-
+                            <li>
+                                <form asp-action="ChangePassword" asp-controller="Home" method="post">
+                                    <i class="fas fa-lock"></i>
+                                    <button type="submit" class="btn btn-link text-dark">
+                                        تغيير كلمة المرور
+                                    </button>
+                                </form>
+                            </li>
                             <li>
                                 <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout">
                                     <i class="icon fas fa-light fa-right-from-bracket"></i>

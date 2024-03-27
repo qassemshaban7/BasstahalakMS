@@ -41,6 +41,7 @@
                         @*<th>تحميل</th>*@
                         <th>تعديل</th>
                         <th>ارسال للمراجعة</th>
+                        <th>ارسال للمراجع</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -78,11 +79,31 @@
                                 }
                                 else if (file.status == 2)
                                 {
-                                    <span class="text-info">تم طلبات تعديلات من المدير</span>
+                                    <span class="text-info">تم طلب تعديلات من المدير</span>
                                 }
                                 else if (file.status == 3)
                                 {
                                     <span class="text-info">تحت مراجعة مجموعة المراجعة</span>
+                                }
+                                else if (file.status == 5)
+                                {
+                                    <span class="text-info">تحت طلب تعديلات من المراجعة</span>
+                                }
+                            </td>
+                            <td>
+                                @if(file.status == 5)
+                                {
+                                    <td>
+                                    <a asp-action="ShowToSendToReviwSupervisor" asp-route-id="@file.Id" class=" btn btn-info">
+                                            <i class="fas fa-plane">ارسال الي المشرف </i>
+                                        </a>
+                                    </td>
+                                }
+                                else
+                                {
+                                <td>
+                                    <span class="text-danger"> غير متاح</span>
+                                </td>
                                 }
                             </td>
                         </tr>

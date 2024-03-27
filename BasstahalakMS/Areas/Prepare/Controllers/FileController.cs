@@ -302,6 +302,69 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
             }
         }
 
-       
+        public async Task<IActionResult> ShowToSendToReviwSupervisor(int id)
+        {
+            var existingFile = await _context.BFiles.Include(c => c.Book).Include(c => c.User).FirstOrDefaultAsync(x => x.Id == id);
+            if (existingFile == null)
+            {
+                return NotFound();
+            }
+
+            var ReviewAdmins = await (from x in _context.ApplicationUsers
+                                      join userRole in _context.UserRoles
+                                      on x.Id equals userRole.UserId
+                                      join role in _context.Roles
+                                      on userRole.RoleId equals role.Id
+                                      where role.Name == StaticDetails.Review
+                                      where x.IsAdmin == 1
+                                      select x)
+                                 .ToListAsync();
+            ViewBag.ReviewAdmins = ReviewAdmins;
+
+            var branches = await _context.FileBranches.Include(x => x.Branch).Where(x => x.BFileId == existingFile.Id).ToListAsync();
+            ViewBag.branches = branches;
+            return View(existingFile);
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SendForReviwSupervisor(string ReviewSupervisor, int BfileId)
+        {
+            try
+            {
+                var bfile = await _context.BFiles.FindAsync(BfileId);
+
+                string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var user = await _context.ApplicationUsers.FindAsync(userId);
+
+                if (bfile.status == 5)
+                {
+                    BfileNote bfileNote = new BfileNote
+                    {
+                        BfileId = BfileId,
+                        CurrentFileContent = bfile.fileContent,
+                        Notes = "",
+                        UserId = ReviewSupervisor,
+                        SendUserId = userId,
+                        status = 3 // Sent to Supervisor 
+                    };
+                    _context.BfileNotes.Add(bfileNote);
+                    bfile.status = 3;
+
+                    await _context.SaveChangesAsync();
+                    HttpContext.Session.SetString("Sent", "true");
+                    return RedirectToAction(nameof(Index));
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+
+                return RedirectToAction(nameof(Index));
+            }
+
+        }
+
     }
 }
