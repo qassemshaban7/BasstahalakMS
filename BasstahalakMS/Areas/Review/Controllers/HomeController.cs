@@ -103,7 +103,7 @@ namespace BasstahalakMS.Areas.Review.Controllers
             if (result.Succeeded)
             {
                 await _signInManager.SignOutAsync();
-                return RedirectToAction("Login", "Account");
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
             }
             else
             {
