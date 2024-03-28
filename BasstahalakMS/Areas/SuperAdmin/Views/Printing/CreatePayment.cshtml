@@ -7,7 +7,7 @@
 
 <div class="br-pagetitle">
     <div>
-        <h4>إضافة فاتورة جديدة</h4>
+        <h3 class="text-info">إضافة فاتورة جديدة</h3>
     </div>
 </div>
 <div class="br-pagebody">
@@ -62,11 +62,9 @@
                             </div>
                         </div><!-- form-group row -->
 
-                        <div class="form-group row">
-                            <div class="col-sm-8 offset-sm-4">
+                        <div class="form-layout-footer mg-t-30 text-center">
                                 <input type="submit" value="إضافة" class="btn btn-info">
                                 <a asp-action="Index" asp-controller="Payment" class="btn btn-secondary">الغاء</a>
-                            </div>
                         </div><!-- form-group row -->
                     </form>
                 </div><!-- form-layout -->
@@ -93,11 +91,15 @@
         var fileInput = document.getElementById("Photo");
 
         if (typeSelect.value === "2") {
-            fileInputDiv.style.display = "none";
-            fileInput.removeAttribute("required");
+            $("#fileInputDiv").addClass("d-none");
+            $("#Photo").prop("required", false);
+            //fileInputDiv.style.display = "none";
+            //fileInput.removeAttribute("required");
         } else {
-            fileInputDiv.style.display = "block";
-            fileInput.setAttribute("required", "required");
+            $("#fileInputDiv").removeClass("d-none");
+            $("#Photo").prop("required", true);
+            //fileInputDiv.style.display = "block";
+            //fileInput.setAttribute("required", "required");
         }
     }
 </script>

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BFile>
+﻿@model IEnumerable<BfileNote>
 
 @{
     ViewData["Title"] = "Index";
@@ -15,13 +15,13 @@
 <div class="br-pagetitle">
     <i class="icon fas fa-light fa-file-word"></i>
     <div class="row">
-        <div class="col-lg-12 col-12">
-            <h3 class="text-info">قائمة المواد العلمية</h3>
+        <div class="col-lg-8 col-8">
+            <h3 class="text-info">العمليات  </h3>
         </div>
 
-       @* <div class="col-lg-2 col-2">
-            <a asp-action="Upload" asp-controller="File" class="btn btn-primary">اضافة ماده علمية </a>
-        </div>*@
+         <div class="col-lg-4 col-4">
+        <a asp-action="Index" asp-controller="File" class="btn btn-primary">العودة الي القائمة   </a>
+        </div>
 
     </div>
 </div>
@@ -34,61 +34,56 @@
                     <tr>
                         <th>اسم الملف</th>
                         <th>اسم الكتاب</th>
-                         <th>اسم المعد</th>
-                        
+                        <th>اسم العضو</th>
+
                         @*<th>تحميل</th>*@
                         @*<th>تعديل</th>*@
                         <th>الحالة </th>
                         <th>عرض</th>
-                        <th>العمليات</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var file in Model)
+                    @foreach (var item in Model)
                     {
                         <tr>
-                            <td>@file.Name</td>
-                            <td>@file.Book.Name</td>
-                            <td>@file.User.FullName</td>
+                            <td>@item.BFile.Name</td>
+                            <td>@item.BFile.Book.Name</td>
+                            <td>@item.User.FullName</td>
 
-                           
+
                             <td>
-                               
-                                @if (file.status == 1)
+
+                                @if (item.status == 1)
                                 {
-                                    <span class="text-info">يحتاج مراجعة المدير  </span>
+                                    <span class="text-info">تحت مراجعة المدير  </span>
                                 }
-                                else if (file.status == 2)
+                                else if (item.status == 2)
                                 {
-                                    <span class="text-info">تم الارسال للاعداد</span>
+                                    <span class="text-info">تحت مراجعة الاعداد</span>
                                 }
-                                else if (file.status == 3)
+                                else if (item.status == 3)
                                 {
-                                    <span class="text-info">تم الارسال للمراجعة</span>
+                                    <span class="text-info">تحت المراجعة </span>
                                 }
-                                else if (file.status == 4)
+                                else if (item.status == 4)
                                 {
-                                    <span class="text-info">تم الارسال للمراجعة</span>
+                                    <span class="text-info">تحت المراجعة </span>
                                 }
-                                else if (file.status == 5)
+                                else if (item.status == 5)
                                 {
-                                    <span class="text-info">تم الارسال للاعداد</span>
+                                    <span class="text-info">تحت مراجعة الاعداد</span>
                                 }
-                                else if (file.status == 6)
+                                else if (item.status == 6)
                                 {
-                                    <span class="text-info">يحتاج مراجعة المدير</span>
+                                    <span class="text-info">تحت مراجعة المدير  </span>
                                 }
                             </td>
                             <td>
-                                <a asp-action="ShowFile" asp-route-id="@file.Id" class=" btn btn-info">
+                                <a asp-action="ShowFileLogDetails" asp-route-id="@item.Id" class=" btn btn-info">
                                     <i class="fas fa-file-word"></i>
                                 </a>
                             </td>
-                            <td>
-                                <a asp-action="ShowFileLog" asp-route-id="@file.Id" class=" btn btn-success">
-                                    <i class="fas fa-list-alt"></i>
-                                </a>
-                            </td>
+                            
 
                         </tr>
                     }
@@ -97,7 +92,6 @@
         </div>
     </div>
 </div>
-<input type="hidden" id="Sent" data-value="@ViewBag.Sent" />
 
 @section scripts {
     <!-- BEGIN PAGE LEVEL SCRIPTS -->
@@ -123,29 +117,9 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            
+
+
            
-            var Sent = $("#Sent").data("value");
-            if (Sent == "True") {
-                toastr.options = {
-                    "closeButton": false,
-                    "debug": false,
-                    "newestOnTop": false,
-                    "progressBar": true,
-                    "positionClass": "toast-top-left",
-                    "preventDuplicates": true,
-                    "onclick": null,
-                    "showDuration": "300",
-                    "hideDuration": "1000",
-                    "timeOut": "12000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut"
-                }
-                toastr.success("تم الارسال بنجاح");
-            }
         });
     </script>
     <!-- END PAGE LEVEL SCRIPTS -->

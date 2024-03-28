@@ -215,5 +215,26 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
 
         }
 
+        public async Task<IActionResult> ShowFileLog(int id)
+        {
+            var bFileNotes = await _context.BfileNotes.Include(c => c.User).Include(c => c.BFile).ThenInclude(x=>x.Book).Where(x => x.BfileId == id).ToListAsync();        
+            //var branches = await _context.FileBranches.Include(x => x.Branch).Where(x => x.BFileId == id).ToListAsync();
+            //ViewBag.branches = branches;
+            return View(bFileNotes);
+        }
+        public async Task<IActionResult> ShowFileLogDetails(int id)
+        {
+            var bFileNoteDetails = await _context.BfileNotes
+                .Include(c => c.User)
+                .Include(c => c.BFile)
+                .ThenInclude(x => x.Book)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            var prpareUser = await _context.ApplicationUsers.FindAsync(bFileNoteDetails.BFile.UserId);
+            ViewBag.prpareUser = prpareUser.FullName;
+            var branches = await _context.FileBranches.Include(x => x.Branch).Where(x => x.BFileId == id).ToListAsync();
+            ViewBag.branches = branches;
+            return View(bFileNoteDetails);
+        }
     }
 }

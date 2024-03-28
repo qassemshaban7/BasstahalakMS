@@ -1,0 +1,142 @@
+﻿@model IEnumerable<ReviewPermission>
+@{
+    ViewData["Title"] = "UsersPermissions";
+    Layout = "~/Areas/SuperAdmin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="br-pagetitle">
+    <h3 class="text-info mr-3"> صلاحيات المستخدم <span class="text-danger">(@ViewBag.User.FullName)</span></h3>
+</div><!-- d-flex -->
+
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="form-layout form-layout-4">
+                    <form method="post" asp-action="AddPermissionsToUsers" asp-controller="ReviewUsers">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        @if (ViewBag.allPermissionsCount == ViewBag.currentUserPermissionsCount)
+                        {
+                            <div class="row mb-3 d-flex justify-content-center">
+                                <div class="form-group ">
+                                    <input type="checkbox" class="ml-2" id="allPermissions" name="allPermissions" value="1" checked>
+                                    <label for="allPermissions" class="text-dark font-weight-bold">كل الصلاحيات</label><br>
+
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="row mb-3 d-flex justify-content-center">
+                                <div class="form-group ">
+                                    <input type="checkbox" class="ml-2" id="allPermissions" name="allPermissions" value="1" >
+                                    <label for="allPermissions" class="text-dark font-weight-bold">كل الصلاحيات</label><br>
+
+                                </div>
+                            </div>
+                        }
+                       
+
+                        <!-- row -->
+                        <div class="row mb-3 permissions">
+
+                            @foreach (var item in Model)
+                            {
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <input type="checkbox" id="@item.Id" name="@item.EnglishName" value="@item.Id" class="chkPermissions">
+                                        <label for="@item.EnglishName" class="text-dark font-weight-bold">@item.ArabicName</label><br>
+
+                                    </div>
+                                </div>
+
+                                <!-- row -->
+                            }
+                            @foreach (var item in ViewBag.currentUserPermissions)
+                            {
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <input type="checkbox" id="@item.ReviewPermission.Id" name="@item.ReviewPermission.EnglishName" value="@item.ReviewPermission.Id" checked class="chkPermissions">
+                                        <label for="@item.ReviewPermission.EnglishName" class="text-dark font-weight-bold">@item.ReviewPermission.ArabicName</label><br>
+
+                                    </div>
+                                </div>
+
+                                <!-- row -->
+                            }
+
+                        </div>
+                       
+                        <div class="row mb-3 Users d-none">
+                            <label class="col-sm-4 form-control-label  text-dark font-weight-bold mt-2">المراجع</label>
+                            <select class="col-sm-7 form-control" id="usersList" name="ReviewUsers[]" multiple>
+                                <option value="@ViewBag.User.Id" selected>@ViewBag.User.Id</option>
+                            </select>
+                        </div>
+                        @*Holds Selected Permissions IDs*@
+                        <select class="form-control tagging d-none" id="select1" multiple="multiple" name="Permissions[]">
+                            @foreach (var item in ViewBag.currentUserPermissions)
+                            {
+                                <option value="@item.ReviewPermission.Id" selected>@item.ReviewPermission.Id</option>
+                            }
+                        </select>
+                        <div class="form-layout-footer mg-t-30 text-center">
+                            <input type="submit" value="حفظ" class="btn btn-info">
+                            <a asp-action="Index" asp-controller="ReviewUsers" class="btn btn-secondary">الرجوع</a>
+                        </div><!-- form-layout-footer -->
+                    </form>
+                </div><!-- form-layout -->
+            </div>
+        </div><!-- row -->
+    </div><!-- br-section-wrapper -->
+</div><!-- br-pagebody -->
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+
+            $('#allPermissions').change(function () {
+                if (this.checked) {
+                    $(".chkPermissions").prop("checked", true);
+                    $('#select1').empty();
+                    $('.chkPermissions').each(function (index, obj) {
+                        if (this.checked === true) {
+                            $('#select1').append($('<option>', {
+                                "selected": "selected",
+                                value: this.value,
+                                text: this.value,
+                            }));
+
+                        }
+                    });
+                }
+                else {
+                    $(".chkPermissions").prop("checked", false);
+                    $('#select1').empty();
+
+                }
+            });
+           
+            $('.chkPermissions').change(function () {
+                if (!this.checked) {
+                    $("#allPermissions").prop("checked", false);
+                    $(`#select1 option[value='${this.value}']`).remove();
+
+                }
+                else {
+                    $('#select1').append($('<option>', {
+                        "selected": "selected",
+                        value: this.value,
+                        text: this.value,
+                    }));
+
+                }
+
+            });
+        });
+    </script>
+}
+
+

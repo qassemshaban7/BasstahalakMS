@@ -1,0 +1,135 @@
+﻿@model IEnumerable<ReviewPermission>
+@{
+    ViewData["Title"] = "SupervisorsPermissions";
+    Layout = "~/Areas/SuperAdmin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="br-pagetitle">
+    <h3 class="text-info mr-3">اضافة صلاحيات لمشرفين مجموعة المراجعة</h3>
+</div><!-- d-flex -->
+
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="form-layout form-layout-4">
+                    <form method="post" asp-action="AddPermissionsToSupervisors" asp-controller="ReviewUsers" >
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="row mb-3 d-flex justify-content-center">
+                            <div class="form-group ">
+                                <input type="checkbox" class="ml-2" id="allPermissions" name="allPermissions" value="1" checked>
+                                <label for="allPermissions" class="text-dark font-weight-bold">كل الصلاحيات</label><br>
+
+                            </div>
+                        </div>
+
+                        <!-- row -->
+                        <div class="row mb-3 permissions">
+
+                        @foreach (var item in Model)
+                        {
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <input type="checkbox" id="@item.Id" name="@item.EnglishName" value="@item.Id" checked class="chkPermissions">
+                                        <label for="@item.EnglishName" class="text-dark font-weight-bold">@item.ArabicName</label><br>
+                                   
+                                </div>
+                            </div>
+
+                            <!-- row -->
+                        }
+                        </div>
+                        <hr />
+                        <div class="row mb-3 d-flex justify-content-center">
+                            <div class="form-group">
+                                <input type="checkbox" id="allSupervisors" name="allSupervisors" value="1" checked>
+                                <label for="allSupervisors" class="text-dark font-weight-bold">كل المشرفين</label><br>
+
+                            </div>
+                        </div>
+                        <div class="row mb-3 supervisors d-none">
+                            <label class="col-sm-4 form-control-label  text-dark font-weight-bold mt-2">المشرف</label>
+                            <select class="col-sm-7 form-control" id="supervisorsList" name="ReviewSupervisors[]" multiple>
+                                @foreach (var item in ViewBag.ReviewAdmins)
+                                {
+                                    <option value="@item.Id">@item.FullName</option>
+                                }
+
+                            </select>
+                        </div>
+                        @*Holds Selected Permissions IDs*@
+                        <select class="form-control tagging d-none" id="select1" multiple="multiple" name="Permissions[]">
+                            @foreach(var item in Model){
+                                <option value="@item.Id" selected>@item.Id</option>
+                            }
+                        </select>
+
+                        <div class="form-layout-footer mg-t-30 text-center">
+                            <input type="submit" value="إضافة" class="btn btn-info">
+                            <a asp-action="Index" asp-controller="ReviewUsers" class="btn btn-secondary">الرجوع</a>
+                        </div><!-- form-layout-footer -->
+                    </form>
+                </div><!-- form-layout -->
+            </div>
+        </div><!-- row -->
+    </div><!-- br-section-wrapper -->
+</div><!-- br-pagebody -->
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+
+            $('#allPermissions').change(function () {
+                if (this.checked) {
+                    $(".chkPermissions").prop("checked", true);
+                    $('#select1').empty();
+                    $('.chkPermissions').each(function (index, obj) {
+                        if (this.checked === true) {
+                            $('#select1').append($('<option>', {
+                                "selected": "selected",
+                                value: this.value,
+                                text: this.value,
+                            }));
+
+                        }
+                    });
+                }
+                else{
+                    $(".chkPermissions").prop("checked", false);
+                    $('#select1').empty();
+
+
+                }
+            });
+            $('#allSupervisors').change(function () {
+                if (this.checked) {
+                    $(".supervisors").addClass("d-none");
+                    $("#supervisorsList").prop("required",false);
+                }
+                else {
+                    $(".supervisors").removeClass("d-none");
+                    $("#supervisorsList").prop("required", true);
+
+                }
+            });
+            $('.chkPermissions').change(function () {
+                if (!this.checked) {
+                    $("#allPermissions").prop("checked", false);
+                    $(`#select1 option[value='${this.value}']`).remove();
+                }
+                else{
+                    $('#select1').append($('<option>', {
+                        "selected": "selected",
+                        value: this.value,
+                        text: this.value,
+                    }));
+
+                }
+
+                
+            });
+        });
+    </script>
+}

@@ -197,6 +197,7 @@
 </div><!-- br-pagebody -->
 @section scripts{
     <script type="text/javascript" src="~/lib/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript" src="~/lib/sweetalerts/sweetalert.min.js"></script>
     <script>
         let chk = @ViewBag.currentBranchesCount;
         window.onload = function () {
@@ -242,7 +243,12 @@
     <script>
         function clicked(e) {
             if (chk == 0) {
-                alert("يجب اختيار قسم واحد علي الاقل")
+                Swal.fire({
+                    icon: "error",
+                    title: "خطأ...",
+                    confirmButtonText: "حسنا",
+                    text: 'يجب اختيار قسم واحد علي الاقل'
+                });
                 e.preventDefault();
             }
         }

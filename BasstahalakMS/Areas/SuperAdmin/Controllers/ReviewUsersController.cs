@@ -48,9 +48,14 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                     ViewBag.deleted = true;
                     HttpContext.Session.Remove("deleted");
                 }
-                // Get a list of users in the role
-                //var usersWithPermission = _userManager.GetUsersInRoleAsync(StaticDetails.Prepare).Result.ToList();
-                var users = await (from x in _context.ApplicationUsers
+                if (HttpContext.Session.GetString("SupervisorsPermissionsDone") != null)
+                {
+                    ViewBag.SupervisorsPermissionsDone = true;
+                    HttpContext.Session.Remove("SupervisorsPermissionsDone");
+                }
+            // Get a list of users in the role
+            //var usersWithPermission = _userManager.GetUsersInRoleAsync(StaticDetails.Prepare).Result.ToList();
+            var users = await (from x in _context.ApplicationUsers
                                    join userRole in _context.UserRoles
                                    on x.Id equals userRole.UserId
                                    join role in _context.Roles
@@ -175,10 +180,226 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
         private bool UserExists(string id)
         {
             return _context.Users.Any(e => e.Id == id);
+        }
+        public async Task<IActionResult> SupervisorsPermissions()
+        {
+            var ReviewAdmins = await (from x in _context.ApplicationUsers
+                                      join userRole in _context.UserRoles
+                                      on x.Id equals userRole.UserId
+                                      join role in _context.Roles
+                                      on userRole.RoleId equals role.Id
+                                      where role.Name == StaticDetails.Review
+                                      where x.IsAdmin == 1
+                                      select x)
+                                 .ToListAsync();
+            
+            ViewBag.ReviewAdmins = ReviewAdmins;
+            return View(await _context.ReviewPermissions.Where(x=>x.IsAdmin == 1).ToListAsync());
+
+
+        }
+        public async Task<IActionResult> UsersPermissions()
+        {
+
+            var ReviewUsers = await (from x in _context.ApplicationUsers
+                                      join userRole in _context.UserRoles
+                                      on x.Id equals userRole.UserId
+                                      join role in _context.Roles
+                                      on userRole.RoleId equals role.Id
+                                      where role.Name == StaticDetails.Review
+                                      where x.IsAdmin == 0
+                                      select x)
+                                  .ToListAsync();
+
+            ViewBag.ReviewUsers = ReviewUsers;
+            return View(await _context.ReviewPermissions.Where(x => x.IsAdmin == 0).ToListAsync());
+
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddPermissionsToSupervisors(int[] Permissions, string[] ReviewSupervisors,int allSupervisors)
+        {
+            try
+            {
+                if(allSupervisors == 1)
+                {
+                    var ReviewAdmins = await (from x in _context.ApplicationUsers
+                                              join userRole in _context.UserRoles
+                                              on x.Id equals userRole.UserId
+                                              join role in _context.Roles
+                                              on userRole.RoleId equals role.Id
+                                              where role.Name == StaticDetails.Review
+                                              where x.IsAdmin == 1
+                                              select x)
+                                .ToListAsync();
+                    foreach (var item in ReviewAdmins)
+                    {
+                        var existingPermissions = await _context.UserReviewPermissions.Where(x => x.UserId == item.Id).ToListAsync();
+                        foreach (var item1 in existingPermissions)
+                        {
+                            _context.UserReviewPermissions.Remove(item1);
+                            await _context.SaveChangesAsync();
+                        }
+                        for (int j = 0; j < Permissions.Count(); j++)
+                        {
+                            UserReviewPermission userReviewPermission = new UserReviewPermission
+                            {
+                                PermissionId = Convert.ToInt32(Permissions.GetValue(j)),
+                                UserId = item.Id,
+
+                            };
+                            _context.UserReviewPermissions.Add(userReviewPermission);
+                            await _context.SaveChangesAsync();
+                        }
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < ReviewSupervisors.Count(); i++)
+                    {
+                        var existingPermissions = await _context.UserReviewPermissions.Where(x => x.UserId == ReviewSupervisors.GetValue(i).ToString()).ToListAsync();
+                        foreach (var item in existingPermissions)
+                        {
+                            _context.UserReviewPermissions.Remove(item);
+                            await _context.SaveChangesAsync();
+                        }
+                        for (int j = 0; j < Permissions.Count(); j++)
+                        {
+                            UserReviewPermission userReviewPermission = new UserReviewPermission
+                            {
+                                PermissionId = Convert.ToInt32(Permissions.GetValue(j)),
+                                UserId = ReviewSupervisors.GetValue(i).ToString(),
+
+                            };
+                            _context.UserReviewPermissions.Add(userReviewPermission);
+                            await _context.SaveChangesAsync();
+                        }
+                    }
+
+                }
+                HttpContext.Session.SetString("SupervisorsPermissionsDone", "true");
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+
+                return RedirectToAction(nameof(Index));
+            }
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddPermissionsToUsers(int[] Permissions, string[] ReviewUsers, int allUsers)
+        {
+            try
+            {
+                if (allUsers == 1)
+                {
+                    var reviewers = await (from x in _context.ApplicationUsers
+                                              join userRole in _context.UserRoles
+                                              on x.Id equals userRole.UserId
+                                              join role in _context.Roles
+                                              on userRole.RoleId equals role.Id
+                                              where role.Name == StaticDetails.Review
+                                              where x.IsAdmin == 0
+                                              select x)
+                                .ToListAsync();
+                    foreach (var item in reviewers)
+                    {
+                        var existingPermissions = await _context.UserReviewPermissions.Where(x => x.UserId == item.Id).ToListAsync();
+                        foreach (var item1 in existingPermissions)
+                        {
+                            _context.UserReviewPermissions.Remove(item1);
+                            await _context.SaveChangesAsync();
+                        }
+                        for (int j = 0; j < Permissions.Count(); j++)
+                        {
+                            UserReviewPermission userReviewPermission = new UserReviewPermission
+                            {
+                                PermissionId = Convert.ToInt32(Permissions.GetValue(j)),
+                                UserId = item.Id,
+
+                            };
+                            _context.UserReviewPermissions.Add(userReviewPermission);
+                            await _context.SaveChangesAsync();
+                        }
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < ReviewUsers.Count(); i++)
+                    {
+                        var existingPermissions = await _context.UserReviewPermissions.Where(x => x.UserId == ReviewUsers.GetValue(i).ToString()).ToListAsync();
+                        foreach (var item in existingPermissions)
+                        {
+                            _context.UserReviewPermissions.Remove(item);
+                            await _context.SaveChangesAsync();
+                        }
+                        for (int j = 0; j < Permissions.Count(); j++)
+                        {
+                            UserReviewPermission userReviewPermission = new UserReviewPermission
+                            {
+                                PermissionId = Convert.ToInt32(Permissions.GetValue(j)),
+                                UserId = ReviewUsers.GetValue(i).ToString(),
+
+                            };
+                            _context.UserReviewPermissions.Add(userReviewPermission);
+                            await _context.SaveChangesAsync();
+                        }
+                    }
+
+                }
+                HttpContext.Session.SetString("SupervisorsPermissionsDone", "true");
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+
+                return RedirectToAction(nameof(Index));
+            }
+
+        }
+
+        public async Task<IActionResult> ShowOneUserPermissions(string Id)
+        {
+            var user = await _context.ApplicationUsers.FindAsync(Id);
+            var allPermissions = new List<ReviewPermission>();
+            int allPermissionsCount = 0;
+            if (user.IsAdmin == 0)
+            {
+                 allPermissions = await _context.ReviewPermissions.Where(x => x.IsAdmin == 0).ToListAsync();
+                 allPermissionsCount = allPermissions.Count();
+            }
+            else
+            {
+                 allPermissions = await _context.ReviewPermissions.Where(x => x.IsAdmin == 1).ToListAsync();
+                 allPermissionsCount = allPermissions.Count();
+
+            }
+            var currentUserPermissions = await _context.UserReviewPermissions
+                    .Include(x => x.ReviewPermission).Where(x => x.UserId == Id).ToListAsync();
+            foreach (var item in allPermissions.ToList())
+            {
+                foreach (var item1 in currentUserPermissions)
+                {
+                    if (item.Id == item1.PermissionId)
+                        allPermissions.Remove(item);
+                }
+            }
+            ViewBag.User = user;
+            ViewBag.currentUserPermissions = currentUserPermissions;
+            ViewBag.currentUserPermissionsCount = currentUserPermissions.Count();
+            ViewBag.allPermissionsCount = allPermissionsCount;
+            return View(allPermissions);
+
         }
     }
 }

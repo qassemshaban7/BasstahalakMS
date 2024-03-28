@@ -1,0 +1,143 @@
+﻿@model BfileNote
+@{
+    ViewData["Title"] = "ShowFile";
+    Layout = "~/Areas/SuperAdmin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="br-pagetitle">
+    <i class="icon fas fa-light fa-file-word"></i>
+    <div class="row">
+        <div class="col-lg-12 col-12">
+            <h3 class="text-info">@Model.BFile.Name</h3>
+        </div>
+
+        @* <div class="col-lg-2 col-2">
+        <a asp-action="Upload" asp-controller="File" class="btn btn-primary">اضافة ماده علمية </a>
+        </div>*@
+
+    </div>
+</div>
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        @* <div>
+        <textarea id="tiny"></textarea>
+        </div>*@
+        <div class="row mb-3">
+            <div class="col-4 mt-2">
+                <label class="form-label text-dark font-weight-bold" for="flexCheckDefault">
+                    اسم الكتاب
+                </label>
+            </div>
+            <div class="col-4">
+                <input type="text" readonly class="form-control " value="@Model.BFile.Book.Name" />
+            </div>
+
+
+
+        </div>
+        <div class="row mb-3">
+            <div class="col-4 mt-2">
+                <label class="form-label text-dark font-weight-bold" for="flexCheckDefault">
+                    اسم المعد الاساسي
+                </label>
+            </div>
+            <div class="col-4">
+                <input type="text" readonly class="form-control " value="@ViewBag.prpareUser" />
+            </div>
+
+
+
+        </div>
+        <div class="row mb-3">
+            <div class="col-4 mt-2">
+                <label class="form-label text-dark font-weight-bold" for="flexCheckDefault">
+                    تاريخ الانشاء
+                </label>
+            </div>
+            <div class="col-4">
+                <input type="text" readonly class="form-control " value="@Model.BFile.CreationDate" />
+            </div>
+
+
+
+        </div>
+       
+        <div class="row mb-3">
+            <div class="col-4 mt-2">
+                <label class="form-label text-dark font-weight-bold" for="flexCheckDefault">
+                    اسم العضو القائم بالعملية
+                </label>
+            </div>
+            <div class="col-4">
+                <input type="text" readonly class="form-control " value="@Model.User.FullName" />
+            </div>
+
+
+
+        </div>
+        <div class="row mb-3">
+            <div class="col-4 mt-2">
+                <label class="form-label text-dark font-weight-bold" for="flexCheckDefault">
+                    تاريخ العملية
+                </label>
+            </div>
+            <div class="col-4">
+                <input type="text" readonly class="form-control " value="@Model.CreationDate" />
+            </div>
+
+
+
+        </div>
+       
+        <hr />
+       
+            
+                <div class="row mb-3">
+                    <label class="col-sm-4 form-control-label  text-dark font-weight-bold">محتوي المادة</label>
+                </div>
+
+                <!-- row -->
+                <div class="row mb-3 mr-1">
+                     <textarea id="fileContent" rows="12" cols="50" readonly name="fileContent" asp-for="@Model.CurrentFileContent">@Model.CurrentFileContent</textarea>
+                </div>
+                <hr />
+
+
+                <div class="form-layout-footer mg-t-30 text-center">
+
+                    <a asp-action="Index" asp-controller="File" class="btn btn-secondary">الرجوع</a>
+                </div>
+
+                <!-- form-layout-footer -->
+           
+
+
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript" src="~/lib/ckeditor/ckeditor.js"></script>
+
+    <script>
+        window.onload = function () {
+            CKEDITOR.replace('fileContent');
+
+        };
+       
+       
+        //tinymce.init({
+        //    selector: 'textarea#tiny'
+        //});
+        // Prevent Bootstrap dialog from blocking focusin
+        //document.addEventListener('focusin', (e) => {
+        //    if (e.target.closest(".tox-tinymce, .tox-tinymce-aux, .moxman-window, .tam-assetmanager-root") !== null) {
+        //        e.stopImmediatePropagation();
+        //    }
+        //});
+    </script>
+
+}
+
+
+
+

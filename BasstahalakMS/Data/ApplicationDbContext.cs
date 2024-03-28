@@ -21,6 +21,8 @@ namespace BasstahalakMS.Data
         public DbSet<FileBranch> FileBranches { get; set; }
         public DbSet<BfileNote> BfileNotes { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<ReviewPermission> ReviewPermissions { get; set; }
+        public DbSet<UserReviewPermission> UserReviewPermissions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

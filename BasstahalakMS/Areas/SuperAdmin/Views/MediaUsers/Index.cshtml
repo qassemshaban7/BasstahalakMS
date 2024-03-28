@@ -17,10 +17,10 @@
     <i class="icon fas fa-light fa-user"></i>
     <div class="row">
         <div class="col-lg-10 col-10">
-            <h3 class="text-info">قائمة المحررين</h3>
+            <h3 class="text-info">قائمة فريق الميديا</h3>
         </div>
         <div class="col-lg-2 col-2">
-            <h2><a asp-action="Create" asp-controller="MediaUsers" class="btn btn-primary">اضافة محرر </a></h2>
+            <h2><a asp-action="Create" asp-controller="MediaUsers" class="btn btn-primary">اضافة عضو </a></h2>
         </div>
     </div>
 </div>
@@ -31,7 +31,7 @@
             <table id="deptsTable" class="table display responsive nowrap">
                 <thead>
                     <tr>
-                        <th>اسم المحرر</th>
+                        <th>اسم العضو</th>
                         <th>اسم المستخدم</th>
                         <th>رقم الموبايل </th>
                         <th>نوع المستخدم  </th>
@@ -56,7 +56,7 @@
                             else
                             {
                                 <td>
-                                    محرر
+                                    عضو
                                 </td>
                             }
                             <td>
@@ -124,7 +124,7 @@
                     "showMethod": "fadeIn",
                     "hideMethod": "fadeOut"
                 }
-                toastr.success("تم اضافة المحرر بنجاح");
+                toastr.success("تم اضافة العضو بنجاح");
             }
 
             var updated = $("#updated").data("value");
@@ -146,7 +146,7 @@
                     "showMethod": "fadeIn",
                     "hideMethod": "fadeOut"
                 }
-                toastr.success("تم تعديل بيانات المحرر بنجاح");
+                toastr.success("تم تعديل بيانات العضو بنجاح");
             }
 
             var deleted = $("#deleted").data("value");
@@ -168,7 +168,7 @@
                     "showMethod": "fadeIn",
                     "hideMethod": "fadeOut"
                 }
-                toastr.success("تم حذف المحرر بنجاح");
+                toastr.success("تم حذف العضو بنجاح");
             }
         });
     </script>

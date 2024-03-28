@@ -19,5 +19,7 @@ namespace BasstahalakMS.Models
         public int IsAdmin { get; set; }    // 1- Super  0- not Super
         public ICollection<BFile> BFiles { get; set; }
         public ICollection<Library> Libraries { get; set; }
+        public ICollection<UserReviewPermission> UserReviewPermissions { get; set; }
+
     }
 }
