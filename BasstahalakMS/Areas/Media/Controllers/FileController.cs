@@ -9,11 +9,11 @@ using System.Security.Claims;
 using BasstahalakMS.Models;
 using Microsoft.AspNetCore.Identity;
 
-namespace BasstahalakMS.Areas.Review.Controllers
+namespace BasstahalakMS.Areas.Media.Controllers
 {
-    [Authorize(Roles = StaticDetails.Review)]
-    [Area(nameof(Review))]
-    [Route(nameof(Review) + "/[controller]/[action]")]
+    [Authorize(Roles = StaticDetails.Media)]
+    [Area(nameof(Media))]
+    [Route(nameof(Media) + "/[controller]/[action]")]
     public class FileController : Controller
     {
         private readonly ApplicationDbContext _context;
