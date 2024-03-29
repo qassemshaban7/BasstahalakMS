@@ -110,7 +110,5 @@ namespace BasstahalakMS.Areas.Review.Controllers
                 return View("ChangePassword", new ChangePasswordViewModel());
             }
         }
-
-
     }
 }
