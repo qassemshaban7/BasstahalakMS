@@ -118,38 +118,6 @@
 
                 <!-- form-layout-footer -->
             }
-            @if (Model.status == 6)
-            {
-                <div class="row mb-3">
-                    <label class="col-sm-4 form-control-label  text-dark font-weight-bold">محتوي المادة</label>
-                </div>
-
-                <!-- row -->
-                <div class="row mb-3 mr-1">
-                    <textarea id="fileContent" rows="12" cols="50" name="fileContent" asp-for="@Model.fileContent">@Model.fileContent</textarea>
-                </div>
-                <hr />
-                <div class="row mb-3">
-                    <label class="col-sm-4 form-control-label  text-dark font-weight-bold">ملاحظات </label>
-                </div>
-
-                <!-- row -->
-                <div class="row mb-3 mr-1">
-                    <textarea id="Notes" name="Notes" class="form-control" rows="8"></textarea>
-                </div>
-                <input type="hidden" name="BfileId" value="@Model.Id" />
-                <input type="hidden" id="Prepare" name="Prepare" value="0" />
-                <div class="form-layout-footer mg-t-30 text-center">
-                   @*  <input type="submit" value="ارسال للاعداد" onclick="clicked(event)" class="btn btn-danger"> *@
-                    @* <input type="submit" value="ارسال للمراجعة" class="btn btn-success">*@
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">
-                        ارسال للمراجعة
-                    </button>
-                    <a asp-action="Index" asp-controller="File" class="btn btn-secondary">الرجوع</a>
-                </div>
-
-                <!-- form-layout-footer -->
-            }
             else
             {
                 <div class="row mb-3">

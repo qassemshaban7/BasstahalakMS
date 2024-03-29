@@ -37,6 +37,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Areas\Media\Views\Home\ChangePassword.cshtml" />
+    <None Include="Areas\Media\Views\Home\Index.cshtml" />
+    <None Include="Areas\Media\Views\MediaUsers\Create.cshtml" />
+    <None Include="Areas\Media\Views\MediaUsers\Edit.cshtml" />
+    <None Include="Areas\Media\Views\MediaUsers\Index.cshtml" />
+    <None Include="Areas\Media\Views\Shared\Error.cshtml" />
+    <None Include="Areas\Media\Views\Shared\_BackButtonToHome.cshtml" />
+    <None Include="Areas\Media\Views\Shared\_BackButtonToList.cshtml" />
+    <None Include="Areas\Media\Views\Shared\_Layout.cshtml" />
+    <None Include="Areas\Media\Views\Shared\_TableButtonsPartial.cshtml" />
+    <None Include="Areas\Media\Views\Shared\_ValidationScriptsPartial.cshtml" />
+    <None Include="Areas\Media\Views\_ViewImports.cshtml" />
     <None Include="wwwroot\lib\sweetalerts\custom-sweetalert.js" />
     <None Include="wwwroot\lib\sweetalerts\promise-polyfill.js" />
     <None Include="wwwroot\lib\sweetalerts\sweetalert.min.js" />

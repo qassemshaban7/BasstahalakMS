@@ -79,11 +79,22 @@
                                     <span class="text-info">يحتاج مراجعة المدير</span>
                                 }
                             </td>
-                            <td>
-                                <a asp-action="ShowFile" asp-route-id="@file.Id" class=" btn btn-info">
-                                    <i class="fas fa-file-word"></i>
-                                </a>
-                            </td>
+                            @if (file.status == 6)
+                            {
+                                <td>
+                                    <a asp-action="ShowFileToSendToMedia" asp-route-id="@file.Id" class=" btn btn-info">
+                                        <i class="fas fa-file-word"></i>
+                                    </a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <a asp-action="ShowFile" asp-route-id="@file.Id" class=" btn btn-info">
+                                        <i class="fas fa-file-word"></i>
+                                    </a>
+                                </td>
+                            }
                             <td>
                                 <a asp-action="ShowFileLog" asp-route-id="@file.Id" class=" btn btn-success">
                                     <i class="fas fa-list-alt"></i>

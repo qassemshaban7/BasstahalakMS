@@ -29,14 +29,14 @@
                     <tr>
                         <th>اسم المادة</th>
                         <th>اسم الكتاب</th>
-                         <th>اسم المعد</th>
+                        <th>اسم المعد</th>
                         
                         <th>الحالة </th>
+                        <th>عرض</th>
                         @if (ViewBag.ThisUser.IsAdmin == 1)
                         {
-                            <th>عرض</th>
+                            <th>ارسال للفريق</th>
                         }
-                        <th>ارسال</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -47,15 +47,23 @@
                             <td>@file.BFile.Book.Name</td>
                             <td>@file.BFile.User.FullName</td>
                             <td>
-                                @if (file.BFile.status == 3)
+                                @if (file.BFile.status == 3 && file.BFile.TeamStatus == 1 && ViewBag.ThisUser.IsAdmin == 0)
                                 {
-                                    <span class="text-info" >يحتاج الي مراجعة</span>
+                                    <span class="text-info" >يحتاج الي مراجعة المشرف</span>
+                                }
+                                else if (file.BFile.status == 3 && file.BFile.TeamStatus == 1 && ViewBag.ThisUser.IsAdmin == 1)
+                                {
+                                    <span class="text-info">يحتاج الي مراجعة </span>
+                                }
+                                else if (file.BFile.status == 3 && file.BFile.TeamStatus == 0 && ViewBag.ThisUser.IsAdmin == 1)
+                                {
+                                    <span class="text-info"> يحتاج الي مراجعة الفريق</span>
                                 }
                                 else if (file.BFile.status == 6)
                                 {
                                     <span class="text-info">يحتاج الي المدير</span>
                                 }
-                                else if (file.BFile.status == 4)
+                                else if (file.BFile.status == 4 || file.BFile.status == 3 && file.BFile.TeamStatus ==0)
                                 {
                                     <span class="text-info">يحتاج مراجعة الفريق</span>
                                 }
@@ -64,57 +72,39 @@
                                     <span class="text-info">يحتاج مراجعة الاعداد</span>
                                 }
                             </td>
-
-                            @if (ViewBag.ThisUser.IsAdmin == 1)
+                            @if (file.BFile.status == 3 || file.BFile.status == 4 || file.BFile.status == 5 || file.BFile.status == 6 && ViewBag.ThisUser.IsAdmin == 1)
                             {
-                                @if (file.BFile.status == 3 || file.BFile.status == 4 || file.BFile.status == 5 && ViewBag.ThisUser.IsAdmin == 1)
-                                {
-                                    <td>
-                                        <a asp-action="ShowFile" asp-route-id="@file.BFile.Id" class=" btn btn-info">
-                                            <i class="fas fa-file-word"></i>
-                                        </a>
-                                    </td>
-                                }
-                                else
-                                {
-                                    <td>
-                                        <span class="text-danger"> غير متاح</span>
-                                    </td>
-                                }
+                                <td>
+                                    <a asp-action="ShowFile" asp-route-id="@file.BFile.Id" class=" btn btn-info">
+                                        <i class="fas fa-file-word"></i>
+                                    </a>
+                                </td>
                             }
-
-                            @if (file.BFile.status == 3 && ViewBag.ThisUser.IsAdmin == 1)
+                            else if (ViewBag.ThisUser.IsAdmin == 0 && file.BFile.status == 4 || file.BFile.status == 3 && file.BFile.TeamStatus == 0)
+                            {
+                                <td>
+                                    <a asp-action="ShowToSendToSupervisor" asp-route-id="@file.BFile.Id" class=" btn btn-info">
+                                        <i class="fas fa-plane">ارسال الي المشرف </i>
+                                    </a>
+                                </td>
+                            }else
+                            {
+                                <td>
+                                    <span class="text-danger"> غير متاح</span>
+                                </td>
+                            }
+                            @if (ViewBag.ThisUser.IsAdmin == 1 && file.BFile.status == 3 || file.BFile.status == 4)
                             {
                                 <td>
                                     <a asp-action="ShowToSendToTeam" asp-route-id="@file.BFile.Id" class=" btn btn-info">
                                         <i class="fas fa-plane">ارسال الي الفريق </i>
                                     </a>
                                 </td>
-                            }
-                            else if (ViewBag.ThisUser.IsAdmin == 0)
-                            {
-                                @if (file.BFile.status == 4)
-                                {
-                                    <td>
-                                        <a asp-action="ShowToSendToSupervisor" asp-route-id="@file.BFile.Id" class=" btn btn-info">
-                                            <i class="fas fa-plane">ارسال الي المشرف </i>
-                                        </a>
-                                    </td>
-                                }
-                                else
-                                {
-                                    <td>
-                                        <span class="text-danger">غير متاح</span>
-                                    </td>
-                                }
-                            }
-                            else
-                            {
+                            }else{
                                 <td>
-                                    <span class="text-danger">غير متاح</span>
+                                    <span class="text-danger"> غير متاح</span>
                                 </td>
                             }
-
                         </tr>
                     }
                 </tbody>

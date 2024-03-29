@@ -1,9 +1,10 @@
-﻿@model IEnumerable<BFile>
+﻿@model IEnumerable<ApplicationUser>
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Areas/Prepare/Views/Shared/_Layout.cshtml";
+    Layout = "~/Areas/Media/Views/Shared/_Layout.cshtml";
 }
+
 
 @section head {
     <!-- BEGIN PAGE LEVEL STYLES -->
@@ -13,16 +14,14 @@
 }
 
 <div class="br-pagetitle">
-    <i class="icon fas fa-light fa-file-word"></i>
+    <i class="icon fas fa-light fa-user"></i>
     <div class="row">
         <div class="col-lg-10 col-10">
-            <h3 class="text-info">قائمة المواد </h3>
+            <h3 class="text-info">قائمة المحررين</h3>
         </div>
-
         <div class="col-lg-2 col-2">
-            <a asp-action="Upload" asp-controller="File" class="btn btn-primary">اضافة ماده علمية </a>
+            <h2><a asp-action="Create" asp-controller="MediaUsers" class="btn btn-primary">اضافة محرر </a></h2>
         </div>
-
     </div>
 </div>
 
@@ -32,76 +31,46 @@
             <table id="deptsTable" class="table display responsive nowrap">
                 <thead>
                     <tr>
-                        <th>اسم الملف</th>
-                       @* <th>الوصف</th>*@
-                        <th>اسم الكتاب</th>
-                        @*<th>اسم الفرع</th>
-                        <th>عدد الوحدات</th>
-                        <th>عدد الدروس</th>*@
-                        @*<th>تحميل</th>*@
+                        <th>اسم المحرر</th>
+                        <th>اسم المستخدم</th>
+                        <th>رقم الموبايل </th>
+                        <th>نوع المستخدم  </th>
                         <th>تعديل</th>
-                        <th>ارسال للمدير</th>
-                        <th>ارسال للمراجعة</th>
+                        <th>حذف</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var file in Model)
+                    @foreach (var item in Model)
                     {
                         <tr>
-                            <td>@file.Name</td>
-                            <td>@file.Book.Name</td>
-                           
-                            @*<td>
-                                <a href="~/@file.FilePath" class=" btn btn-info" target="_blank">
-                                    <i class="fas fa-file-word"></i>
+                            <td>@item.FullName</td>
+                            <td>@item.UserName</td>
+                            <td>@item.PhoneNumber</td>
+
+                            @if (item.IsAdmin == 1)
+                            {
+                                <td>
+                                    مشرف
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    مراجع
+                                </td>
+                            }
+                            <td>
+                                <a asp-action="Edit" asp-controller="MediaUsers" asp-route-id="@item.Id" class="btn btn-primary text-white">
+                                    <i class="fas fa-edit"></i>
                                 </a>
-                            </td>*@
+                            </td>
                             <td>
-                                @if (file.status == 0 || file.status ==2)
-                                {
-                                    <a asp-action="Edit" asp-controller="File" asp-route-id="@file.Id" class=" btn btn-warning"> <i class="fas fa-edit"></i> </a>
+                                @*                              <a asp-action="Delete" asp-controller="Printing" asp-route-id="@item.Id" onclick="return confirm('هل انت متأكد من الحذف')" class="btn btn-danger text-white"> *@
+                                <a asp-action="Delete" asp-controller="MediaUsers" asp-route-id="@item.Id" class="btn btn-danger">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </td>
 
-                                }
-                                else
-                                {
-                                    <span class="text-info">تحت المراجعة</span>
-                                }
-                            </td>
-                            <td>
-                                @if(file.status == 0)
-                                {
-                                    <a asp-action="SendForReview" asp-controller="File" asp-route-id="@file.Id" class=" btn btn-success"> <i class="fas fa-plane"></i> </a>
-
-                                }
-                                else if (file.status == 1)
-                                {
-                                    <span class="text-info">تحت مراجعة المدير</span>
-                                }
-                                else if (file.status == 2)
-                                {
-                                    <span class="text-info">تم طلب تعديلات من المدير</span>
-                                }
-                                else if (file.status == 3)
-                                {
-                                    <span class="text-info">تحت مراجعة مجموعة المراجعة</span>
-                                }
-                                else if (file.status == 5)
-                                {
-                                    <span class="text-info">تم طلب تعديلات من المراجعة</span>
-                                }
-                            </td>
-                            <td>
-                                @if(file.status == 5)
-                                {
-                                    <a asp-action="ShowToSendToReviwSupervisor" asp-route-id="@file.Id" class=" btn btn-info">
-                                            <i class="fas fa-plane">ارسال الي المشرف </i>
-                                    </a>
-                                }
-                                else
-                                {    
-                                    <span class="text-danger"> غير متاح</span>
-                                }
-                            </td>
                         </tr>
                     }
                 </tbody>
@@ -110,9 +79,8 @@
     </div>
 </div>
 <input type="hidden" id="created" data-value="@ViewBag.created" />
-<input type="hidden" id="Sent" data-value="@ViewBag.Sent" />
 <input type="hidden" id="updated" data-value="@ViewBag.updated" />
-
+<input type="hidden" id="deleted" data-value="@ViewBag.deleted" />
 @section scripts {
     <!-- BEGIN PAGE LEVEL SCRIPTS -->
     <script src="~/lib/table/datatable/datatables.js"></script>
@@ -137,27 +105,6 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            var updated = $("#updated").data("value");
-            if (updated == "True") {
-                toastr.options = {
-                    "closeButton": false,
-                    "debug": false,
-                    "newestOnTop": false,
-                    "progressBar": true,
-                    "positionClass": "toast-top-left",
-                    "preventDuplicates": true,
-                    "onclick": null,
-                    "showDuration": "300",
-                    "hideDuration": "1000",
-                    "timeOut": "12000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut"
-                }
-                toastr.success("تم التعديل  بنجاح");
-            }
             var created = $("#created").data("value");
             if (created == "True") {
                 toastr.options = {
@@ -177,11 +124,11 @@
                     "showMethod": "fadeIn",
                     "hideMethod": "fadeOut"
                 }
-                toastr.success("تم اضافة المادة العلمية  بنجاح");
+                toastr.success("تم اضافة المحرر بنجاح");
             }
 
-            var Sent = $("#Sent").data("value");
-            if (Sent == "True") {
+            var updated = $("#updated").data("value");
+            if (updated == "True") {
                 toastr.options = {
                     "closeButton": false,
                     "debug": false,
@@ -199,9 +146,32 @@
                     "showMethod": "fadeIn",
                     "hideMethod": "fadeOut"
                 }
-                toastr.success("تم الارسال للمراجعة بنجاح");
+                toastr.success("تم تعديل بيانات المحرر بنجاح");
+            }
+
+            var deleted = $("#deleted").data("value");
+            if (deleted == "True") {
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": true,
+                    "positionClass": "toast-top-left",
+                    "preventDuplicates": true,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "12000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+                toastr.success("تم حذف المحرر بنجاح");
             }
         });
     </script>
     <!-- END PAGE LEVEL SCRIPTS -->
 }
+
