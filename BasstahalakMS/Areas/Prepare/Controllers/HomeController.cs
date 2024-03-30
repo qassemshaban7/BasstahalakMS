@@ -14,7 +14,7 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
 {
     [Authorize(Roles = StaticDetails.Prepare)]
     [Area(nameof(Prepare))]
-    [Route(nameof(Prepare) + "/[controller]")]
+    [Route(nameof(Prepare) + "/[controller]/[action]")]
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _context;

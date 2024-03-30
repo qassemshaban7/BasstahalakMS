@@ -44,7 +44,7 @@ namespace BasstahalakMS.Areas.Media.Controllers
             if (user.IsAdmin == 1)
             {
                 var bFileNotes = await _context.BfileNotes
-                    .Where(x => x.UserId == userId && (x.status == 3 || x.status == 4 || x.status == 5 || x.status == 6))
+                    .Where(x => x.SendUserId == userId && (x.status == 3 || x.status == 4 || x.status == 5 || x.status == 6))
                     .Include(c => c.BFile)
                     .ThenInclude(c => c.Book)
                     .Include(c => c.BFile)
@@ -63,7 +63,7 @@ namespace BasstahalakMS.Areas.Media.Controllers
             else
             {
                 var bFileNotes = await _context.BfileNotes
-                    .Where(x => x.UserId == userId && x.status == 3 || x.status == 4)
+                    .Where(x => x.SendUserId == userId && x.status == 3 || x.status == 4)
                     .Include(c => c.BFile)
                     .ThenInclude(c => c.Book)
                     .Include(c => c.BFile)
@@ -171,7 +171,7 @@ namespace BasstahalakMS.Areas.Media.Controllers
                         BfileId = BfileId,
                         CurrentFileContent = fileContent,
                         Notes = Notes,
-                        UserId = userId,
+                        SendUserId = userId,
                         status = 5 // Back to Prepare
                     };
                     _context.BfileNotes.Add(bfileNote);
@@ -188,7 +188,7 @@ namespace BasstahalakMS.Areas.Media.Controllers
                         BfileId = BfileId,
                         CurrentFileContent = fileContent,
                         Notes = Notes,
-                        UserId = userId,
+                        SendUserId = userId,
                         status = 6 // Sent to Admin
                     };
                     _context.BfileNotes.Add(bfileNote);
@@ -264,7 +264,7 @@ namespace BasstahalakMS.Areas.Media.Controllers
                                     BfileId = BfileId,
                                     CurrentFileContent = bfile.fileContent,
                                     Notes = "",
-                                    UserId = reviewer.Id,
+                                    ReciveUserId = reviewer.Id,
                                     SendUserId = userId,
                                     status = 4 // Sent to All Team Review
                                 };
@@ -287,7 +287,7 @@ namespace BasstahalakMS.Areas.Media.Controllers
                                     BfileId = BfileId,
                                     CurrentFileContent = bfile.fileContent,
                                     Notes = "",
-                                    UserId = reviewer.Id,
+                                    ReciveUserId = reviewer.Id,
                                     SendUserId = userId,
                                     status = 4 // Sent to specific Member of Team Review
                                 };
@@ -355,7 +355,7 @@ namespace BasstahalakMS.Areas.Media.Controllers
                         BfileId = BfileId,
                         CurrentFileContent = bfile.fileContent,
                         Notes = "",
-                        UserId = ReviewSupervisor,
+                        ReciveUserId = ReviewSupervisor,
                         SendUserId = userId,
                         status = 3 // Sent to Supervisor 
                     };

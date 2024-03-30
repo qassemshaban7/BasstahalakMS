@@ -1,0 +1,137 @@
+﻿@model BFile
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Review/Views/Shared/_Layout.cshtml";
+}
+
+<div class="br-pagetitle">
+    <h3 class="text-info mr-3">إضافة مادة جديدة</h3>
+</div><!-- d-flex -->
+
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="form-layout form-layout-4">
+                    <form method="post" asp-action="Upload" asp-controller="File" enctype="multipart/form-data">
+                        <div class="row mb-3">
+                            <label class="col-sm-4 form-control-label">اسم المادة: <span class="tx-danger">*</span></label>
+                            <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                                <input asp-for="Name" type="text" class="form-control" placeholder="اسم المادة" required>
+                                <span class="text-danger" asp-validation-for="Name"></span>
+                            </div>
+                        </div><!-- row -->
+                        <div class="row mb-3">
+                            <label class="col-sm-4 form-control-label">الوصف: <span class="tx-danger">*</span></label>
+                            <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                                <textarea asp-for="Description" rows="5" class="form-control" required>
+                                 </textarea>
+                                <span class="text-danger" asp-validation-for="Description"></span>
+                            </div>
+                        </div><!-- row -->
+                        <div class="row mb-3">
+                            <label class="col-sm-4 form-control-label">اسم الكتاب: <span class="tx-danger">*</span></label>
+                            <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                                <select asp-for="BookId" class="form-control" required>
+                                    <option value="">اختر اسم الكتاب</option>
+                                    @foreach (var book in ViewBag.Books)
+                                    {
+                                        <option value="@book.Id">@book.Name</option>
+                                    }
+                                </select>
+                                <span class="text-danger" asp-validation-for="BookId"></span>
+                            </div>
+                        </div><!-- row -->
+                        @foreach (var branch in ViewBag.Branches)
+                        {
+                            <div class="row mb-3 mr-1">
+                                <div class="col-4">
+                                    <input class="form-check-input" type="checkbox" value="1" name="check_@branch.Id" id="check_@branch.Id">
+                                    <label class="form-check-label mr-3" for="flexCheckDefault">
+                                        @branch.Name
+                                    </label>
+                                </div>
+                                <div class="col-4">
+                                    <input type="number" name="noUnits_@branch.Id" readonly placeholder="عدد الوحدات" class="form-control input_@branch.Id" />
+                                </div>
+                                <div class="col-4">
+                                    <input type="number" name="noLessons_@branch.Id" readonly placeholder="عدد الدروس" class="form-control input_@branch.Id" />
+                                </div>
+
+
+                            </div>
+
+                            <!-- row -->
+                        }
+                        <div class="row mb-3">
+                            <label class="col-sm-4 form-control-label">محتوي المادة: <span class="tx-danger">*</span></label>
+
+                        </div><!-- row -->
+                        <div class="row mb-3">
+
+                            <textarea asp-for="fileContent" id="fileContent" required>
+                                 </textarea>
+                            <span class="text-danger" asp-validation-for="fileContent"></span>
+
+                        </div><!-- row -->
+                        @*<div class="row">
+                        <label class="col-sm-4 form-control-label">الملف: <span class="tx-danger">*</span></label>
+                        <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                        <input type="file" asp-for="UploadedFile" accept=".doc,.docx" class="form-control" required>
+                        <span class="text-danger" asp-validation-for="UploadedFile"></span>
+                        </div>
+                        </div><!-- row -->*@
+                        <div class="form-layout-footer mg-t-30 text-center">
+                            <input type="submit" value="إضافة" onclick="clicked(event)" class="btn btn-info">
+                            <a asp-action="Index" asp-controller="File" class="btn btn-secondary">الرجوع</a>
+                        </div><!-- form-layout-footer -->
+                    </form>
+                </div><!-- form-layout -->
+            </div>
+        </div><!-- row -->
+    </div><!-- br-section-wrapper -->
+</div><!-- br-pagebody -->
+@section scripts {
+    <script type="text/javascript" src="~/lib/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript" src="~/lib/sweetalerts/sweetalert.min.js"></script>
+
+    <script>
+        let chk = 0;
+        window.onload = function () {
+            CKEDITOR.replace('fileContent');
+        };
+    </script>
+    @foreach (var item in ViewBag.Branches)
+    {
+        <script>
+            $("#check_@item.Id").change(function () {
+                if (this.checked) {
+                    $(".input_@item.Id").attr("readonly", false);
+                    $(".input_@item.Id").prop("required", true);
+                    chk++;
+                }
+                else {
+                    $(".input_@item.Id").attr("readonly", true);
+                    $(".input_@item.Id").prop("required", false);
+                    chk--;
+                }
+            });
+
+        </script>
+    }
+    <script>
+        function clicked(e) {
+            if (chk == 0) {
+                Swal.fire({
+                    icon: "error",
+                    title: "خطأ...",
+                    confirmButtonText: "حسنا",
+                    text: 'يجب اختيار قسم واحد علي الاقل'
+                });
+                e.preventDefault();
+            }
+        }
+    </script>
+
+
+}

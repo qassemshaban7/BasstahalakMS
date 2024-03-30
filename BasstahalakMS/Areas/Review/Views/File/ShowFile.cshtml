@@ -83,7 +83,7 @@
         <hr />
         @if (ViewBag.ThisUser.IsAdmin == 1){
             <form method="post" asp-action="SendForReview" asp-controller="File">
-            @if (Model.status == 3 && ViewBag.ThisUser.IsAdmin == 1)
+            @if (Model.status == 3 || Model.status == -1 || Model.status == 4)
             {
                 <div class="row mb-3">
                     <label class="col-sm-4 form-control-label  text-dark font-weight-bold">محتوي المادة</label>
@@ -137,7 +137,7 @@
             </form>
         }else
         {
-            <form method="post" asp-action="SendForSupervisor" asp-controller="File">
+            <form method="post" asp-action="SendForReview" asp-controller="File">
                 @if(Model.status == 4 && ViewBag.ThisUser.IsAdmin == 0 || Model.status == 3 && Model.TeamStatus == 0 && ViewBag.ThisUser.IsAdmin == 0)
                 {
                     <div class="row mb-3">
@@ -160,10 +160,9 @@
                     <input type="hidden" name="BfileId" value="@Model.Id" />
                     <input type="hidden" id="Prepare" name="Prepare" value="0" />
                     <div class="form-layout-footer mg-t-30 text-center">
-                        @* <input type="submit" value="ارسال للاعداد" onclick="clicked(event)" class="btn btn-danger"> *@
-                        @* <input type="submit" value="ارسال للمراجعة" class="btn btn-success">*@
-                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">
-                            ارسال للمشرف
+                        <input type="submit" value="ارسال للمدير" class="btn btn-danger">
+                        <button type="button" class="btn btn-success" onclick="clicked(event)" data-toggle="modal" data-target="#exampleModal">
+                            ارسال للاعداد
                         </button>
                         <a asp-action="Index" asp-controller="File" class="btn btn-secondary">الرجوع</a>
                     </div>
@@ -194,7 +193,7 @@
         }
     </div>
 </div>
-@if(ViewBag.ThisUser.IsAdmin == 1){
+
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -229,63 +228,7 @@
         </div>
     </div>
 </div>
-}else
-{
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">ارسال للمشرف</h5>
 
-            </div>
-            <div class="modal-body">
-                <form method="post" asp-action="SendForSupervisor" asp-controller="File">
-                    <div class="row mb-3">
-                        <label class="col-sm-4 form-control-label  text-dark font-weight-bold mt-2">المشرف</label>
-                        <select class="col-sm-7 form-control" required name="ReviewSupervisor">
-                            <option value="">اختر المشرف...</option>
-                            @foreach (var item in ViewBag.ReviewAdmins)
-                            {
-                                <option value="@item.Id">@item.FullName</option>
-                            }
-
-                        </select>
-                    </div>
-                    @* <div class="row mb-3">
-                    <label class="col-sm-4 form-control-label  text-dark font-weight-bold mt-2">المراجعين</label>
-                    <div class="form-group">
-                    <input type="radio" id="status1" name="Reviewers" value="0" checked>
-                    <label for="status1">بلا مراجعين</label><br>
-                    <input type="radio" id="status2" name="Reviewers" value="1" checked>
-                    <label for="status2"> كل الفريق</label><br>
-                    <input type="radio" id="status3" name="Reviewers" value="2">
-                    <label for="status3"> تحديد أعضاء</label>
-                    </div>
-
-                    </div>
-                    <div class="row mb-3">
-
-                    <select class="m-3 form-control d-none reviewersClass" multiple name="ReviewUsers[]">
-                    @foreach (var item in ViewBag.ReviewUsers)
-                    {
-                    <option value="@item.Id">@item.FullName</option>
-                    }
-                    </select>
-                    </div> *@
-                    <input type="hidden" name="BfileId" value="@Model.Id" />
-                    <div class="form-layout-footer mg-t-30 text-center">
-                        <input type="submit" value="ارسال الي المشرف " class="btn btn-success">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
-            </div>
-        </div>
-    </div>
-</div>
-}
 @section scripts {
     <script type="text/javascript" src="~/lib/ckeditor/ckeditor.js"></script>
     <script type="text/javascript" src="~/lib/sweetalerts/sweetalert.min.js"></script>

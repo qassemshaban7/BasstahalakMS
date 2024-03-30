@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BFile>
+﻿@model IEnumerable<BfileNote>
 
 @{
     ViewData["Title"] = "Index";
@@ -40,16 +40,16 @@
                         <th>عدد الدروس</th>*@
                         @*<th>تحميل</th>*@
                         <th>تعديل</th>
-                        <th>ارسال للمدير</th>
-                        <th>ارسال للمراجعة</th>
+                        <th>الحالة</th>
+                        <th>ارسال </th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var file in Model)
                     {
                         <tr>
-                            <td>@file.Name</td>
-                            <td>@file.Book.Name</td>
+                            <td>@file.BFile.Name</td>
+                            <td>@file.BFile.Book.Name</td>
                            
                             @*<td>
                                 <a href="~/@file.FilePath" class=" btn btn-info" target="_blank">
@@ -57,9 +57,9 @@
                                 </a>
                             </td>*@
                             <td>
-                                @if (file.status == 0 || file.status ==2)
+                                @if (file.BFile.status == 0 || file.BFile.status ==2 || file.BFile.status == 5)
                                 {
-                                    <a asp-action="Edit" asp-controller="File" asp-route-id="@file.Id" class=" btn btn-warning"> <i class="fas fa-edit"></i> </a>
+                                    <a asp-action="Edit" asp-controller="File" asp-route-id="@file.BFile.Id" class=" btn btn-warning"> <i class="fas fa-edit"></i> </a>
 
                                 }
                                 else
@@ -68,33 +68,39 @@
                                 }
                             </td>
                             <td>
-                                @if(file.status == 0)
+                                @if(file.BFile.status == 0)
                                 {
-                                    <a asp-action="SendForReview" asp-controller="File" asp-route-id="@file.Id" class=" btn btn-success"> <i class="fas fa-plane"></i> </a>
-
+                                    @* <a asp-action="SendForReview" asp-controller="File" asp-route-id="@file.Id" class=" btn btn-success"> <i class="fas fa-plane"></i> </a> *@
+                                    <span class="text-info">لم يتم الارسال بعد</span>
                                 }
-                                else if (file.status == 1)
+                                else if (file.BFile.status == 1)
                                 {
                                     <span class="text-info">تحت مراجعة المدير</span>
                                 }
-                                else if (file.status == 2)
+                                else if (file.BFile.status == 2)
                                 {
                                     <span class="text-info">تم طلب تعديلات من المدير</span>
                                 }
-                                else if (file.status == 3)
+                                else if (file.BFile.status == 3)
                                 {
                                     <span class="text-info">تحت مراجعة مجموعة المراجعة</span>
                                 }
-                                else if (file.status == 5)
+                                else if (file.BFile.status == 5)
                                 {
                                     <span class="text-info">تم طلب تعديلات من المراجعة</span>
                                 }
                             </td>
                             <td>
-                                @if(file.status == 5)
+                                @if(file.BFile.status == 5)
                                 {
-                                    <a asp-action="ShowToSendToReviwSupervisor" asp-route-id="@file.Id" class=" btn btn-info">
-                                            <i class="fas fa-plane">ارسال الي المشرف </i>
+                                    <a asp-action="ShowToSendToReviwSupervisor" asp-route-id="@file.BFile.Id" class=" btn btn-info">
+                                            <i class="fas fa-plane">ارسال الي المراجعة </i>
+                                    </a>
+                                }
+                                else if (file.BFile.status == 0 || file.BFile.status == 2)
+                                {
+                                    <a asp-action="ShowFile" asp-route-id="@file.BFile.Id" class=" btn btn-info">
+                                        <i class="fas fa-plane">ارسال الي المراجعة </i>
                                     </a>
                                 }
                                 else

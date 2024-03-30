@@ -86,7 +86,7 @@
         }
         <hr />
         <form method="post" asp-action="SendForSupervisor" asp-controller="File">
-            @if (Model.status == 4)
+            @if (Model.status == 4 || Model.status == 3 && Model.TeamStatus == 0)
             {
                 <div class="row mb-3">
                     <label class="col-sm-4 form-control-label  text-dark font-weight-bold">محتوي المادة</label>

@@ -1,7 +1,7 @@
 ﻿@model BFile
 @{
     ViewData["Title"] = "Edit";
-    Layout = "~/Areas/Prepare/Views/Shared/_Layout.cshtml";
+    Layout = "~/Areas/Review/Views/Shared/_Layout.cshtml";
 }
 
 <div class="br-pagetitle">
@@ -14,7 +14,7 @@
             <div class="col-xl-12">
                 <div class="form-layout form-layout-4">
                     <form method="post" asp-action="Edit" asp-controller="File" enctype="multipart/form-data">
-                        @if(Model.status != 0)
+                        @if (Model.status != -1)
                         {
                             <div class="row mb-3">
                                 <div class="col-4 mt-2">
@@ -54,7 +54,7 @@
                             </div>
                             <hr />
                         }
-                        
+
 
                         <div class="row mb-3">
                             <label class="col-sm-4 form-control-label">اسم المادة: <span class="tx-danger">*</span></label>
@@ -78,7 +78,7 @@
                                     <option value="">اختر اسم الكتاب</option>
                                     @foreach (var book in ViewBag.Books)
                                     {
-                                        if(Model.BookId == book.Id)
+                                        if (Model.BookId == book.Id)
                                         {
                                             <option value="@book.Id" selected>@book.Name</option>
 
@@ -95,7 +95,7 @@
                         </div><!-- row -->
                         @foreach (var item in ViewBag.currentBranches)
                         {
-                            
+
                             <div class="row mb-3 mr-1">
                                 <div class="col-4">
                                     <input class="form-check-input" type="checkbox" value="1" name="check_@item.Branch.Id" id="check_@item.Branch.Id" checked>
@@ -114,7 +114,6 @@
                             </div>
 
                             <!-- row -->
-                            
                         }
                         @foreach (var branch in ViewBag.Branches)
                         {
@@ -136,19 +135,19 @@
                             </div>
 
                             <!-- row -->
-                           
                         }
                         <hr />
                         <div class="row mb-3">
                             <label class="col-sm-4 form-control-label">محتوي المادة: <span class="tx-danger">*</span></label>
 
                         </div><!-- row -->
-                        @if(Model.status !=0){
+                        @if (Model.status != -1)
+                        {
                             <div class="row mb-3">
 
                                 <textarea id="fileContent" name="fileContent" required>
                                     @ViewBag.bfileNote.CurrentFileContent
-                                </textarea>
+                                    </textarea>
                                 <span class="text-danger" asp-validation-for="fileContent"></span>
 
                             </div>
@@ -160,22 +159,22 @@
                             <div class="row mb-3">
 
                                 <textarea id="fileContent" name="fileContent" asp-for="fileContent" required>
-                                </textarea>
+                                    </textarea>
                                 <span class="text-danger" asp-validation-for="fileContent"></span>
 
                             </div>
 
                             <!-- row -->
                         }
-                      
+
                         <hr />
-                        
-                        
+
+
                         <input type="hidden" asp-for="Id" />
                         <div class="form-layout-footer mg-t-30 text-center">
-                            @if(Model.status == 0 || Model.status == 2 || Model.status == 6 )
+                            @if (Model.status == 3 || Model.status == -1)
                             {
-                                <input type="submit" value="حفظ التعديلات"  class="btn btn-info">
+                                <input type="submit" value="حفظ التعديلات" class="btn btn-info">
 
                             }
                             <a asp-action="Index" asp-controller="File" class="btn btn-secondary">الرجوع</a>
@@ -186,7 +185,7 @@
         </div><!-- row -->
     </div><!-- br-section-wrapper -->
 </div><!-- br-pagebody -->
-@section scripts{
+@section scripts {
     <script type="text/javascript" src="~/lib/ckeditor/ckeditor.js"></script>
     <script type="text/javascript" src="~/lib/sweetalerts/sweetalert.min.js"></script>
     <script>
@@ -247,8 +246,3 @@
 
 
 }
-
-
-
-
-

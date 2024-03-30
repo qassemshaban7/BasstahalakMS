@@ -44,7 +44,7 @@ namespace BasstahalakMS.Areas.Review.Controllers
             if (user.IsAdmin == 1)
             {
                 var bFileNotes = await _context.BfileNotes
-                    .Where(x => x.UserId == userId && (x.status == 3 || x.status == 4 || x.status == 5 || x.status == 6))
+                    .Where(x => x.SendUserId == userId && (x.status == 3 || x.status == 4 || x.status == 5 || x.status == 6 || x.BFile.status == -1))
                     .Include(c => c.BFile)
                     .ThenInclude(c => c.Book)
                     .Include(c => c.BFile)
@@ -63,15 +63,21 @@ namespace BasstahalakMS.Areas.Review.Controllers
             else
             {
                 var bFileNotes = await _context.BfileNotes
-                    .Where(x => x.UserId == userId && x.status == 3 || x.status == 4)
+                    .Where(x => x.ReciveUserId == userId && x.status == 3 || x.status == 4 || x.BFile.status == -1)
                     .Include(c => c.BFile)
                     .ThenInclude(c => c.Book)
                     .Include(c => c.BFile)
                     .ThenInclude(c => c.User)
                     .Where(c => c.BFile.status == 4 || c.BFile.status == 3)
                     .ToListAsync();
+                
+
+
+                var distinctBFiles = bFileNotes.GroupBy(x => x.BFile.Id)
+                                                .Select(group => group.First())
+                                                .ToList();
                 ViewBag.ThisUser = user;
-                return View(bFileNotes);
+                return View(distinctBFiles);
             }
 
 
@@ -97,21 +103,257 @@ namespace BasstahalakMS.Areas.Review.Controllers
 
             //return View(bFileNotes);
         }
+
+        public IActionResult Upload()
+        {
+            var books = _context.Books.ToList();
+            ViewBag.Books = books;
+            var branches = _context.Branches.ToList();
+            ViewBag.Branches = branches;
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Upload(BFile bFile/*, IFormFile uploadedFile*/)
+        {
+            try
+            {
+                //if (uploadedFile != null)
+                //{
+                //string uploadsFolder = Path.Combine("files");
+                //string uploadsFolderPath = Path.Combine(_hostingEnvironment.WebRootPath, uploadsFolder);
+                //if (!Directory.Exists(uploadsFolderPath))
+                //{
+                //    Directory.CreateDirectory(uploadsFolderPath);
+                //}
+
+                //string uniqueFileName = Guid.NewGuid().ToString() + "_" + uploadedFile.FileName;
+                //string filePath = Path.Combine(uploadsFolderPath, uniqueFileName);
+                //using (var stream = new FileStream(filePath, FileMode.Create))
+                //{
+                //    await uploadedFile.CopyToAsync(stream);
+                //}
+
+                string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                var file = new BFile
+                {
+                    Name = bFile.Name,
+                    Description = bFile.Description,
+                    fileContent = bFile.fileContent,
+                    //FilePath = Path.Combine(uploadsFolder, uniqueFileName),
+                    BookId = bFile.BookId,
+                    //BranchName = branchName,
+                    //UnitsCount = unitsCount,
+                    //LessonsCount = lessonsCount,
+                    UserId = userId,
+                    status = -1
+                };
+
+                _context.BFiles.Add(file);
+                await _context.SaveChangesAsync();
+                var branchesInDB = await _context.Branches.ToListAsync();
+                foreach (var branch in branchesInDB)
+                {
+                    string name = "check_" + branch.Id;
+                    string chkValue = Request.Form[name].ToString();
+                    if (chkValue == "1")
+                    {
+                        string noOfUnitsName = "noUnits_" + @branch.Id;
+                        string noOfLessonsName = "noLessons_" + @branch.Id;
+                        string noOfUnits = Request.Form[noOfUnitsName].ToString();
+                        string noOfLessons = Request.Form[noOfLessonsName].ToString();
+                        var fileBranch = new FileBranch
+                        {
+                            BFileId = file.Id,
+                            BranchId = branch.Id,
+                            LessonsCount = Convert.ToInt32(noOfLessons),
+                            UnitsCount = Convert.ToInt32(noOfUnits),
+
+
+                        };
+
+                        var bfileNote = new BfileNote
+                        {  
+                            BfileId = file.Id,
+                            CurrentFileContent = file.fileContent,
+                            Notes = " ",
+                            SendUserId = userId,
+                            ReciveUserId = userId,
+                            status = -1
+                        };
+                        _context.BfileNotes.Add(bfileNote);
+
+                        _context.FileBranches.Add(fileBranch);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+                HttpContext.Session.SetString("created", "true");
+                return RedirectToAction(nameof(Index));
+                //}
+                //else
+                //{
+                //    var books = _context.Books.ToList();
+                //    ViewBag.Books = books;
+                //    var branches = _context.Branches.ToList();
+                //    ViewBag.Branches = branches;
+                //    return View();
+                //}
+            }
+            catch (Exception ex)
+            {
+                var books = _context.Books.ToList();
+                ViewBag.Books = books;
+                var branches = _context.Branches.ToList();
+                ViewBag.Branches = branches;
+                return View();
+            }
+
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var existingFile = await _context.BFiles.FindAsync(id);
+            if (existingFile == null)
+            {
+                return NotFound();
+            }
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+
+            var books = _context.Books.ToList();
+            ViewBag.Books = books;
+
+            var branches = _context.Branches.ToList();
+            var currentBranches = await _context.FileBranches.Include(x => x.Branch).Where(x => x.BFileId == existingFile.Id).ToListAsync();
+
+            foreach (var item in branches.ToList())
+            {
+                foreach (var item1 in currentBranches)
+                {
+                    if (item.Id == item1.BranchId)
+                        branches.Remove(item);
+                }
+            }
+            ViewBag.Branches = branches;
+
+            ViewBag.currentBranches = currentBranches;
+            ViewBag.currentBranchesCount = currentBranches.Count();
+
+            if(existingFile.status == -1)
+            {
+                var bfileNotess = await _context.BfileNotes
+                                .Where(p => p.BfileId == existingFile.Id  && p.status == -1 && p.BFile.UserId == userId)
+                                .Include(x => x.BFile)
+                                .Include(x => x.User)
+                                .ToListAsync();
+
+                ViewBag.bfileNote = bfileNotess;
+                return View(existingFile);
+            }
+
+            var bfileNote = await _context.BfileNotes.Include(x => x.BFile)
+                .Include(x => x.User)
+                .OrderBy(e => e.CreationDate)
+                .LastOrDefaultAsync(x => x.status == existingFile.status && x.ReciveUserId != userId);
+
+            ViewBag.bfileNote = bfileNote;
+            return View(existingFile);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(BFile bFile)
+        {
+            try
+            {
+                string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var existingFile = await _context.BFiles.FindAsync(bFile.Id);
+                if (existingFile != null)
+                {
+                    existingFile.Name = bFile.Name;
+                    existingFile.Description = bFile.Description;
+                    existingFile.fileContent = Request.Form["fileContent"].ToString();
+                    existingFile.BookId = bFile.BookId;
+                    bool updated = true;
+                    if (existingFile.status == 3)
+                    {
+                        BfileNote bfileNote = new BfileNote
+                        {
+                            BfileId = bFile.Id,
+                            CurrentFileContent = Request.Form["fileContent"].ToString(),
+                            Notes = "",
+                            ReciveUserId = userId
+                            
+                        };
+                        _context.BfileNotes.Add(bfileNote);
+                        updated = false;
+                    }
+                    
+                    await _context.SaveChangesAsync();
+
+                    var currentBranches = await _context.FileBranches.Include(x => x.Branch).Where(x => x.BFileId == existingFile.Id).ToListAsync();
+                    foreach (var item in currentBranches)
+                    {
+                        _context.FileBranches.Remove(item);
+                    }
+                    await _context.SaveChangesAsync();
+                    var branchesInDB = await _context.Branches.ToListAsync();
+                    foreach (var branch in branchesInDB)
+                    {
+                        string name = "check_" + branch.Id;
+                        string chkValue = Request.Form[name].ToString();
+                        if (chkValue == "1")
+                        {
+                            string noOfUnitsName = "noUnits_" + @branch.Id;
+                            string noOfLessonsName = "noLessons_" + @branch.Id;
+                            string noOfUnits = Request.Form[noOfUnitsName].ToString();
+                            string noOfLessons = Request.Form[noOfLessonsName].ToString();
+                            var fileBranch = new FileBranch
+                            {
+                                BFileId = bFile.Id,
+                                BranchId = branch.Id,
+                                LessonsCount = Convert.ToInt32(noOfLessons),
+                                UnitsCount = Convert.ToInt32(noOfUnits),
+
+
+                            };
+                            _context.FileBranches.Add(fileBranch);
+                            await _context.SaveChangesAsync();
+                        }
+                    }
+                    if (updated == false)
+                        HttpContext.Session.SetString("Sent", "true");
+                    else
+                        HttpContext.Session.SetString("updated", "true");
+                    return RedirectToAction(nameof(Index));
+                }
+
+                return RedirectToAction(nameof(Index));
+
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
         public async Task<IActionResult> ShowFile(int id)
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var user = await _context.ApplicationUsers.FindAsync(userId);
             ViewBag.ThisUser = user;
 
-            if (user.IsAdmin == 1)
-            {
+            //if (user.IsAdmin == 1)
+            //{
                 var exFile = await _context.BFiles.Include(c => c.Book).Include(c => c.User).FirstOrDefaultAsync(x => x.Id == id);
                 if (exFile == null)
                 {
                     return NotFound();
                 }
 
-                if (exFile.status == 3 || exFile.status == 4 || exFile.status == 5 || exFile.status == 6)
+                if (exFile.status == 3 || exFile.status == 4 || exFile.status == 5 || exFile.status == 6 || exFile.status == -1) 
                 {
                     var PerpareMembers = await (from x in _context.ApplicationUsers
                                                 join userRole in _context.UserRoles
@@ -129,30 +371,30 @@ namespace BasstahalakMS.Areas.Review.Controllers
                     return View(exFile);
                 }
                 return RedirectToAction(nameof(Index));
-            }
-            else
-            {
-                var existingFile = await _context.BFiles.Include(c => c.Book).Include(c => c.User).FirstOrDefaultAsync(x => x.Id == id);
-                if (existingFile == null)
-                {
-                    return NotFound();
-                }
+            //}
+            //else
+            //{
+            //    var existingFile = await _context.BFiles.Include(c => c.Book).Include(c => c.User).FirstOrDefaultAsync(x => x.Id == id);
+            //    if (existingFile == null)
+            //    {
+            //        return NotFound();
+            //    }
 
-                var ReviewAdmins = await (from x in _context.ApplicationUsers
-                                          join userRole in _context.UserRoles
-                                          on x.Id equals userRole.UserId
-                                          join role in _context.Roles
-                                          on userRole.RoleId equals role.Id
-                                          where role.Name == StaticDetails.Review
-                                          where x.IsAdmin == 1
-                                          select x)
-                                     .ToListAsync();
-                ViewBag.ReviewAdmins = ReviewAdmins;
+            //    var ReviewAdmins = await (from x in _context.ApplicationUsers
+            //                              join userRole in _context.UserRoles
+            //                              on x.Id equals userRole.UserId
+            //                              join role in _context.Roles
+            //                              on userRole.RoleId equals role.Id
+            //                              where role.Name == StaticDetails.Review
+            //                              where x.IsAdmin == 1
+            //                              select x)
+            //                         .ToListAsync();
+            //    ViewBag.ReviewAdmins = ReviewAdmins;
 
-                var branches = await _context.FileBranches.Include(x => x.Branch).Where(x => x.BFileId == existingFile.Id).ToListAsync();
-                ViewBag.branches = branches;
-                return View(existingFile);
-            }
+            //    var branches = await _context.FileBranches.Include(x => x.Branch).Where(x => x.BFileId == existingFile.Id).ToListAsync();
+            //    ViewBag.branches = branches;
+            //    return View(existingFile);
+            //}
         }
 
         [HttpPost]
@@ -171,7 +413,8 @@ namespace BasstahalakMS.Areas.Review.Controllers
                         BfileId = BfileId,
                         CurrentFileContent = fileContent,
                         Notes = Notes,
-                        UserId = userId,
+                        SendUserId = userId,
+                        //ReciveUserId = ReceiverId,
                         status = 5 // Back to Prepare
                     };
                     _context.BfileNotes.Add(bfileNote);
@@ -183,12 +426,21 @@ namespace BasstahalakMS.Areas.Review.Controllers
                 }
                 else
                 {
+                    var SuperAdmin = await (from x in _context.ApplicationUsers
+                                            join userRole in _context.UserRoles
+                                            on x.Id equals userRole.UserId
+                                            join role in _context.Roles
+                                            on userRole.RoleId equals role.Id
+                                            where role.Name == StaticDetails.SuperAdmin
+                                            select x)
+                                            .SingleOrDefaultAsync();
                     BfileNote bfileNote = new BfileNote
                     {
                         BfileId = BfileId,
                         CurrentFileContent = fileContent,
                         Notes = Notes,
-                        UserId = userId,
+                        SendUserId = userId,
+                        ReciveUserId = SuperAdmin.Id,
                         status = 6 // Sent to Admin
                     };
                     _context.BfileNotes.Add(bfileNote);
@@ -242,7 +494,7 @@ namespace BasstahalakMS.Areas.Review.Controllers
                 string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 var user = await _context.ApplicationUsers.FindAsync(userId);
 
-                if (user.IsAdmin == 1 && bfile.status == 3)
+                if (user.IsAdmin == 1 && bfile.status == 3 || bfile.status == -1)
                 {
                     if (Reviewers == 1)
                     {
@@ -264,7 +516,7 @@ namespace BasstahalakMS.Areas.Review.Controllers
                                     BfileId = BfileId,
                                     CurrentFileContent = bfile.fileContent,
                                     Notes = "",
-                                    UserId = reviewer.Id,
+                                    ReciveUserId = reviewer.Id,
                                     SendUserId = userId,
                                     status = 4 // Sent to All Team Review
                                 };
@@ -287,7 +539,7 @@ namespace BasstahalakMS.Areas.Review.Controllers
                                     BfileId = BfileId,
                                     CurrentFileContent = bfile.fileContent,
                                     Notes = "",
-                                    UserId = reviewer.Id,
+                                    ReciveUserId = reviewer.Id,
                                     SendUserId = userId,
                                     status = 4 // Sent to specific Member of Team Review
                                 };
@@ -355,7 +607,7 @@ namespace BasstahalakMS.Areas.Review.Controllers
                         BfileId = BfileId,
                         CurrentFileContent = bfile.fileContent,
                         Notes = "",
-                        UserId = ReviewSupervisor,
+                        ReciveUserId = ReviewSupervisor,
                         SendUserId = userId,
                         status = 3 // Sent to Supervisor 
                     };

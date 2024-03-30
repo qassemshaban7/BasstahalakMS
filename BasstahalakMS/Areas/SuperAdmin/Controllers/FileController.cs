@@ -89,7 +89,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                         BfileId = BfileId,
                         CurrentFileContent = fileContent,
                         Notes = Notes,
-                        UserId = userId,
+                        SendUserId = userId,
                         status = 2 // Back to Prepare
                     };
                     _context.BfileNotes.Add(bfileNote);
@@ -107,7 +107,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                         BfileId = BfileId,
                         CurrentFileContent = fileContent,
                         Notes = Notes,
-                        UserId = userId,
+                        SendUserId = userId,
                         status = 3 // Sent to Review
                     };
                     _context.BfileNotes.Add(bfileNote);
@@ -143,7 +143,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                         BfileId = BfileId,
                         CurrentFileContent = bfile.fileContent,
                         Notes = "",
-                        UserId = ReviewSupervisor,
+                        ReciveUserId = ReviewSupervisor,
                         SendUserId = userId,
                         status = 3 // Sent to Review
                     };
@@ -168,7 +168,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                                 BfileId = BfileId,
                                 CurrentFileContent = bfile.fileContent,
                                 Notes = "",
-                                UserId = reviewer.Id,
+                                ReciveUserId = reviewer.Id,
                                 SendUserId = userId,
                                 status = 3 // Sent to Team Review
                             };
@@ -190,7 +190,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                                     BfileId = BfileId,
                                     CurrentFileContent = bfile.fileContent,
                                     Notes = "",
-                                    UserId = reviewer.Id,
+                                    ReciveUserId = reviewer.Id,
                                     SendUserId = userId,
                                     status = 3 // Sent to Supervisor of team Reviews
                                 };
@@ -205,7 +205,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                                     BfileId = BfileId,
                                     CurrentFileContent = bfile.fileContent,
                                     Notes = "",
-                                    UserId = reviewer.Id,
+                                    ReciveUserId = reviewer.Id,
                                     SendUserId = userId,
                                     status = 3 // Sent to Team Review
                                 };
@@ -327,7 +327,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                             BfileId = BfileId,
                             CurrentFileContent = bfile.fileContent,
                             Notes = "",
-                            UserId = ReviewSupervisor,
+                            ReciveUserId = ReviewSupervisor,
                             SendUserId = userId,
                             status = 7 // Sent to Review
                         };
@@ -352,7 +352,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                                     BfileId = BfileId,
                                     CurrentFileContent = bfile.fileContent,
                                     Notes = "",
-                                    UserId = reviewer.Id,
+                                    ReciveUserId = reviewer.Id,
                                     SendUserId = userId,
                                     status = 7 // Sent to Team Review
                                 };
@@ -374,7 +374,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                                         BfileId = BfileId,
                                         CurrentFileContent = bfile.fileContent,
                                         Notes = "",
-                                        UserId = reviewer.Id,
+                                        ReciveUserId = reviewer.Id,
                                         SendUserId = userId,
                                         status = 7 // Sent to Supervisor of team Reviews
                                     };
@@ -389,7 +389,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                                         BfileId = BfileId,
                                         CurrentFileContent = bfile.fileContent,
                                         Notes = "",
-                                        UserId = reviewer.Id,
+                                        ReciveUserId = reviewer.Id,
                                         SendUserId = userId,
                                         status = 7 // Sent to Team Review
                                     };
@@ -415,7 +415,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                             BfileId = BfileId,
                             CurrentFileContent = bfile.fileContent,
                             Notes = "",
-                            UserId = ReviewSupervisor,
+                            ReciveUserId = ReviewSupervisor,
                             SendUserId = userId,
                             status = 8 // Sent to Media
                         };
@@ -440,7 +440,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                                     BfileId = BfileId,
                                     CurrentFileContent = bfile.fileContent,
                                     Notes = "",
-                                    UserId = reviewer.Id,
+                                    ReciveUserId = reviewer.Id,
                                     SendUserId = userId,
                                     status = 8 // Sent to Team Media
                                 };
@@ -462,7 +462,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                                         BfileId = BfileId,
                                         CurrentFileContent = bfile.fileContent,
                                         Notes = "",
-                                        UserId = reviewer.Id,
+                                        ReciveUserId = reviewer.Id,
                                         SendUserId = userId,
                                         status = 8 // Sent to Supervisor of team Media
                                     };
@@ -477,7 +477,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                                         BfileId = BfileId,
                                         CurrentFileContent = bfile.fileContent,
                                         Notes = "",
-                                        UserId = reviewer.Id,
+                                        ReciveUserId = reviewer.Id,
                                         SendUserId = userId,
                                         status = 8 // Sent to Team Media
                                     };

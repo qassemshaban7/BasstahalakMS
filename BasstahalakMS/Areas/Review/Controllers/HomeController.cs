@@ -30,7 +30,7 @@ namespace BasstahalakMS.Areas.Review.Controllers
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var user = await _context.ApplicationUsers.FindAsync(userId);
-            var bFileNotes = await _context.BfileNotes.Where(x => x.UserId == userId && x.status == 3 || x.status ==4).ToListAsync();
+            var bFileNotes = await _context.BfileNotes.Where(x => x.SendUserId == userId && x.status == 3 || x.status ==4).ToListAsync();
             var bFiles = await _context.BFiles.Include(x => x.Book).Include(x => x.User).Where(x => x.status == 3 || x.status == 4).ToListAsync();
             if(bFileNotes.Count() == 0)
             {
@@ -83,19 +83,17 @@ namespace BasstahalakMS.Areas.Review.Controllers
             var user = await _userManager.FindByIdAsync(userId);
 
             int x = 0;
-            if (oldPassword == null && newPassword == null)
+            if (newPassword == null)
             {
-                {
-                    x = 2;
-                    return View("ChangePassword", new ChangePasswordViewModel { X = x });
-                }
+                x = 2;
+                return View("ChangePassword", new ChangePasswordViewModel { X = x });
             }
 
             var passwordVerificationResult = await _userManager.CheckPasswordAsync(user, oldPassword);
             if (!passwordVerificationResult)
             {
                 x = 1;
-                return View("ChangePassword",  new  ChangePasswordViewModel { X = x });
+                return View("ChangePassword", new ChangePasswordViewModel { X = x });
             }
 
             // P@ssw0rd

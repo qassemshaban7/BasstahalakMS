@@ -1,7 +1,7 @@
 ﻿@model BFile
 @{
-    ViewData["Title"] = "ShowToSendToTeam";
-    Layout = "~/Areas/Review/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "ShowFile";
+    Layout = "~/Areas/Prepare/Views/Shared/_Layout.cshtml";
 }
 
 <div class="br-pagetitle">
@@ -85,8 +85,8 @@
             <!-- row -->
         }
         <hr />
-        <form method="post" asp-action="SendForReviewTeamMember" asp-controller="File">
-            @if (Model.status == 3 || Model.status == -1)
+        <form method="post" asp-action="SendForAdminOrReview" asp-controller="File">
+            @if (Model.status == 0 || Model.status == 2)
             {
                 <div class="row mb-3">
                     <label class="col-sm-4 form-control-label  text-dark font-weight-bold">محتوي المادة</label>
@@ -108,10 +108,10 @@
                 <input type="hidden" name="BfileId" value="@Model.Id" />
                 <input type="hidden" id="Prepare" name="Prepare" value="0" />
                 <div class="form-layout-footer mg-t-30 text-center">
-                    @* <input type="submit" value="ارسال للاعداد" onclick="clicked(event)" class="btn btn-danger"> *@
+                    <input type="submit" value="ارسال للادمن" @* onclick="clicked(event)" *@ class="btn btn-danger">
                     @* <input type="submit" value="ارسال للمراجعة" class="btn btn-success">*@
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">
-                        ارسال للفريق
+                        ارسال للمراجعة
                     </button>
                     <a asp-action="Index" asp-controller="File" class="btn btn-secondary">الرجوع</a>
                 </div>
@@ -152,27 +152,27 @@
 
             </div>
             <div class="modal-body">
-                <form method="post" asp-action="SendForReviewTeamMember" asp-controller="File">
-                    @*                     <div class="row mb-3">
-                    <label class="col-sm-4 form-control-label  text-dark font-weight-bold mt-2">المشرف</label>
-                    <select class="col-sm-7 form-control" required name="ReviewSupervisor">
-                    <option value="">اختر مشرف...</option>
-                    @foreach (var item in ViewBag.ReviewAdmins)
-                    {
-                    <option value="@item.Id">@item.FullName</option>
-                    }
+                <form method="post" asp-action="SendForReviewTeam" asp-controller="File">
+                    <div class="row mb-3">
+                        <label class="col-sm-4 form-control-label  text-dark font-weight-bold mt-2">المشرف</label>
+                        <select class="col-sm-7 form-control" required name="ReviewSupervisor">
+                            <option value="">اختر مشرف...</option>
+                            @foreach (var item in ViewBag.ReviewAdmins)
+                            {
+                                <option value="@item.Id">@item.FullName</option>
+                            }
 
-                    </select>
-                    </div> *@
+                        </select>
+                    </div>
                     <div class="row mb-3">
                         <label class="col-sm-4 form-control-label  text-dark font-weight-bold mt-2">المراجعين</label>
                         <div class="form-group">
-                            @* <input type="radio" id="status1" name="Reviewers" value="0" checked> *@
-                            @* <label for="status1">بلا مراجعين</label><br> *@
-                            <input type="radio" id="status2" name="Reviewers" value="1" checked>
-                            <label for="status2"> كل الفريق</label><br>
+                            <input type="radio" id="status1" name="Reviewers" value="0" checked>
+                            <label for="status1">بلا مراجعين</label><br>
+                            <input type="radio" id="status2" name="Reviewers" value="1">
+                            <label for="status2"> كل المراجعين</label><br>
                             <input type="radio" id="status3" name="Reviewers" value="2">
-                            <label for="status3"> تحديد أعضاء</label>
+                            <label for="status3"> تحديد المراجعين</label>
                         </div>
 
                     </div>
@@ -187,7 +187,7 @@
                     </div>
                     <input type="hidden" name="BfileId" value="@Model.Id" />
                     <div class="form-layout-footer mg-t-30 text-center">
-                        <input type="submit" value="ارسال للاعضاء المحددة" class="btn btn-success">
+                        <input type="submit" value="ارسال للمراجعة" class="btn btn-success">
                     </div>
                 </form>
             </div>
@@ -208,10 +208,10 @@
         };
         function clicked(e) {
             if ($('#Notes').val().length <= 0) {
-                alert("يجب ادخال ملاحظات للفريق")
+                alert("يجب ادخال ملاحظات للاعداد")
                 e.preventDefault();
             }
-            $('#Prepare').val('1');
+            $('#Prepare').val('0');
         }
         $('input[name=Reviewers]').change(function () {
             var value = $('input[name=Reviewers]:checked').val();

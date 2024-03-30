@@ -9,8 +9,8 @@ namespace BasstahalakMS.Models
         [ForeignKey("BfileId")]
         public BFile BFile { get; set; }
 
-        public string? UserId { get; set; }
-        [ForeignKey("UserId")]
+        public string? ReciveUserId { get; set; }   
+        [ForeignKey("ReciveUserId")]
         public ApplicationUser User { get; set; }
         public string? SendUserId { get; set; }
         //[ForeignKey("SendUserId")]

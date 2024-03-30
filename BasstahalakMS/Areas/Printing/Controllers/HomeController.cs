@@ -12,7 +12,7 @@ namespace BasstahalakMS.Areas.Printing.Controllers
 {
     [Authorize(Roles = StaticDetails.Printing)]
     [Area(nameof(Printing))]
-    [Route(nameof(Printing) + "/[controller]")] 
+    [Route(nameof(Printing) + "/[controller]/[action]")]
     public class HomeController : Controller
     {
 

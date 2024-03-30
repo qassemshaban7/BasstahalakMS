@@ -4,6 +4,7 @@ using BasstahalakMS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BasstahalakMS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240330033840_reciveUserId_Column")]
+    partial class reciveUserId_Column
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -90,10 +93,14 @@ namespace BasstahalakMS.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ReciveUserId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SendUserId")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("status")
                         .HasColumnType("int");
@@ -102,7 +109,7 @@ namespace BasstahalakMS.Migrations
 
                     b.HasIndex("BfileId");
 
-                    b.HasIndex("ReciveUserId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("BfileNotes");
                 });
@@ -604,7 +611,9 @@ namespace BasstahalakMS.Migrations
 
                     b.HasOne("BasstahalakMS.Models.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("ReciveUserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("BFile");
 
