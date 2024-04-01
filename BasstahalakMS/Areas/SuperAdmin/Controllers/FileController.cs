@@ -100,7 +100,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                     return RedirectToAction(nameof(Index));
                 }
                 
-                else
+                else if (Prepare == 2)
                 {
                     BfileNote bfileNote = new BfileNote
                     {
@@ -117,6 +117,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                     HttpContext.Session.SetString("Sent", "true");
                     return RedirectToAction(nameof(Index));
                 }
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
@@ -310,15 +311,14 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SendForMediaReviewTeam(string ReviewSupervisor, int Reviewers, string[] ReviewUsers, int BfileId)
+        public async Task<IActionResult> SendForMediaReviewTeam(string ReviewSupervisor, int Reviewers, string[] ReviewUsers, int BfileId, int Prepare)
         {
             try
             {
                 string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 var bfile = await _context.BFiles.FindAsync(BfileId);
 
-                int sendOption = int.Parse(Request.Form["SendOption"]);
-                if (sendOption == 1)
+                if (Prepare == 10 )
                 {
                     if (bfile.status == 6)
                     {

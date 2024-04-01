@@ -44,7 +44,7 @@ namespace BasstahalakMS.Areas.Review.Controllers
             if (user.IsAdmin == 1)
             {
                 var bFileNotes = await _context.BfileNotes
-                    .Where(x => x.SendUserId == userId && (x.status == 3 || x.status == 4 || x.status == 5 || x.status == 6 || x.BFile.status == -1))
+                    .Where(x => x.SendUserId == userId && (x.status == 3 || x.status == 4 || x.BFile.status == -1))
                     .Include(c => c.BFile)
                     .ThenInclude(c => c.Book)
                     .Include(c => c.BFile)
@@ -257,7 +257,7 @@ namespace BasstahalakMS.Areas.Review.Controllers
                 .Include(x => x.User)
                 .OrderBy(e => e.CreationDate)
                 .LastOrDefaultAsync(x => x.status == existingFile.status && x.ReciveUserId != userId);
-
+            
             ViewBag.bfileNote = bfileNote;
             return View(existingFile);
         }
@@ -277,16 +277,17 @@ namespace BasstahalakMS.Areas.Review.Controllers
                     existingFile.fileContent = Request.Form["fileContent"].ToString();
                     existingFile.BookId = bFile.BookId;
                     bool updated = true;
-                    if (existingFile.status == 3)
+                    if (existingFile.status == 3 || existingFile.status == 4)
                     {
                         BfileNote bfileNote = new BfileNote
                         {
                             BfileId = bFile.Id,
                             CurrentFileContent = Request.Form["fileContent"].ToString(),
                             Notes = "",
-                            ReciveUserId = userId
-                            
+                            ReciveUserId = userId,
+                            status = existingFile.status
                         };
+                        existingFile.status = existingFile.status;
                         _context.BfileNotes.Add(bfileNote);
                         updated = false;
                     }
@@ -600,7 +601,7 @@ namespace BasstahalakMS.Areas.Review.Controllers
                 string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 var user = await _context.ApplicationUsers.FindAsync(userId);
 
-                if (user.IsAdmin == 0 && bfile.status == 4 || user.IsAdmin == 0 && bfile.status == 3 && bfile.TeamStatus == 0)
+                if (user.IsAdmin == 0 && bfile.status == 4 || user.IsAdmin == 0 && bfile.status == 3 && bfile.TeamStatus == 0 || bfile.status == -1 && bfile.UserId == userId)
                 {
                     BfileNote bfileNote = new BfileNote
                     {
@@ -627,6 +628,137 @@ namespace BasstahalakMS.Areas.Review.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+        }
+
+
+        public async Task<IActionResult> AcceptMaterial(int id)
+        {
+            var existingFile = await _context.BFiles.FindAsync(id);
+            if (existingFile == null)
+            {
+                return NotFound();
+            }
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+
+            var books = _context.Books.ToList();
+            ViewBag.Books = books;
+
+            var branches = _context.Branches.ToList();
+            var currentBranches = await _context.FileBranches.Include(x => x.Branch).Where(x => x.BFileId == existingFile.Id).ToListAsync();
+
+            foreach (var item in branches.ToList())
+            {
+                foreach (var item1 in currentBranches)
+                {
+                    if (item.Id == item1.BranchId)
+                        branches.Remove(item);
+                }
+            }
+            ViewBag.Branches = branches;
+
+            ViewBag.currentBranches = currentBranches;
+            ViewBag.currentBranchesCount = currentBranches.Count();
+
+            if (existingFile.status == -1)
+            {
+                var bfileNotess = await _context.BfileNotes
+                                .Where(p => p.BfileId == existingFile.Id && p.status == -1 && p.BFile.UserId == userId)
+                                .Include(x => x.BFile)
+                                .Include(x => x.User)
+                                .ToListAsync();
+
+                ViewBag.bfileNote = bfileNotess;
+                return View(existingFile);
+            }
+
+            var bfileNote = await _context.BfileNotes.Include(x => x.BFile)
+                .Include(x => x.User)
+                .OrderBy(e => e.CreationDate)
+                .LastOrDefaultAsync(x => x.status == existingFile.status && x.ReciveUserId != userId);
+
+            ViewBag.bfileNote = bfileNote;
+            return View(existingFile);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AcceptMaterial(BFile bFile)    
+        {
+            try
+            {
+                string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var existingFile = await _context.BFiles.FindAsync(bFile.Id);
+                if (existingFile != null)
+                {
+                    //existingFile.Name = existingFile.Name;
+                    //existingFile.Description = existingFile.Description;
+                    //existingFile.fileContent = Request.Form["fileContent"].ToString();
+                    //existingFile.BookId = existingFile.BookId;
+                    bool updated = true;
+                    if (existingFile.status == 3 || existingFile.status == -1 || existingFile.status == 4)
+                    {
+                        BfileNote bfileNote = new BfileNote
+                        {
+                            BfileId = bFile.Id,
+                            CurrentFileContent = Request.Form["fileContent"].ToString(),
+                            Notes = "",
+                            SendUserId = userId,
+                            ReciveUserId = userId,
+                            status = 10
+
+                        };
+                        existingFile.status = 10;
+                        _context.BfileNotes.Add(bfileNote);
+                        updated = false;
+                    }
+
+                    await _context.SaveChangesAsync();
+
+                    //var currentBranches = await _context.FileBranches.Include(x => x.Branch).Where(x => x.BFileId == existingFile.Id).ToListAsync();
+                    //foreach (var item in currentBranches)
+                    //{
+                    //    _context.FileBranches.Remove(item);
+                    //}
+                    //await _context.SaveChangesAsync();
+                    //var branchesInDB = await _context.Branches.ToListAsync();
+                    //foreach (var branch in branchesInDB)
+                    //{
+                    //    string name = "check_" + branch.Id;
+                    //    string chkValue = Request.Form[name].ToString();
+                    //    if (chkValue == "1")
+                    //    {
+                    //        string noOfUnitsName = "noUnits_" + @branch.Id;
+                    //        string noOfLessonsName = "noLessons_" + @branch.Id;
+                    //        string noOfUnits = Request.Form[noOfUnitsName].ToString();
+                    //        string noOfLessons = Request.Form[noOfLessonsName].ToString();
+                    //        var fileBranch = new FileBranch
+                    //        {
+                    //            BFileId = bFile.Id,
+                    //            BranchId = branch.Id,
+                    //            LessonsCount = Convert.ToInt32(noOfLessons),
+                    //            UnitsCount = Convert.ToInt32(noOfUnits),
+
+
+                    //        };
+                    //        _context.FileBranches.Add(fileBranch);
+                    //        await _context.SaveChangesAsync();
+                    //    }
+                    //}
+                    if (updated == false)
+                        HttpContext.Session.SetString("Sent", "true");
+                    else
+                        HttpContext.Session.SetString("updated", "true");
+                    return RedirectToAction(nameof(Index));
+                }
+
+                return RedirectToAction(nameof(Index));
+
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         //public async Task<IActionResult> SendForTeam(int id)  

@@ -105,8 +105,8 @@
                 <input type="hidden" name="BfileId" value="@Model.Id" />
                 <input type="hidden" id="Prepare" name="Prepare" value="0" />
                 <div class="form-layout-footer mg-t-30 text-center">
-                    <input type="submit" value="ارسال للمدير" class="btn btn-danger">
-                    <button type="button" class="btn btn-success" onclick="clicked(event)" data-toggle="modal" data-target="#exampleModal">
+                        <input type="submit" value="ارسال للمدير"  class="btn btn-success">
+                        <button type="button" class="btn btn-danger" onclick="clicked(event)" data-toggle="modal" data-target="#exampleModal">
                         ارسال للاعداد
                     </button>
                     <a asp-action="Index" asp-controller="File" class="btn btn-secondary">الرجوع</a>
@@ -160,10 +160,11 @@
                     <input type="hidden" name="BfileId" value="@Model.Id" />
                     <input type="hidden" id="Prepare" name="Prepare" value="0" />
                     <div class="form-layout-footer mg-t-30 text-center">
-                        <input type="submit" value="ارسال للمدير" class="btn btn-danger">
-                        <button type="button" class="btn btn-success" onclick="clicked(event)" data-toggle="modal" data-target="#exampleModal">
+                        <input type="submit" value="ارسال للمدير"  class="btn btn-success">
+                        <button type="button" class="btn btn-danger" onclick="clicked(event)" data-toggle="modal" data-target="#exampleModal">
                             ارسال للاعداد
                         </button>
+                        <a asp-action="AcceptMaterial" asp-controller="File" class="btn btn-success">قبول المادة العلمية</a>
                         <a asp-action="Index" asp-controller="File" class="btn btn-secondary">الرجوع</a>
                     </div>
 

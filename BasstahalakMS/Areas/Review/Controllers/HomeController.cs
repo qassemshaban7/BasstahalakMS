@@ -66,7 +66,38 @@ namespace BasstahalakMS.Areas.Review.Controllers
                 ViewBag.usersCount = users.Count();
                
             }
-           
+
+
+            var acceptedNotes = _context.BfileNotes 
+                .Where(x => x.ReciveUserId == userId && (x.status == 10))
+                .Include(c => c.BFile)
+                .ThenInclude(c => c.Book)
+                .Include(c => c.BFile)
+                .ThenInclude(c => c.User)
+                .AsQueryable(); 
+
+            var AcceptedBFiles = await acceptedNotes.GroupBy(x => x.BFile.Id)
+                .Select(group => group.First())
+                .CountAsync();
+
+            ViewBag.accCounter = AcceptedBFiles;
+
+            var rejectedNotes = _context.BfileNotes
+                .Where(x => x.ReciveUserId == userId && (x.status == 5))
+                .Include(c => c.BFile)
+                .ThenInclude(c => c.Book)
+                .Include(c => c.BFile)
+                .ThenInclude(c => c.User)
+                .AsQueryable();
+
+            var RectedBFiles = await rejectedNotes.GroupBy(x => x.BFile.Id)
+                .Select(group => group.First())
+                .CountAsync();
+
+            ViewBag.rejectedCounter = RectedBFiles;
+
+
+
             return View(homeVM);
         }
 

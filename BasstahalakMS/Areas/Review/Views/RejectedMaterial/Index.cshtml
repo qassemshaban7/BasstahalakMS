@@ -1,8 +1,7 @@
-﻿@model IEnumerable<BFile>
-
+﻿@model IEnumerable<BfileNote>
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Areas/SuperAdmin/Views/Shared/_Layout.cshtml";
+    Layout = "~/Areas/Review/Views/Shared/_Layout.cshtml";
 }
 
 @section head {
@@ -15,14 +14,9 @@
 <div class="br-pagetitle">
     <i class="icon fas fa-light fa-file-word"></i>
     <div class="row">
-        <div class="col-lg-12 col-12">
-            <h3 class="text-info">قائمة المواد العلمية</h3>
+        <div class="col-lg-10 col-10">
+            <h3 class="text-info">المواد العلمية المرفوضة</h3>
         </div>
-
-       @* <div class="col-lg-2 col-2">
-            <a asp-action="Upload" asp-controller="File" class="btn btn-primary">اضافة ماده علمية </a>
-        </div>*@
-
     </div>
 </div>
 
@@ -32,67 +26,24 @@
             <table id="deptsTable" class="table display responsive nowrap">
                 <thead>
                     <tr>
-                        <th>اسم الملف</th>
+                        <th>اسم المادة</th>
                         <th>اسم الكتاب</th>
-                         <th>اسم المعد</th>
-                        
-                        @*<th>تحميل</th>*@
-                        @*<th>تعديل</th>*@
-                        <th>الحالة </th>
+                        <th>اسم المعد</th>
                         <th>عرض</th>
-                        <th>العمليات</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var file in Model)
                     {
                         <tr>
-                            <td>@file.Name</td>
-                            <td>@file.Book.Name</td>
-                            <td>@file.User.FullName</td>
-
-                           
+                            <td>@file.BFile.Name</td>
+                            <td>@file.BFile.Book.Name</td>
+                            <td>@file.BFile.User.FullName</td>
                             <td>
-                               
-                                @if (file.status == 1 || file.status == 6)
-                                {
-                                    <span class="text-info">يحتاج مراجعة المدير  </span>
-                                }
-                                else if (file.status == 2 || file.status == 5)
-                                {
-                                    <span class="text-info">تم الارسال للاعداد</span>
-                                }
-                                else if (file.status == 3 || file.status == 4 || file.status ==7 )
-                                {
-                                    <span class="text-info">تم الارسال للمراجعة</span>
-                                }
-                                else if (file.status == 8)
-                                {
-                                    <span class="text-info">تم الارسال للميديا</span>
-                                }
-                            </td>
-                            @if (file.status == 6)
-                            {
-                                <td>
-                                    <a asp-action="ShowFileToSendToMedia" asp-route-id="@file.Id" class=" btn btn-info">
-                                        <i class="fas fa-file-word"></i>
-                                    </a>
-                                </td>
-                            }
-                            else
-                            {
-                                <td>
-                                    <a asp-action="ShowFile" asp-route-id="@file.Id" class=" btn btn-info">
-                                        <i class="fas fa-file-word"></i>
-                                    </a>
-                                </td>
-                            }
-                            <td>
-                                <a asp-action="ShowFileLog" asp-route-id="@file.Id" class=" btn btn-success">
-                                    <i class="fas fa-list-alt"></i>
+                                <a asp-action="Rejected" asp-controller="RejectedMaterial" asp-route-id="@file.BFile.Id" class="btn btn-success">
+                                    <i class="fas fa-file-word"></i>
                                 </a>
                             </td>
-
                         </tr>
                     }
                 </tbody>
@@ -126,8 +77,8 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            
-           
+
+
             var Sent = $("#Sent").data("value");
             if (Sent == "True") {
                 toastr.options = {

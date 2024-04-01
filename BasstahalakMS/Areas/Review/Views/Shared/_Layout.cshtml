@@ -48,6 +48,24 @@
                         <li class="sub-item"><a asp-action="Index" asp-controller="File" class="sub-link">عرض المواد العلمية </a></li>
                     </ul>
                 </li>
+                <li class="br-menu-item">
+                <a href="#" class="br-menu-link with-sub">
+                        <i class="menu-item-icon icon fas fa-light fas fa-check tx-20"></i>
+                        <span class="menu-item-label">المواد العلمية المقبولة</span>
+                    </a><!-- br-menu-link -->
+                    <ul class="br-menu-sub">
+                        <li class="sub-item"><a asp-action="Index" asp-controller="AccMaterial" class="sub-link">عرض المواد العلمية المقبولة</a></li>
+                    </ul>
+                </li>
+                <li class="br-menu-item">
+                    <a href="#" class="br-menu-link with-sub">
+                    <i class="menu-item-icon icon fas fa-light fas fa-times tx-20"></i>
+                        <span class="menu-item-label">المواد العلمية المرفوضة</span>
+                    </a><!-- br-menu-link -->
+                    <ul class="br-menu-sub">
+                    <li class="sub-item"><a asp-action="Index" asp-controller="RejectedMaterial" class="sub-link">عرض المواد العلمية المرفوضة</a></li>
+                    </ul>
+                </li>
                @* <li class="br-menu-item">
                     <a href="#" class="br-menu-link with-sub">
                         <i class="menu-item-icon icon fas fa-light fa-building tx-20"></i>

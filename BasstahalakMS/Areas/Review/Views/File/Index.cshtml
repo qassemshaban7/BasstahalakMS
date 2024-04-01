@@ -34,12 +34,11 @@
                         <th>اسم المادة</th>
                         <th>اسم الكتاب</th>
                         <th>اسم المعد</th>
-                        
                         <th>الحالة </th>
-                        <th>عرض</th>
                         <th>تعديل</th>
-                         <th>ارسال للفريق</th>
-                        
+                        <th>عرض</th>
+                        <th>ارسال للفريق</th>
+                        <th>قبول المادة</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -52,7 +51,7 @@
                             <td>
                                 @if (file.BFile.status == 3 && file.BFile.TeamStatus == 1 && ViewBag.ThisUser.IsAdmin == 0)
                                 {
-                                    <span class="text-info" >يحتاج الي مراجعة المشرف</span>
+                                    <span class="text-info">يحتاج الي مراجعة المشرف</span>
                                 }
                                 else if (file.BFile.status == 3 && file.BFile.TeamStatus == 1 && ViewBag.ThisUser.IsAdmin == 1)
                                 {
@@ -66,7 +65,7 @@
                                 {
                                     <span class="text-info">يحتاج الي مراجعة المدير</span>
                                 }
-                                else if (file.BFile.status == 4 || file.BFile.status == 3 && file.BFile.TeamStatus ==0)
+                                else if (file.BFile.status == 4 || file.BFile.status == 3 && file.BFile.TeamStatus == 0)
                                 {
                                     <span class="text-info">يحتاج مراجعة الفريق</span>
                                 }
@@ -76,33 +75,11 @@
                                 }
                                 else
                                 {
-                                <span class="text-info">لم يتم الارسال بعد</span>
+                                    <span class="text-info">لم يتم الارسال بعد</span>
                                 }
                             </td>
-                            @if (file.BFile.status == -1 && file.SendUserId == ViewBag.ThisUser.Id || file.BFile.status == 3 || file.BFile.status == 4 || file.BFile.status == 5 || file.BFile.status == 6 && ViewBag.ThisUser.IsAdmin == 1 || file.BFile.status == -1)
-                            {
-                                <td>
-                                    <a asp-action="ShowFile" asp-route-id="@file.BFile.Id" class=" btn btn-info">
-                                        <i class="fas fa-file-word"></i>
-                                    </a>
-                                </td>
-                            }
-                            else if (file.BFile.status == -1 && file.SendUserId == ViewBag.ThisUser.Id || file.BFile.status == 3  && file.BFile.TeamStatus == 0 || file.BFile.status == 4 || file.BFile.status == 5 || file.BFile.status == 6 && ViewBag.ThisUser.IsAdmin == 0 || file.BFile.status == -1)
-                            {
-                                <td>
-                                    <a asp-action="ShowFile" asp-route-id="@file.BFile.Id" class=" btn btn-info">
-                                        <i class="fas fa-file-word"></i>
-                                    </a>
-                                </td>
-                            }
-                            else
-                            {
-                                <td>
-                                    <span class="text-danger"> غير متاح</span>
-                                </td>
-                            }
                             <td>
-                                @if (file.BFile.status == 3 && ViewBag.ThisUser.IsAdmin == 1 )
+                                @if (file.BFile.status == 3 && ViewBag.ThisUser.IsAdmin == 1)
                                 {
                                     <a asp-action="Edit" asp-controller="File" asp-route-id="@file.BFile.Id" class=" btn btn-warning"> <i class="fas fa-edit"></i> </a>
 
@@ -126,29 +103,67 @@
                                     <span class="text-info">تحت المراجعة</span>
                                 }
                             </td>
-             
-                                @if (ViewBag.ThisUser.IsAdmin == 1 && file.BFile.status == 3 || file.BFile.status == 4 || file.BFile.status == -1 && file.SendUserId == ViewBag.ThisUser.Id)
+                            <td>
+                                @if (file.BFile.status == -1 && file.SendUserId == ViewBag.ThisUser.Id || file.BFile.status == 3 || file.BFile.status == 4 || file.BFile.status == 5 || file.BFile.status == 6 && ViewBag.ThisUser.IsAdmin == 1 || file.BFile.status == -1)
                                 {
-                                    <td>
-                                        <a asp-action="ShowToSendToTeam" asp-route-id="@file.BFile.Id" class=" btn btn-info">
-                                            <i class="fas fa-plane">ارسال الي الفريق </i>
+                                        <a asp-action="ShowFile" asp-route-id="@file.BFile.Id" class=" btn btn-info">
+                                            <i class="fas fa-file-word"></i>
                                         </a>
-                                    </td>
                                 }
-                                else if (ViewBag.ThisUser.IsAdmin == 0 && file.BFile.status == 4 || file.BFile.status == 3 && file.BFile.TeamStatus == 0 || file.BFile.status == -1 && file.SendUserId == ViewBag.ThisUser.Id)
+                                else if (file.BFile.status == -1 && file.SendUserId == ViewBag.ThisUser.Id || file.BFile.status == 3 && file.BFile.TeamStatus == 0 || file.BFile.status == 4 || file.BFile.status == 5 || file.BFile.status == 6 && ViewBag.ThisUser.IsAdmin == 0 || file.BFile.status == -1)
                                 {
-                                    <td>
-                                        <a asp-action="ShowToSendToSupervisor" asp-route-id="@file.BFile.Id" class=" btn btn-info">
-                                            <i class="fas fa-plane">ارسال الي المشرف </i>
+                                        <a asp-action="ShowFile" asp-route-id="@file.BFile.Id" class=" btn btn-info">
+                                            <i class="fas fa-file-word"></i>
                                         </a>
-                                    </td>
                                 }
                                 else
                                 {
-                                    <td>
                                         <span class="text-danger"> غير متاح</span>
-                                    </td>
                                 }
+                            </td>
+                            <td>
+                                @if (ViewBag.ThisUser.IsAdmin == 1 && file.BFile.status == 3 || file.BFile.status == 4 || file.BFile.status == -1 && file.SendUserId == ViewBag.ThisUser.Id)
+                                {
+                                        <a asp-action="ShowToSendToTeam" asp-route-id="@file.BFile.Id" class=" btn btn-info">
+                                            <i class="fas fa-plane">ارسال الي الفريق </i>
+                                        </a>
+                                }
+                                else if (ViewBag.ThisUser.IsAdmin == 0 && file.BFile.status == 4 || file.BFile.status == 3 && file.BFile.TeamStatus == 0 || file.BFile.status == -1 && file.SendUserId == ViewBag.ThisUser.Id)
+                                {
+                                        <a asp-action="ShowToSendToSupervisor" asp-route-id="@file.BFile.Id" class=" btn btn-info">
+                                            <i class="fas fa-plane">ارسال الي المشرف </i>
+                                        </a>
+                                }
+                                else
+                                {
+                                        <span class="text-danger"> غير متاح</span>
+                                }
+                            </td>
+                            <td>
+                                @if (file.BFile.status == 3 && ViewBag.ThisUser.IsAdmin == 1)
+                                {
+                                    <a asp-action="AcceptMaterial" asp-controller="File" asp-route-id="@file.BFile.Id" class="btn btn-success" ><i class="fas fa-check"></i> </a>
+
+                                }
+                                else if (file.BFile.status == -1 && file.SendUserId == ViewBag.ThisUser.Id)
+                                {
+                                    <a asp-action="AcceptMaterial" asp-controller="File" asp-route-id="@file.BFile.Id" class="btn btn-success" ><i class="fas fa-check"></i> </a>
+                                }
+                                else if (file.BFile.status == 4 && ViewBag.ThisUser.IsAdmin == 0 && file.ReciveUserId == ViewBag.ThisUser.Id)
+                                {
+                                    <a asp-action="AcceptMaterial" asp-controller="File" asp-route-id="@file.BFile.Id" class="btn btn-success" ><i class="fas fa-check"></i> </a>
+
+                                }
+                                else if (file.BFile.status == 3 && file.BFile.TeamStatus == 0 && ViewBag.ThisUser.IsAdmin == 0 && file.ReciveUserId == ViewBag.ThisUser.Id)
+                                {
+                                    <a asp-action="AcceptMaterial" asp-controller="File" asp-route-id="@file.BFile.Id" class="btn btn-success" ><i class="fas fa-check"></i> </a>
+
+                                }
+                                else
+                                {
+                                    <span class="text-info">تحت المراجعة</span>
+                                }
+                            </td>
                         </tr>
                     }
                 </tbody>
