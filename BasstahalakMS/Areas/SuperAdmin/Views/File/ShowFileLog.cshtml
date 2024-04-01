@@ -34,11 +34,11 @@
                     <tr>
                         <th>اسم الملف</th>
                         <th>اسم الكتاب</th>
-                        <th>اسم العضو</th>
+                        <th>اسم القائم بالعملية</th>
 
                         @*<th>تحميل</th>*@
                         @*<th>تعديل</th>*@
-                        <th>الحالة </th>
+                        <th>العملية </th>
                         <th>عرض</th>
                     </tr>
                 </thead>
@@ -48,34 +48,47 @@
                         <tr>
                             <td>@item.BFile.Name</td>
                             <td>@item.BFile.Book.Name</td>
-                            <td>@item.User.FullName</td>
+                            @foreach (var user in ViewBag.SendUsers)
+                            {
+                                if(user.Id == item.SendUserId)
+                                {
+                                    <td>@user.FullName</td>
+                                    break;
+                                }
+                            }
+                           
 
 
                             <td>
 
                                 @if (item.status == 1)
                                 {
-                                    <span class="text-info">تحت مراجعة المدير  </span>
+                                    <span class="text-info">ارسال للمدير  </span>
+                                }
+                                else if (item.status == -1)
+                                {
+                                    <span class="text-info">انشاء المادة العلمية   </span>
+
                                 }
                                 else if (item.status == 2)
                                 {
-                                    <span class="text-info">تحت مراجعة الاعداد</span>
+                                    <span class="text-info">ارسال للاعداد</span>
                                 }
                                 else if (item.status == 3)
                                 {
-                                    <span class="text-info">تحت المراجعة </span>
+                                    <span class="text-info">ارسال للمراجعة </span>
                                 }
                                 else if (item.status == 4)
                                 {
-                                    <span class="text-info">تحت المراجعة </span>
+                                    <span class="text-info">ارسال للمراجعة  </span>
                                 }
                                 else if (item.status == 5)
                                 {
-                                    <span class="text-info">تحت مراجعة الاعداد</span>
+                                    <span class="text-info">ارسال للاعداد</span>
                                 }
                                 else if (item.status == 6)
                                 {
-                                    <span class="text-info">تحت مراجعة المدير  </span>
+                                    <span class="text-info">ارسال للمدير  </span>
                                 }
                             </td>
                             <td>

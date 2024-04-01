@@ -44,7 +44,7 @@ namespace BasstahalakMS.Areas.Review.Controllers
             if (user.IsAdmin == 1)
             {
                 var bFileNotes = await _context.BfileNotes
-                    .Where(x => x.SendUserId == userId && (x.status == 3 || x.status == 4 || x.BFile.status == -1))
+                    .Where(x => (x.ReciveUserId == userId || x.SendUserId == userId) && (x.status == 3 || x.status == 4 || x.BFile.status == -1))
                     .Include(c => c.BFile)
                     .ThenInclude(c => c.Book)
                     .Include(c => c.BFile)
@@ -63,7 +63,7 @@ namespace BasstahalakMS.Areas.Review.Controllers
             else
             {
                 var bFileNotes = await _context.BfileNotes
-                    .Where(x => x.ReciveUserId == userId && x.status == 3 || x.status == 4 || x.BFile.status == -1)
+                    .Where(x => (x.ReciveUserId == userId || x.SendUserId == userId) && x.status == 3 || x.status == 4 || x.BFile.status == -1)
                     .Include(c => c.BFile)
                     .ThenInclude(c => c.Book)
                     .Include(c => c.BFile)
