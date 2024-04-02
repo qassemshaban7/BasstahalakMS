@@ -1,0 +1,240 @@
+﻿@model BFile
+@{
+    ViewData["Title"] = "ShowFile";
+    Layout = "~/Areas/SuperAdmin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="br-pagetitle">
+    <i class="icon fas fa-light fa-file-word"></i>
+    <div class="row">
+        <div class="col-lg-12 col-12">
+            <h3 class="text-info">@Model.Name</h3>
+        </div>
+
+        @* <div class="col-lg-2 col-2">
+        <a asp-action="Upload" asp-controller="File" class="btn btn-primary">اضافة ماده علمية </a>
+        </div>*@
+
+    </div>
+</div>
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        @* <div>
+        <textarea id="tiny"></textarea>
+        </div>*@
+        <div class="row mb-3">
+            <div class="col-4 mt-4">
+                <label class="form-label text-dark font-weight-bold" for="flexCheckDefault">
+                    اسم المعد
+                </label>
+            </div>
+            <div class="col-4">
+                <input type="text" readonly class="form-control " value="@Model.User.FullName" />
+            </div>
+
+
+
+        </div>
+        <div class="row mb-3">
+            <div class="col-4 mt-4">
+                <label class="form-label text-dark font-weight-bold" for="flexCheckDefault">
+                    اسم الكتاب
+                </label>
+            </div>
+            <div class="col-4">
+                <input type="text" readonly class="form-control " value="@Model.Book.Name" />
+            </div>
+
+
+
+        </div>
+        <div class="row mb-3">
+            <div class="col-4 mt-4">
+                <label class="form-label text-dark font-weight-bold" for="flexCheckDefault">
+                    تاريخ الانشاء
+                </label>
+            </div>
+            <div class="col-4">
+                <input type="text" readonly class="form-control " value="@Model.CreationDate" />
+            </div>
+
+
+
+        </div>
+        <hr />
+        @foreach (var branch in ViewBag.Branches)
+        {
+            <div class="row mb-3">
+                <div class="col-4 mt-4">
+                    <label class="form-label text-dark font-weight-bold" for="flexCheckDefault">
+                        @branch.Branch.Name
+                    </label>
+                </div>
+                <div class="col-4">
+                    <label class="form-label">عدد الوحدات</label>
+                    <input type="number" readonly class="form-control " value="@branch.UnitsCount" />
+                </div>
+                <div class="col-4">
+                    <label class="form-label">عدد الدروس </label>
+                    <input type="number" readonly placeholder="عدد الدروس" class="form-control " value="@branch.LessonsCount" />
+                </div>
+
+
+            </div>
+
+            <!-- row -->
+        }
+        <hr />
+        <form method="post" asp-action="SendForReview" asp-controller="AccMaterial">
+            @if (Model.status == 10)
+            {
+                <div class="row mb-3">
+                    <label class="col-sm-4 form-control-label  text-dark font-weight-bold">محتوي المادة</label>
+                </div>
+
+                <!-- row -->
+                <div class="row mb-3 mr-1">
+                    <textarea id="fileContent" rows="12" cols="50" name="fileContent" asp-for="@Model.fileContent">@Model.fileContent</textarea>
+                </div>
+                <hr />
+                <div class="row mb-3">
+                    <label class="col-sm-4 form-control-label  text-dark font-weight-bold">ملاحظات </label>
+                </div>
+
+                <!-- row -->
+                <div class="row mb-3 mr-1">
+                    <textarea id="Notes" name="Notes" class="form-control" rows="8"></textarea>
+                </div>
+                <input type="hidden" name="BfileId" value="@Model.Id" />
+                <input type="hidden" id="Prepare" name="Prepare" value="0" />
+                <div class="form-layout-footer mg-t-30 text-center">
+                    @* <input type="submit" value="ارسال للاعداد" onclick="clicked(event)" class="btn btn-danger"> *@
+                    @* <input type="submit" value="ارسال للمراجعة" class="btn btn-success">*@
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">
+                        ارسال للميديا
+                    </button>
+                    <a asp-action="Index" asp-controller="AccMaterial" class="btn btn-secondary">الرجوع</a>
+                </div>
+
+                <!-- form-layout-footer -->
+            }
+            else
+            {
+                <div class="row mb-3">
+                    <label class="col-sm-4 form-control-label  text-dark font-weight-bold">محتوي المادة</label>
+                </div>
+
+                <!-- row -->
+                <div class="row mb-3 mr-1">
+                    <textarea id="fileContent" rows="12" cols="50" readonly name="fileContent" asp-for="@Model.fileContent">@Model.fileContent</textarea>
+                </div>
+                <hr />
+
+
+                <div class="form-layout-footer mg-t-30 text-center">
+
+                    <a asp-action="Index" asp-controller="AccMaterial" class="btn btn-secondary">الرجوع</a>
+                </div>
+
+                <!-- form-layout-footer -->
+            }
+
+        </form>
+
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">ارسال للميديا</h5>
+
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-action="SendForReviewTeam" asp-controller="AccMaterial">
+                    <div class="row mb-3">
+                        <label class="col-sm-4 form-control-label  text-dark font-weight-bold mt-2">المشرف</label>
+                        <select class="col-sm-7 form-control" required name="ReviewSupervisor">
+                            <option value="">اختر مشرف...</option>
+                            @foreach (var item in ViewBag.ReviewAdmins)
+                            {
+                                <option value="@item.Id">@item.FullName</option>
+                            }
+
+                        </select>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="col-sm-4 form-control-label  text-dark font-weight-bold mt-2">الاعضاء</label>
+                        <div class="form-group">
+                            <input type="radio" id="status1" name="Reviewers" value="0" checked>
+                            <label for="status1">بلا اعضاء</label><br>
+                            <input type="radio" id="status2" name="Reviewers" value="1">
+                            <label for="status2"> كل الاعضاء</label><br>
+                            <input type="radio" id="status3" name="Reviewers" value="2">
+                            <label for="status3"> تحديد الاعضاء</label>
+                        </div>
+
+                    </div>
+                    <div class="row mb-3">
+
+                        <select class="m-3 form-control d-none reviewersClass" multiple name="ReviewUsers[]">
+                            @foreach (var item in ViewBag.ReviewUsers)
+                            {
+                                <option value="@item.Id">@item.FullName</option>
+                            }
+                        </select>
+                    </div>
+                    <input type="hidden" name="BfileId" value="@Model.Id" />
+                    <div class="form-layout-footer mg-t-30 text-center">
+                        <input type="submit" value="ارسال للميديا" class="btn btn-success">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script type="text/javascript" src="~/lib/ckeditor/ckeditor.js"></script>
+
+    <script>
+        window.onload = function () {
+            CKEDITOR.replace('fileContent');
+
+        };
+        function clicked(e) {
+            if ($('#Notes').val().length <= 0) {
+                alert("يجب ادخال ملاحظات للاعداد")
+                e.preventDefault();
+            }
+            $('#Prepare').val('1');
+        }
+        $('input[name=Reviewers]').change(function () {
+            var value = $('input[name=Reviewers]:checked').val();
+            if (value == 2) {
+
+                $('.reviewersClass').removeClass('d-none');
+                $(".reviewersClass").prop("required", true);
+            }
+            else {
+
+                $('.reviewersClass').addClass('d-none');
+                $(".reviewersClass").prop("required", false);
+            }
+        });
+        //tinymce.init({
+        //    selector: 'textarea#tiny'
+        //});
+        // Prevent Bootstrap dialog from blocking focusin
+        //document.addEventListener('focusin', (e) => {
+        //    if (e.target.closest(".tox-tinymce, .tox-tinymce-aux, .moxman-window, .tam-assetmanager-root") !== null) {
+        //        e.stopImmediatePropagation();
+        //    }
+        //});
+    </script>
+
+}

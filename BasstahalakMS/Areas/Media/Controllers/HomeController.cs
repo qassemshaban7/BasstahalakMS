@@ -32,7 +32,7 @@ namespace BasstahalakMS.Areas.Media.Controllers
             var user = await _context.ApplicationUsers.FindAsync(userId);
             ViewBag.ThisUser = user;
             var acceptedNotes = _context.BfileNotes
-                .Where(x => x.ReciveUserId == userId && (x.status == 10))
+                .Where(x => x.ReciveUserId == userId && (x.status == 7))
                 .Include(c => c.BFile)
                 .ThenInclude(c => c.Book)
                 .Include(c => c.BFile)

@@ -14,21 +14,30 @@
             <div class="col-xl-12">
                 <div class="form-layout form-layout-4">
                     <form method="post" asp-action="Edit" asp-controller="File" enctype="multipart/form-data">
-                        @if (Model.status != -1)
+                        @if (Model.status != -5)
                         {
                             <div class="row mb-3">
                                 <div class="col-4 mt-2">
                                     <label class="form-label text-dark font-weight-bold" for="flexCheckDefault">
-                                        اسم المراجع
+                                        اسم المعد
                                     </label>
                                 </div>
                                 <div class="col-4">
-                                    <input type="text" readonly class="form-control " value="@ViewBag.bfileNote.User.FullName" />
+                                    <input type="text" readonly class="form-control " value="@Model.User.FullName" />
                                 </div>
 
-
-
                             </div>
+                            @* <div class="row mb-3">
+                                <div class="col-4 mt-2">
+                                    <label class="form-label text-dark font-weight-bold" for="flexCheckDefault">
+                                        اسم المادة
+                                    </label>
+                                </div>
+                                <div class="col-4">
+                                    <input type="text" readonly class="form-control " value="@Model.Name" />
+                                </div>
+
+                            </div> *@
                             <hr />
                             <div class="row mb-3">
                                 <div class="col-4 mt-2">

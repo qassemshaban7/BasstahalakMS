@@ -121,6 +121,18 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
 
                     _context.BFiles.Add(file);
                     await _context.SaveChangesAsync();
+
+                    var bfileNote = new BfileNote
+                    {
+                        BfileId = file.Id,
+                        CurrentFileContent = file.fileContent,
+                        Notes = " ",
+                        SendUserId = userId,
+                        ReciveUserId = userId,
+                        status = -1
+                    };
+                    _context.BfileNotes.Add(bfileNote);
+                    await _context.SaveChangesAsync();
                     var branchesInDB = await _context.Branches.ToListAsync();
                     foreach (var branch in branchesInDB)
                     {

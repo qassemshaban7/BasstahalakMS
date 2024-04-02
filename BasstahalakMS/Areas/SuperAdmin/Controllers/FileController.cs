@@ -237,6 +237,14 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
             var bFileNotes = await _context.BfileNotes.Include(c => c.User).Include(c => c.BFile).ThenInclude(x=>x.Book).Where(x => x.BfileId == id).ToListAsync();        
             //var branches = await _context.FileBranches.Include(x => x.Branch).Where(x => x.BFileId == id).ToListAsync();
             //ViewBag.branches = branches;
+            var users = new List<ApplicationUser>();
+            foreach (var item in bFileNotes)
+            {
+                var user = await _context.ApplicationUsers.FindAsync(item.SendUserId);
+                if (user != null)
+                    users.Add(user);
+            }
+            ViewBag.SendUsers = users;
             return View(bFileNotes);
         }
         public async Task<IActionResult> ShowFileLogDetails(int id)
@@ -249,10 +257,15 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
 
             var prpareUser = await _context.ApplicationUsers.FindAsync(bFileNoteDetails.BFile.UserId);
             ViewBag.prpareUser = prpareUser.FullName;
+            var SendUser = await _context.ApplicationUsers.FindAsync(bFileNoteDetails.SendUserId);
+            ViewBag.SendUser = SendUser.FullName;
             var branches = await _context.FileBranches.Include(x => x.Branch).Where(x => x.BFileId == id).ToListAsync();
             ViewBag.branches = branches;
             return View(bFileNoteDetails);
         }
+
+
+
 
         //public async Task<IActionResult> ShowFileToSendToMedia(int id)
         //{

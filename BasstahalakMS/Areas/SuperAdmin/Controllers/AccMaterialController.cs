@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
-namespace BasstahalakMS.Areas.Review.Controllers
+namespace BasstahalakMS.Areas.SuperAdmin.Controllers
 {
-    [Authorize(Roles = StaticDetails.Review)]
-    [Area(nameof(Review))]
-    [Route(nameof(Review) + "/[controller]/[action]")]
+    [Authorize(Roles = StaticDetails.SuperAdmin)]
+    [Area(nameof(SuperAdmin))]
+    [Route(nameof(SuperAdmin) + "/[controller]/[action]")]
     public class AccMaterialController : Controller
     {
 
@@ -26,20 +26,21 @@ namespace BasstahalakMS.Areas.Review.Controllers
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var user = await _context.ApplicationUsers.FindAsync(userId);
 
-                var bFileNotes = await _context.BfileNotes
-                    .Where(x => x.ReciveUserId == userId && (x.status ==10 || x.status == 7))
-                    .Include(c => c.BFile)
-                    .ThenInclude(c => c.Book)
-                    .Include(c => c.BFile)
-                    .ThenInclude(c => c.User)
-                    .ToListAsync();
+            var bFileNotes = await _context.BfileNotes
+                .Where(x => x.status == 10 || x.status == 7)
+                .Include(c => c.User)
+                .Include(c => c.BFile)
+                .ThenInclude(c => c.Book)
+                .Include(c => c.BFile)
+                .ThenInclude(c => c.User)
+                .ToListAsync();
 
-                var distinctBFiles = bFileNotes.GroupBy(x => x.BFile.Id)
-                                                .Select(group => group.First())
-                                                .ToList();
-                
-                ViewBag.ThisUser = user;
-                return View(distinctBFiles);
+            var distinctBFiles = bFileNotes.OrderByDescending(c => c.CreationDate).GroupBy(x => x.BFile.Id)
+                                            .Select(group => group.First())
+                                            .ToList();
+
+            ViewBag.ThisUser = user;
+            return View(distinctBFiles);
         }
 
         public async Task<IActionResult> AcceptMaterial(int id)
@@ -74,7 +75,7 @@ namespace BasstahalakMS.Areas.Review.Controllers
             if (existingFile.status == -1)
             {
                 var bfileNotess = await _context.BfileNotes
-                                .Where(p => p.BfileId == existingFile.Id && p.status == 10 || p.status == 7)
+                                .Where(p => p.BfileId == existingFile.Id && p.status == 10 | p.status == 7)
                                 .Include(x => x.BFile)
                                 .Include(x => x.User)
                                 .ToListAsync();
@@ -112,22 +113,22 @@ namespace BasstahalakMS.Areas.Review.Controllers
                 return NotFound();
             }
             var MediaAdmins = await (from x in _context.ApplicationUsers
-                                      join userRole in _context.UserRoles
-                                      on x.Id equals userRole.UserId
-                                      join role in _context.Roles
-                                      on userRole.RoleId equals role.Id
-                                      where role.Name == StaticDetails.Media
-                                      where x.IsAdmin == 1
-                                      select x)
-                                 .ToListAsync();
-            var MediaUsers = await (from x in _context.ApplicationUsers
                                      join userRole in _context.UserRoles
                                      on x.Id equals userRole.UserId
                                      join role in _context.Roles
                                      on userRole.RoleId equals role.Id
                                      where role.Name == StaticDetails.Media
-                                     where x.IsAdmin != 1
+                                     where x.IsAdmin == 1
                                      select x)
+                                 .ToListAsync();
+            var MediaUsers = await (from x in _context.ApplicationUsers
+                                    join userRole in _context.UserRoles
+                                    on x.Id equals userRole.UserId
+                                    join role in _context.Roles
+                                    on userRole.RoleId equals role.Id
+                                    where role.Name == StaticDetails.Media
+                                    where x.IsAdmin != 1
+                                    select x)
                                  .ToListAsync();
 
             ViewBag.ReviewAdmins = MediaAdmins;

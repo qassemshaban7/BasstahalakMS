@@ -63,6 +63,22 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                 Libraries = await _context.Libraries.ToListAsync(),
                 Payments = await _context.Payments.ToListAsync()
             };
+
+            var AcceptedBFilesCount = await _context.BFiles
+                .Where(x => x.status == 10 || x.status == 7)
+                .ToListAsync();
+
+            ViewBag.accCounter = AcceptedBFilesCount;
+
+            var RejectedBFiles = await _context.BFiles
+                .Where(x => x.status == 5 || x.status == 2 || x.status == 3 || x.status == 4)
+                .ToListAsync();
+
+            ViewBag.CountAsync = RejectedBFiles; 
+
+            return View(homeVM);
+
+
             return View(homeVM);
         }
 

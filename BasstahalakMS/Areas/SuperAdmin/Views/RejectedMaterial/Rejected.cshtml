@@ -1,7 +1,7 @@
 ﻿@model BFile
 @{
-    ViewData["Title"] = "AcceptMaterial";
-    Layout = "~/Areas/Media/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Rejected";
+    Layout = "~/Areas/SuperAdmin/Views/Shared/_Layout.cshtml";
 }
 
 <div class="br-pagetitle">
@@ -13,7 +13,7 @@
         <div class="row">
             <div class="col-xl-12">
                 <div class="form-layout form-layout-4">
-                    <form method="post" asp-action="AcceptMaterial" asp-controller="File" enctype="multipart/form-data">
+                    <form method="post" asp-action="Rejected" asp-controller="RejectedMaterial" enctype="multipart/form-data">
                         <div class="row mb-3">
                             <label class="col-sm-4 form-control-label" for="flexCheckDefault">اسم المادة: <span class="tx-danger">*</span></label>
                             <div class="col-sm-8 mg-t-10 mg-sm-t-0">
@@ -91,7 +91,7 @@
                         <div class="row mb-3">
                             <label class="col-sm-4 form-control-label">محتوي المادة: <span class="tx-danger">*</span></label>
                         </div><!-- row -->
-                        @if (Model.status == 7)
+                        @if (Model.status == 5)
                         {
                             <div class="row mb-3">
                                 <textarea id="fileContent" name="fileContent" required readonly>
@@ -111,7 +111,7 @@
                         <hr />
                         <input type="hidden" asp-for="Id" />
                         <div class="form-layout-footer mg-t-30 text-center">
-                            <a asp-action="Index" asp-controller="File" class="btn btn-secondary">الرجوع</a>
+                            <a asp-action="Index" asp-controller="RejectedMaterial" class="btn btn-secondary">الرجوع</a>
                         </div><!-- form-layout-footer -->
                     </form>
                 </div><!-- form-layout -->

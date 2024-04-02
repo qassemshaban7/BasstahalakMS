@@ -132,6 +132,36 @@
         </div><!-- col-3 -->
     </div>
 
+        <div class="col-sm-4 col-xl-4 mb-3">
+            <a asp-action="Index" asp-controller="AccMaterial">
+                <div class="bg-success rounded overflow-hidden">
+                    <div class="pd-x-20 pd-t-20 d-flex align-items-center">
+                        <i class="fas fa-check fa-3x tx-white op-7"></i>
+                        <div class="mg-r-20">
+                            <p class="tx-20 tx-spacing-1 tx-mont tx-bold tx-uppercase tx-white-8 mg-b-10">المواد المقبولة</p>
+                            <p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1">@ViewBag.accCounter</p>
+                        </div>
+                    </div>
+                    <div id="ch3" class="ht-50 tr-y-1"></div>
+                </div>
+            </a>
+        </div><!-- col-3 -->
+        <div class="col-sm-4 col-xl-4 mb-3">
+            <a asp-action="Index" asp-controller="RejectedMaterial">
+                <div class="bg-danger rounded overflow-hidden">
+                    <div class="pd-x-20 pd-t-20 d-flex align-items-center">
+                        <i class="fas fa-times fa-3x tx-white op-7"></i> 
+                        <div class="mg-r-20">
+                            <p class="tx-20 tx-spacing-1 tx-mont tx-bold tx-uppercase tx-white-8 mg-b-10">المواد المرفوضة</p>
+                            <p class="tx-24 tx-white tx-lato tx-bold mg-b-0 lh-1">@ViewBag.rejectedCounter</p>
+                        </div>
+                    </div>
+                    <div id="ch3" class="ht-50 tr-y-1"></div>
+                </div>
+            </a>
+        </div><!-- col-3 -->
+    
+
 
 
 

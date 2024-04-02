@@ -30,8 +30,9 @@ namespace BasstahalakMS.Areas.Review.Controllers
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var user = await _context.ApplicationUsers.FindAsync(userId);
-            var bFileNotes = await _context.BfileNotes.Where(x => x.SendUserId == userId && x.status == 3 || x.status ==4).ToListAsync();
-            var bFiles = await _context.BFiles.Include(x => x.Book).Include(x => x.User).Where(x => x.status == 3 || x.status == 4).ToListAsync();
+            var bFileNotes = await _context.BfileNotes.Where(x => (x.ReciveUserId == userId || x.SendUserId == userId) && x.status == 3 || x.status ==4).ToListAsync();
+            var bFiles = await _context.BFiles.Include(x => x.Book).Include(x => x.User).Where(x => x.status == 3 || x.status == 4  ).ToListAsync();
+            
             if(bFileNotes.Count() == 0)
             {
                 bFiles.RemoveAll(x=>x.UserId != null);
@@ -69,7 +70,7 @@ namespace BasstahalakMS.Areas.Review.Controllers
 
 
             var acceptedNotes = _context.BfileNotes 
-                .Where(x => x.ReciveUserId == userId && (x.status == 10))
+                .Where(x => x.ReciveUserId == userId && (x.status == 10 || x.status == 7))
                 .Include(c => c.BFile)
                 .ThenInclude(c => c.Book)
                 .Include(c => c.BFile)
@@ -83,7 +84,7 @@ namespace BasstahalakMS.Areas.Review.Controllers
             ViewBag.accCounter = AcceptedBFiles;
 
             var rejectedNotes = _context.BfileNotes
-                .Where(x => x.ReciveUserId == userId && (x.status == 5))
+                .Where(x => x.ReciveUserId == userId && (x.status == 5 || x.status == 6))
                 .Include(c => c.BFile)
                 .ThenInclude(c => c.Book)
                 .Include(c => c.BFile)
