@@ -31,7 +31,19 @@ namespace BasstahalakMS.Areas.Media.Controllers
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var user = await _context.ApplicationUsers.FindAsync(userId);
             ViewBag.ThisUser = user;
+            var acceptedNotes = _context.BfileNotes
+                .Where(x => x.ReciveUserId == userId && (x.status == 10))
+                .Include(c => c.BFile)
+                .ThenInclude(c => c.Book)
+                .Include(c => c.BFile)
+                .ThenInclude(c => c.User)
+                .AsQueryable();
 
+            var AcceptedBFiles = await acceptedNotes.GroupBy(x => x.BFile.Id)
+                .Select(group => group.First())
+                .CountAsync();
+
+            ViewBag.accCounter = AcceptedBFiles;
             if (user.IsAdmin == 1)
             {
 

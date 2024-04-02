@@ -6,7 +6,7 @@
     Layout = "~/Areas/Media/Views/Shared/_Layout.cshtml";
 }
 <div class="br-pagetitle">
-    <h3 class="text-info mr-3">تعديل بيانات مراجع </h3>
+    <h3 class="text-info mr-3">تعديل بيانات عضو </h3>
 </div><!-- d-flex -->
 
 <div class="br-pagebody">
@@ -16,7 +16,7 @@
                 <div class="form-layout form-layout-4">
                     <form method="post" asp-action="Edit" asp-controller="MediaUsers" enctype="multipart/form-data">
                         <div class="row mb-3">
-                            <label class="col-sm-4 form-control-label">اسم المحرر: <span class="tx-danger">*</span></label>
+                            <label class="col-sm-4 form-control-label">اسم العضو: <span class="tx-danger">*</span></label>
                             <div class="col-sm-8 mg-t-10 mg-sm-t-0">
                                 <input asp-for="FullName" type="text" class="form-control" required>
                                 <span class="text-danger" asp-validation-for="FullName"></span>

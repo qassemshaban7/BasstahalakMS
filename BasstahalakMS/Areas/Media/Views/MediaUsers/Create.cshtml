@@ -5,7 +5,7 @@
     Layout = "~/Areas/Media/Views/Shared/_Layout.cshtml";
 }
 <div class="br-pagetitle">
-    <h3 class="text-info mr-3">إضافة محرر جديد</h3>
+    <h3 class="text-info mr-3">إضافة عضو جديد</h3>
 </div><!-- d-flex -->
 
 <div class="br-pagebody">
@@ -16,9 +16,9 @@
                     <form method="post" asp-action="Create" asp-controller="MediaUsers" asp-route-returnurl="@ViewData["ReturnUrl"]">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="row mb-3">
-                            <label class="col-sm-4 form-control-label">اسم المحرر: <span class="tx-danger">*</span></label>
+                            <label class="col-sm-4 form-control-label">اسم العضو: <span class="tx-danger">*</span></label>
                             <div class="col-sm-8 mg-t-10 mg-sm-t-0">
-                                <input asp-for="FullName" type="text" class="form-control" placeholder="اسم المحرر" required>
+                                <input asp-for="FullName" type="text" class="form-control" placeholder="اسم العضو" required>
                                 <span class="text-danger" asp-validation-for="FullName"></span>
                             </div>
                         </div><!-- row -->
