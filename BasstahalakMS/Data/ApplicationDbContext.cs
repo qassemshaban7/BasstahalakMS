@@ -23,6 +23,8 @@ namespace BasstahalakMS.Data
         public DbSet<Payment> Payments { get; set; }
         public DbSet<ReviewPermission> ReviewPermissions { get; set; }
         public DbSet<UserReviewPermission> UserReviewPermissions { get; set; }
+        public DbSet<PdfFile> PdfFiles { get; set; }    
+        public DbSet<pdfNote> pdfNotes { get; set; }    
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

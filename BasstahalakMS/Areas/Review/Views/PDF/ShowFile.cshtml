@@ -1,0 +1,153 @@
+﻿@model PdfFile
+@{
+    ViewData["Title"] = "ShowFile";
+    Layout = "~/Areas/Review/Views/Shared/_Layout.cshtml";
+}
+<div class="br-pagetitle">
+    <i class="icon fas fa-light fa-file-word"></i>
+    <div class="row">
+        <div class="col-lg-12 col-12">
+            <h3 class="text-info">@Model.Name</h3>
+        </div>
+    </div>
+</div>
+
+<div class="br-pagebody">
+    <div class="br-section-wrapper">
+        <div class="row mb-3">
+            <div class="col-4 mt-4">
+                <label class="form-label text-dark font-weight-bold" for="flexCheckDefault">اسم المعد</label>
+            </div>
+            <div class="col-4">
+                <input type="text" readonly class="form-control" value="@Model.User.FullName" />
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-4 mt-4">
+                <label class="form-label text-dark font-weight-bold" for="flexCheckDefault">تاريخ الانشاء</label>
+            </div>
+            <div class="col-4">
+                <input type="text" readonly class="form-control" value="@Model.CreationDate" />
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-4 mt-4">
+                <label class="form-label text-dark font-weight-bold" for="flexCheckDefault">الوصف</label>
+            </div>
+            <div class="col-4">
+                @if (Model.Description == null)
+                {
+                    <input type="text" readonly class="form-control" value="لا يوجد وصف" />
+                }
+                else
+                {
+                    <input type="text" readonly class="form-control" value="@Model.Description" />
+                }
+            </div>
+        </div>
+
+        <hr />
+
+        <form method="post" asp-action="SendForReview" asp-controller="PDF">
+            @if (Model.status == 3)
+            {
+                <div class="row mb-3">
+                    <label class="col-sm-4 form-control-label text-dark font-weight-bold">ملاحظات</label>
+                </div>
+
+                <div class="row mb-3 mr-1">
+                    <textarea id="Notes" name="Notes" class="form-control" rows="8"></textarea>
+                </div>
+
+                <input type="hidden" name="BfileId" value="@Model.Id" />
+                <input type="hidden" id="Prepare" name="Prepare" value="0" />
+
+                <div class="form-layout-footer mg-t-30 text-center">
+                    <input type="submit" value="ارسال للمدير" class="btn btn-success">
+                    <button type="button" class="btn btn-danger" onclick="clicked(event)" data-toggle="modal" data-target="#exampleModal">ارسال للميديا</button>
+                    <a asp-action="Index" asp-controller="PDF" class="btn btn-secondary">الرجوع</a>
+                </div>
+            }
+            else
+            {
+                <div class="form-layout-footer mg-t-30 text-center">
+                    <a asp-action="Index" asp-controller="PDF" class="btn btn-secondary">الرجوع</a>
+                </div>
+            }
+        </form>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">ارسال للميديا</h5>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-action="SendForReview" asp-controller="PDF">
+                    <input type="hidden" id="Prepare" name="Prepare" value="1" />
+
+                    <div class="row mb-3">
+                        <label class="col-sm-4 form-control-label text-dark font-weight-bold mt-2">العضو</label>
+                        <select class="col-sm-7 form-control" required name="ReviewSupervisor">
+                            <option value="">اختر عضو...</option>
+                            @foreach (var item in ViewBag.PrepareMemberList)
+                            {
+                                <option value="@item.Id">@item.FullName</option>
+                            }
+                        </select>
+                    </div>
+
+                    <input type="hidden" name="BfileId" value="@Model.Id" />
+
+                    <div class="form-layout-footer mg-t-30 text-center">
+                        <input type="submit" value="ارسال للميديا" class="btn btn-success">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script type="text/javascript" src="~/lib/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript" src="~/lib/sweetalerts/sweetalert.min.js"></script>
+
+    <script>
+        window.onload = function () {
+            CKEDITOR.replace('fileContent');
+        };
+
+        function clicked(e) {
+            if ($('#Notes').val().length <= 0) {
+                Swal.fire({
+                    icon: "error",
+                    title: "خطأ...",
+                    confirmButtonText: "حسنا",
+                    text: 'يجب ادخال ملاحظات للميديا'
+                });
+                e.stopPropagation();
+            }
+            $('#Prepare').val('1');
+        }
+
+        $('input[name=Reviewers]').change(function () {
+            var value = $('input[name=Reviewers]:checked').val();
+            if (value == 2) {
+                $('.reviewersClass').removeClass('d-none');
+                $(".reviewersClass").prop("required", true);
+            }
+            else {
+                $('.reviewersClass').addClass('d-none');
+                $(".reviewersClass").prop("required", false);
+            }
+        });
+    </script>
+}

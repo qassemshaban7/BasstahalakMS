@@ -30,7 +30,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
         {
             SuperAdminHomeVM homeVM = new SuperAdminHomeVM
             {
-                Users = await _context.ApplicationUsers.Where(x=>x.Type == 1 || x.Type == 2).ToListAsync(),
+                Users = await _context.ApplicationUsers.Where(x => x.Type == 1 || x.Type == 2).ToListAsync(),
                 ReviewTeam = await (from x in _context.ApplicationUsers
                                     join userRole in _context.UserRoles
                                     on x.Id equals userRole.UserId
@@ -56,7 +56,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                                    select x)
                                   .ToListAsync(),
 
-                BFiles = await _context.BFiles.Where(x=>x.status!=0).ToListAsync(),
+                BFiles = await _context.BFiles.Where(x => x.status != 0).ToListAsync(),
                 Books = await _context.Books.ToListAsync(),
                 Branches = await _context.Branches.ToListAsync(),
                 PrintTypes = await _context.PrintTypes.ToListAsync(),
@@ -66,15 +66,15 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
 
             var AcceptedBFilesCount = await _context.BFiles
                 .Where(x => x.status == 10 || x.status == 7)
-                .ToListAsync();
+                .CountAsync();
 
             ViewBag.accCounter = AcceptedBFilesCount;
 
             var RejectedBFiles = await _context.BFiles
                 .Where(x => x.status == 5 || x.status == 2 || x.status == 3 || x.status == 4)
-                .ToListAsync();
+                .CountAsync();
 
-            ViewBag.CountAsync = RejectedBFiles; 
+            ViewBag.Rejected = RejectedBFiles; 
 
             return View(homeVM);
 

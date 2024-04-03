@@ -33,6 +33,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\files\" />
+    <Folder Include="wwwroot\pdffiles\" />
     <Folder Include="wwwroot\Payment\" />
   </ItemGroup>
 

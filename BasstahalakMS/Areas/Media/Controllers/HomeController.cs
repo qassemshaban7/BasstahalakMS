@@ -44,6 +44,10 @@ namespace BasstahalakMS.Areas.Media.Controllers
                 .CountAsync();
 
             ViewBag.accCounter = AcceptedBFiles;
+
+            var pdfs = await _context.PdfFiles.Where(x => x.UserId == userId).Include(c => c.User).CountAsync();
+            ViewBag.pdf = pdfs;
+
             if (user.IsAdmin == 1)
             {
 

@@ -1,4 +1,5 @@
 ﻿using BasstahalakMS.Data;
+using BasstahalakMS.Models;
 using BasstahalakMS.Utility;
 using BasstahalakMS.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -97,7 +98,13 @@ namespace BasstahalakMS.Areas.Review.Controllers
 
             ViewBag.rejectedCounter = RectedBFiles;
 
+            var pdfs = await _context.pdfNotes.Where(x => x.ReciveUserId == userId).Include(c => c.PdfFile).ToListAsync();
 
+            var distinctpdfs = pdfs.GroupBy(x => x.PdfFile.Id)
+                                .Select(group => group.First())
+                                .Count();
+
+            ViewBag.pdf = distinctpdfs;
 
             return View(homeVM);
         }
