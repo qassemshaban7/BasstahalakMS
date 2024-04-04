@@ -126,7 +126,7 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
                     {
                         BfileId = file.Id,
                         CurrentFileContent = file.fileContent,
-                        Notes = " ",
+                        Notes = "",
                         SendUserId = userId,
                         ReciveUserId = userId,
                         status = -1
@@ -215,6 +215,8 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
                 .LastOrDefaultAsync(x => x.status == existingFile.status && x.SendUserId != userId);
 
             ViewBag.bfileNote = bfileNote;
+            var SendUser = await _context.ApplicationUsers.FindAsync(bfileNote.SendUserId);
+            ViewBag.SendUser = SendUser.FullName;
             return View(existingFile);
         }
 
@@ -233,19 +235,19 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
                     existingFile.fileContent = Request.Form["fileContent"].ToString();
                     existingFile.BookId = bFile.BookId;
                     bool updated = true;
-                    if(existingFile.status == 2  || existingFile.status == 0 || existingFile.status == 6) {
-                        //existingFile.status = 1;
-                        BfileNote bfileNote = new BfileNote
-                        {
-                            BfileId = bFile.Id,
-                            CurrentFileContent = Request.Form["fileContent"].ToString(),
-                            Notes = "",
-                            SendUserId = userId,
-                            status = 0 // Back to Admin
-                        };
-                        _context.BfileNotes.Add(bfileNote);
-                        updated = false;
-                    }  
+                    //if(existingFile.status == 2  || existingFile.status == 0 || existingFile.status == 6) {
+                    //    //existingFile.status = 1;
+                    //    BfileNote bfileNote = new BfileNote
+                    //    {
+                    //        BfileId = bFile.Id,
+                    //        CurrentFileContent = Request.Form["fileContent"].ToString(),
+                    //        Notes = "",
+                    //        SendUserId = userId,
+                    //        status = 0 
+                    //    };
+                    //    _context.BfileNotes.Add(bfileNote);
+                    //    //updated = false;
+                    //}  
                     //else if(existingFile.status == 4)
                     //{
                     //    existingFile.status = 3;
@@ -353,6 +355,16 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
 
             var branches = await _context.FileBranches.Include(x => x.Branch).Where(x => x.BFileId == existingFile.Id).ToListAsync();
             ViewBag.branches = branches;
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            var bfileNote = await _context.BfileNotes.Include(x => x.BFile)
+                .Include(x => x.User)
+                .OrderBy(e => e.CreationDate)
+                .LastOrDefaultAsync(x => x.status == existingFile.status && x.SendUserId != userId);
+
+            ViewBag.bfileNote = bfileNote;
+            var SendUser = await _context.ApplicationUsers.FindAsync(bfileNote.SendUserId);
+            ViewBag.SendUser = SendUser.FullName;
             return View(existingFile);
 
         }
@@ -441,8 +453,8 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
                 string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 var bF = _context.BFiles.Find(BfileId);
 
-                if (bF.status == 0)
-                {
+                //if (bF.status == 0)
+                //{
                     if (Prepare == 0)
                     {
                         var SuperAdmin = await (from x in _context.ApplicationUsers
@@ -488,7 +500,7 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
                         HttpContext.Session.SetString("Sent", "true");
                         return RedirectToAction(nameof(Index));
                     }
-                }
+                //}
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

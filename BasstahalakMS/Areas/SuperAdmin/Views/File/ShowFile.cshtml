@@ -200,7 +200,8 @@
 
 @section scripts{
     <script type="text/javascript" src="~/lib/ckeditor/ckeditor.js"></script>
-   
+    <script type="text/javascript" src="~/lib/sweetalerts/sweetalert.min.js"></script>
+
     <script>
         window.onload = function () {
             CKEDITOR.replace('fileContent');
@@ -208,7 +209,12 @@
         };
         function clicked(e) {
             if ($('#Notes').val().length <=0) {
-                alert("يجب ادخال ملاحظات للاعداد")
+                Swal.fire({
+                    icon: "error",
+                    title: "خطأ...",
+                    confirmButtonText: "حسنا",
+                    text: "يجب ادخال ملاحظات للاعداد"
+                });
                 e.preventDefault();
             }
             $('#Prepare').val('1');

@@ -83,10 +83,33 @@
                                 }
                             </td>
                             <td>
-                                <a asp-action="ShowFile" asp-controller="PDF" asp-route-id="@file.Id" class=" btn btn-success">
+                                @if (file.status == 0)
+                                {
+                                    <a asp-action="ShowFile" asp-controller="PDF" asp-route-id="@file.Id" class=" btn btn-success">
                                         <i class="fas fa-plane"></i>
-                                        ارسال 
+                                        ارسال
                                     </a>
+                                }
+                                @if (file.status == 1)
+                                {
+                                    <span class="text-info">تحت مراجعة الادمن</span>
+                                }
+                                else if (file.status == 2)
+                                {
+                                    <a asp-action="ShowFile" asp-controller="PDF" asp-route-id="@file.Id" class=" btn btn-success">
+                                        <i class="fas fa-plane"></i>
+                                        ارسال
+                                    </a>
+                                }
+                                else if (file.status == 3)
+                                {
+                                    <span class="text-info">تحت مراجعة فريق المراجعة</span>
+                                }
+                                else if (file.status == 4)
+                                {
+                                    <span class="text-info">تم قبول الملف</span>
+                                }
+                                
                             </td>
                         </tr>
                     }

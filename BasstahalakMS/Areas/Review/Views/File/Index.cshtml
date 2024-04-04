@@ -79,29 +79,37 @@
                                 }
                             </td>
                             <td>
-                                @if (file.BFile.status == 3 && ViewBag.ThisUser.IsAdmin == 1)
+                                @if (file.BFile.UserId != ViewBag.ThisUser.Id)
                                 {
-                                    <a asp-action="Edit" asp-controller="File" asp-route-id="@file.BFile.Id" class=" btn btn-warning"> <i class="fas fa-edit"></i> </a>
-
-                                }
-                                else if (file.BFile.status == -1 && file.SendUserId == ViewBag.ThisUser.Id)
-                                {
-                                    <a asp-action="Edit" asp-controller="File" asp-route-id="@file.BFile.Id" class=" btn btn-warning"> <i class="fas fa-edit"></i> </a>
-                                }
-                                else if (file.BFile.status == 4 && ViewBag.ThisUser.IsAdmin == 0)
-                                {
-                                    <a asp-action="Edit" asp-controller="File" asp-route-id="@file.BFile.Id" class=" btn btn-warning"> <i class="fas fa-edit"></i> </a>
-
-                                }
-                                else if (file.BFile.status == 3 && file.BFile.TeamStatus == 0 && ViewBag.ThisUser.IsAdmin == 0)
-                                {
-                                    <a asp-action="Edit" asp-controller="File" asp-route-id="@file.BFile.Id" class=" btn btn-warning"> <i class="fas fa-edit"></i> </a>
-
+                                    <spa class="text-danger">لا يمكن التعديل</spa>
                                 }
                                 else
                                 {
-                                    <span class="text-info">تحت المراجعة</span>
+                                    @if (file.BFile.status == 3 && ViewBag.ThisUser.IsAdmin == 1)
+                                    {
+                                        <a asp-action="Edit" asp-controller="File" asp-route-id="@file.BFile.Id" class=" btn btn-warning"> <i class="fas fa-edit"></i> </a>
+
+                                    }
+                                    else if (file.BFile.status == -1 && file.SendUserId == ViewBag.ThisUser.Id)
+                                    {
+                                        <a asp-action="Edit" asp-controller="File" asp-route-id="@file.BFile.Id" class=" btn btn-warning"> <i class="fas fa-edit"></i> </a>
+                                    }
+                                    else if (file.BFile.status == 4 && ViewBag.ThisUser.IsAdmin == 0)
+                                    {
+                                        <a asp-action="Edit" asp-controller="File" asp-route-id="@file.BFile.Id" class=" btn btn-warning"> <i class="fas fa-edit"></i> </a>
+
+                                    }
+                                    else if (file.BFile.status == 3 && file.BFile.TeamStatus == 0 && ViewBag.ThisUser.IsAdmin == 0)
+                                    {
+                                        <a asp-action="Edit" asp-controller="File" asp-route-id="@file.BFile.Id" class=" btn btn-warning"> <i class="fas fa-edit"></i> </a>
+
+                                    }
+                                    else
+                                    {
+                                        <span class="text-info">تحت المراجعة</span>
+                                    }
                                 }
+                                
                             </td>
                             <td>
                                 @if (file.BFile.status == -1 && file.SendUserId == ViewBag.ThisUser.Id || file.BFile.status == 3 || file.BFile.status == 4 || file.BFile.status == 5 || file.BFile.status == 6 && ViewBag.ThisUser.IsAdmin == 1 || file.BFile.status == -1)
@@ -122,17 +130,25 @@
                                 }
                             </td>
                             <td>
-                                @if (ViewBag.ThisUser.IsAdmin == 1 && file.BFile.status == 3 || file.BFile.status == 4 || file.BFile.status == -1 && file.SendUserId == ViewBag.ThisUser.Id)
+                                @if (ViewBag.ThisUser.IsAdmin == 1)
                                 {
+                                    if (file.BFile.status == 3 || file.BFile.status == 4 || file.BFile.status == -1 && file.SendUserId == ViewBag.ThisUser.Id)
+                                    {
                                         <a asp-action="ShowToSendToTeam" asp-route-id="@file.BFile.Id" class=" btn btn-info">
                                             <i class="fas fa-plane">الي الفريق</i>
                                         </a>
+                                    }
+
                                 }
-                                else if (ViewBag.ThisUser.IsAdmin == 0 && file.BFile.status == 4 || file.BFile.status == 3 && file.BFile.TeamStatus == 0 || file.BFile.status == -1 && file.SendUserId == ViewBag.ThisUser.Id)
+                                else if (ViewBag.ThisUser.IsAdmin == 0 )
                                 {
+                                    if (file.BFile.status == 4 || file.BFile.status == 3 && file.BFile.TeamStatus == 0 || file.BFile.status == -1 && file.SendUserId == ViewBag.ThisUser.Id)
+                                    {
                                         <a asp-action="ShowToSendToSupervisor" asp-route-id="@file.BFile.Id" class=" btn btn-info">
                                             <i class="fas fa-plane">الي المشرف</i>
                                         </a>
+                                    }
+                                   
                                 }
                                 else
                                 {
@@ -172,6 +188,7 @@
     </div>
 </div>
 <input type="hidden" id="Sent" data-value="@ViewBag.Sent" />
+<input type="hidden" id="accepted" data-value="@ViewBag.accepted" />
 
 @section scripts {
     <!-- BEGIN PAGE LEVEL SCRIPTS -->
@@ -220,6 +237,28 @@
                     "hideMethod": "fadeOut"
                 }
                 toastr.success("تم الارسال بنجاح");
+            }
+
+            var accepted = $("#accepted").data("value");
+            if (accepted == "True") {
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": true,
+                    "positionClass": "toast-top-left",
+                    "preventDuplicates": true,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "12000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+                toastr.success("تم قبول المادة العلمية بنجاح");
             }
         });
     </script>

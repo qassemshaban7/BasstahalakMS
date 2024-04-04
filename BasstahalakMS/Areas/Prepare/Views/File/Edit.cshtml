@@ -23,7 +23,7 @@
                                     </label>
                                 </div>
                                 <div class="col-4">
-                                    <input type="text" readonly class="form-control " value="@ViewBag.bfileNote.User.FullName" />
+                                    <input type="text" readonly class="form-control " value="@ViewBag.SendUser" />
                                 </div>
 
 
@@ -173,7 +173,7 @@
                         
                         <input type="hidden" asp-for="Id" />
                         <div class="form-layout-footer mg-t-30 text-center">
-                            @if(Model.status == 0 || Model.status == 2 || Model.status == 6 )
+                            @if(Model.status == 0 || Model.status == 2 || Model.status == 6 || Model.status == 5)
                             {
                                 <input type="submit" value="حفظ التعديلات"  class="btn btn-info">
 

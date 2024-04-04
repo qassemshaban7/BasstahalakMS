@@ -137,7 +137,7 @@ namespace BasstahalakMS.Areas.SuperAdmin.Controllers
                 string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 var bfile = await _context.BFiles.FindAsync(BfileId);
 
-                if (bfile.status == 1 && bfile.status == 6 )
+                if (bfile.status == 1 || bfile.status == 6 )
                 {
                     BfileNote bfileNote = new BfileNote
                     {

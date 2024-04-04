@@ -90,6 +90,10 @@
                                 {
                                     <span class="text-info">ارسال للمدير  </span>
                                 }
+                                else if (item.status == 10)
+                                {
+                                    <span class="text-info">تم قبول المادة العلمية   </span>
+                                }
                             </td>
                             <td>
                                 <a asp-action="ShowFileLogDetails" asp-route-id="@item.Id" class=" btn btn-info">

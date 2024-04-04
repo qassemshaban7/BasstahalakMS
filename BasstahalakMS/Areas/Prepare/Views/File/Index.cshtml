@@ -94,13 +94,13 @@
                                 @if(file.BFile.status == 5)
                                 {
                                     <a asp-action="ShowToSendToReviwSupervisor" asp-route-id="@file.BFile.Id" class=" btn btn-info">
-                                            <i class="fas fa-plane">ارسال الي المراجعة </i>
+                                            <i class="fas fa-plane"> ارسال الي المراجعة </i>
                                     </a>
                                 }
                                 else if (file.BFile.status == 0 || file.BFile.status == 2)
                                 {
                                     <a asp-action="ShowFile" asp-route-id="@file.BFile.Id" class=" btn btn-info">
-                                        <i class="fas fa-plane">ارسال الي المراجعة </i>
+                                        <i class="fas fa-plane"> ارسال الي المراجعة  </i>
                                     </a>
                                 }
                                 else

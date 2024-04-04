@@ -115,7 +115,6 @@ namespace BasstahalakMS.Areas.Media.Controllers
             return View(pdf);
         }
 
-        [Authorize(Roles = "Prepare")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(PdfFile pdf)

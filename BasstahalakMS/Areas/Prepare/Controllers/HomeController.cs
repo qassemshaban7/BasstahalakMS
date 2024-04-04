@@ -31,9 +31,21 @@ namespace BasstahalakMS.Areas.Prepare.Controllers
         public async Task<IActionResult> Index()
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var files = await _context.BFiles.Include(x => x.Book).Where(x => x.UserId == userId ).ToListAsync();
+            var bFileNotes = await _context.BfileNotes
+               .Where(x => x.ReciveUserId == userId &&
+                           (x.BFile.status == 0 || x.BFile.status == 1 || x.BFile.status == 2 || x.BFile.status == 5))
+               .Include(c => c.BFile)
+                   .ThenInclude(c => c.Book)
+               .Include(c => c.BFile.User)
+               .ToListAsync();
 
-            return View(files);
+
+            var distinctBFiles = bFileNotes.GroupBy(x => x.BFile.Id)
+                                            .Select(group => group.First())
+                                            .ToList();
+            //var files = await _context.BFiles.Include(x => x.Book).Where(x => x.UserId == userId ).ToListAsync();
+
+            return View(distinctBFiles);
         }
 
         public async Task<IActionResult> ChangePassword()

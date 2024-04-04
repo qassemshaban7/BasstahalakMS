@@ -18,6 +18,46 @@
         @* <div>
         <textarea id="tiny"></textarea>
         </div>*@
+        @if (Model.status == 5)
+        {
+            <div class="row mb-3">
+                <div class="col-4 mt-2">
+                    <label class="form-label text-dark font-weight-bold" for="flexCheckDefault">
+                        اسم المراجع
+                    </label>
+                </div>
+                <div class="col-4">
+                    <input type="text" readonly class="form-control " value="@ViewBag.SendUser" />
+                </div>
+
+
+
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-4 mt-2">
+                    <label class="form-label text-dark font-weight-bold" for="flexCheckDefault">
+                        تاريخ المراجعة
+                    </label>
+                </div>
+                <div class="col-4">
+                    <input type="text" readonly class="form-control " value=" @ViewBag.bfileNote.CreationDate" />
+                </div>
+
+
+
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <label class="col-sm-4 form-control-label  text-dark font-weight-bold">ملاحظات </label>
+            </div>
+
+            <!-- row -->
+            <div class="row mb-3 mr-1">
+                <textarea id="Notes" name="Notes" readonly class="form-control" rows="8">@ViewBag.bfileNote.Notes</textarea>
+            </div>
+            <hr />
+        }
         <div class="row mb-3">
             <div class="col-4 mt-4">
                 <label class="form-label text-dark font-weight-bold" for="flexCheckDefault">

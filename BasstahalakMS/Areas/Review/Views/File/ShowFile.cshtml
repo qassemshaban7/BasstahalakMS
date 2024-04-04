@@ -164,7 +164,7 @@
                         <button type="button" class="btn btn-danger" onclick="clicked(event)" data-toggle="modal" data-target="#exampleModal">
                             ارسال للاعداد
                         </button>
-                        <a asp-action="AcceptMaterial" asp-controller="File" class="btn btn-success">قبول المادة العلمية</a>
+                        <a asp-action="AcceptMaterial" asp-controller="File" asp-route-id="@Model.Id" class="btn btn-success">قبول المادة العلمية</a>
                         <a asp-action="Index" asp-controller="File" class="btn btn-secondary">الرجوع</a>
                     </div>
 
@@ -207,6 +207,14 @@
                     <form method="post" asp-action="SendForReview" asp-controller="File">
                     <input type="hidden" id="Prepare" name="Prepare" value="1" />
                     <div class="row mb-3">
+                        <label class="col-sm-4 form-control-label  text-dark font-weight-bold">ملاحظات </label>
+                    </div>
+
+                    <!-- row -->
+                    <div class="row mb-3 m-2">
+                        <textarea id="Notes" name="Notes" class="form-control" rows="8" required></textarea>
+                    </div>
+                    <div class="row mb-3">
                         <label class="col-sm-4 form-control-label  text-dark font-weight-bold mt-2">المعد</label>
                         <select class="col-sm-7 form-control" required name="ReviewSupervisor">
                             <option value="">اختر معد...</option>
@@ -240,15 +248,15 @@
 
         };
         function clicked(e) {
-            if ($('#Notes').val().length <= 0) {
-                Swal.fire({
-                    icon: "error",
-                    title: "خطأ...",
-                    confirmButtonText: "حسنا",
-                    text: 'يجب ادخال ملاحظات للاعداد'
-                });
-                e.stopPropagation();
-            }
+            //if ($('#Notes').val().length <= 0) {
+            //    Swal.fire({
+            //        icon: "error",
+            //        title: "خطأ...",
+            //        confirmButtonText: "حسنا",
+            //        text: 'يجب ادخال ملاحظات للاعداد'
+            //    });
+            //    e.stopPropagation();
+            //}
             $('#Prepare').val('1');
         }
         $('input[name=Reviewers]').change(function () {
