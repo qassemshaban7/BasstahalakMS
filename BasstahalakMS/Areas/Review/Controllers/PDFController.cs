@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using static Azure.Core.HttpHeader;
+using Microsoft.CodeAnalysis.Elfie.Serialization;
 
 namespace BasstahalakMS.Areas.Review.Controllers
 {
@@ -46,6 +47,11 @@ namespace BasstahalakMS.Areas.Review.Controllers
             {
                 ViewBag.updated = true;
                 HttpContext.Session.Remove("updated");
+            }
+            if (HttpContext.Session.GetString("Accepted") != null)
+            {
+                ViewBag.Accepted = true;
+                HttpContext.Session.Remove("Accepted");
             }
 
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -139,6 +145,22 @@ namespace BasstahalakMS.Areas.Review.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
+        }
+
+        public async Task<IActionResult> AcceptFile(int id)
+        {
+            var bF = await _context.PdfFiles.FindAsync(id);
+            pdfNote pdfnote = new pdfNote
+            {
+                PdfId = id,
+                Description = "",
+                ReciveUserId = bF.UserId  // Accepted and Sent to Media
+            };
+            _context.pdfNotes.Add(pdfnote);
+            bF.status = 4;
+            await _context.SaveChangesAsync();
+            HttpContext.Session.SetString("Accepted", "true");
+            return RedirectToAction(nameof(Index));
         }
     }
 }

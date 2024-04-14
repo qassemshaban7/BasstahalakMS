@@ -50,12 +50,15 @@ namespace BasstahalakMS.Areas.Media.Controllers
 
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            var pdfs = await _context.PdfFiles.Where(x => x.UserId == userId).Include(c => c.User).ToListAsync();
+            var pdfs = await _context.PdfFiles.Where(x => x.UserId == userId).Include(c => c.User).Include(x=>x.BFile).ToListAsync();
             return View(pdfs);
         }
 
-        public IActionResult Upload()
+        public async Task<IActionResult> Upload()
         {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var AccMaterials = await _context.BfileNotes.Include(x=>x.BFile).Where(x => x.status == 7 && x.ReciveUserId == userId).ToListAsync();
+            ViewBag.AccMaterials = AccMaterials;
             return View();
         }
 
@@ -88,21 +91,30 @@ namespace BasstahalakMS.Areas.Media.Controllers
                         Description = pdf.Description,
                         PDFPath = uniqueFileName,
                         status = 0,
-                        UserId = userId
+                        UserId = userId,
+                        BfileId = pdf.BfileId
                     };
 
                     _context.PdfFiles.Add(file);
                     await _context.SaveChangesAsync();
-
+                    HttpContext.Session.SetString("created", "true");
                     return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    return RedirectToAction(nameof(Index));
+
                 }
             }
             catch (Exception ex)
             {
+                string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var AccMaterials = await _context.BfileNotes.Include(x => x.BFile).Where(x => x.status == 7 && x.ReciveUserId == userId).ToListAsync();
+                ViewBag.AccMaterials = AccMaterials;
                 return View();
             }
-            return View(pdf);
         }
+
 
 
         public async Task<IActionResult> Edit(int id)
@@ -147,6 +159,7 @@ namespace BasstahalakMS.Areas.Media.Controllers
 
                 existingFile.Name = pdf.Name;
                 existingFile.Description = pdf.Description;
+                existingFile.BfileId = pdf.BfileId;
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
@@ -196,32 +209,31 @@ namespace BasstahalakMS.Areas.Media.Controllers
                 string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 var bF = _context.PdfFiles.Find(pdfId);
 
-                if (true)
+               
+                if (Prepare == 0)
                 {
-                    if (Prepare == 0)
-                    {
-                        var SuperAdmin = await (from x in _context.ApplicationUsers
-                                                join userRole in _context.UserRoles
-                                                on x.Id equals userRole.UserId
-                                                join role in _context.Roles
-                                                on userRole.RoleId equals role.Id
-                                                where role.Name == StaticDetails.SuperAdmin
-                                                select x)
-                                            .SingleOrDefaultAsync();
+                    var SuperAdmin = await (from x in _context.ApplicationUsers
+                                            join userRole in _context.UserRoles
+                                            on x.Id equals userRole.UserId
+                                            join role in _context.Roles
+                                            on userRole.RoleId equals role.Id
+                                            where role.Name == StaticDetails.SuperAdmin
+                                            select x)
+                                        .SingleOrDefaultAsync();
 
-                        pdfNote pdfnote = new pdfNote
-                        {
-                            PdfId = pdfId,
-                            Description = Notes,
-                            ReciveUserId = SuperAdmin.Id   // Sent to Admin
-                        };
-                        _context.pdfNotes.Add(pdfnote);
-                        bF.status = 1;
-                        await _context.SaveChangesAsync();
-                        HttpContext.Session.SetString("Sent", "true");
-                        return RedirectToAction(nameof(Index));
-                    }
-                    else if(Prepare == 5)
+                    pdfNote pdfnote = new pdfNote
+                    {
+                        PdfId = pdfId,
+                        Description = Notes,
+                        ReciveUserId = SuperAdmin.Id   // Sent to Admin
+                    };
+                    _context.pdfNotes.Add(pdfnote);
+                    bF.status = 1;
+                    await _context.SaveChangesAsync();
+                    HttpContext.Session.SetString("Sent", "true");
+                    return RedirectToAction(nameof(Index));
+                }
+                else if(Prepare == 5)
                     {
                         pdfNote pdfnote = new pdfNote
                         {
@@ -234,7 +246,6 @@ namespace BasstahalakMS.Areas.Media.Controllers
                         HttpContext.Session.SetString("Sent", "true");
                         return RedirectToAction(nameof(Index));
                     }
-                }
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -247,22 +258,98 @@ namespace BasstahalakMS.Areas.Media.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SendForReviewTeam(string ReviewSupervisor, int Reviewers, string[] ReviewUsers, int pdfId)
+        public async Task<IActionResult> SendForReviewTeam(string ReviewSupervisor, int Reviewers, string[] ReviewUsers, int pdfId, IFormFile pdf)
         {
             try
             {
 
                 var bfile = await _context.PdfFiles.FindAsync(pdfId);
+                if(bfile.status == 4)
+                {
+                    if (pdf != null)
+                    {
+                        string uploadsFolder = Path.Combine("pdffiles");
+                        string uniqueFilePath = Path.Combine(_hostingEnvironment.WebRootPath, uploadsFolder);
+                        if (!Directory.Exists(uniqueFilePath))
+                        {
+                            Directory.CreateDirectory(uniqueFilePath);
+                        }
 
+
+                        string uniqueFileName = Guid.NewGuid().ToString() + "_" + pdf.FileName;
+                        string filePath = Path.Combine(uniqueFilePath, uniqueFileName);
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await pdf.CopyToAsync(fileStream);
+                        }
+
+                        string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                        bfile.PDFPath = uniqueFileName;
+                        bfile.status = 5; // Latest PDF File
+                        pdfNote pdfnote = new pdfNote
+                        {
+                            PdfId = pdfId,
+                            Description = "",
+                            ReciveUserId = ReviewSupervisor  // Sent to Review
+                        };
+                        _context.pdfNotes.Add(pdfnote);
+
+                        if (Reviewers == 1)
+                        {
+                            var reviewers = await (from x in _context.ApplicationUsers
+                                                   join userRole in _context.UserRoles
+                                                   on x.Id equals userRole.UserId
+                                                   join role in _context.Roles
+                                                   on userRole.RoleId equals role.Id
+                                                   where role.Name == StaticDetails.Review
+                                                   where x.IsAdmin != 1
+                                                   select x)
+                                            .ToListAsync();
+                            foreach (var reviewer in reviewers)
+                            {
+                                pdfNote pdfnote1 = new pdfNote
+                                {
+                                    PdfId = pdfId,
+                                    Description = "",
+                                    ReciveUserId = reviewer.Id   // Sent to Review
+                                };
+                                _context.pdfNotes.Add(pdfnote1);
+
+                            }
+                        }
+                        else if (Reviewers == 2)
+                        {
+                            for (int i = 0; i < ReviewUsers.Count(); i++)
+                            {
+                                var reviewer = await _context.ApplicationUsers.FindAsync(ReviewUsers.GetValue(i));
+                                pdfNote pdfnote1 = new pdfNote
+                                {
+                                    PdfId = pdfId,
+                                    Description = "",
+                                    ReciveUserId = reviewer.Id   // Sent to Review
+                                };
+                                _context.pdfNotes.Add(pdfnote1);
+                            }
+                        }
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        return RedirectToAction(nameof(Index));
+
+                    }
+                }
+                else
+                {
                     pdfNote pdfnote = new pdfNote
                     {
-                        PdfId = pdfId, 
+                        PdfId = pdfId,
                         Description = "",
                         ReciveUserId = ReviewSupervisor  // Sent to Review
                     };
                     _context.pdfNotes.Add(pdfnote);
                     bfile.status = 3;
-                    
+
                     if (Reviewers == 1)
                     {
                         var reviewers = await (from x in _context.ApplicationUsers
@@ -273,7 +360,7 @@ namespace BasstahalakMS.Areas.Media.Controllers
                                                where role.Name == StaticDetails.Review
                                                where x.IsAdmin != 1
                                                select x)
-                                      .ToListAsync();
+                                        .ToListAsync();
                         foreach (var reviewer in reviewers)
                         {
                             pdfNote pdfnote1 = new pdfNote
@@ -302,10 +389,12 @@ namespace BasstahalakMS.Areas.Media.Controllers
                             bfile.status = 3;
                         }
                     }
+                }
+                
 
-                    await _context.SaveChangesAsync();
-                    HttpContext.Session.SetString("Sent", "true");
-                    return RedirectToAction(nameof(Index));
+                await _context.SaveChangesAsync();
+                HttpContext.Session.SetString("Sent", "true");
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
@@ -314,6 +403,6 @@ namespace BasstahalakMS.Areas.Media.Controllers
             }
         }
 
-
+        
     }
 }

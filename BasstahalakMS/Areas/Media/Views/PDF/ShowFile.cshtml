@@ -55,11 +55,13 @@
             </div>
         </div>
         <hr />
+
         <form method="post" asp-action="SendForAdminOrReview" asp-controller="PDF">
                 <div class="row mb-3">
                     <label class="col-sm-4 form-control-label  text-dark font-weight-bold">ملاحظات </label>
                 </div>
-
+                
+          
                 <!-- row -->
                 <div class="row mb-3 mr-1">
                 <textarea id="Notes" name="Notes" class="form-control" rows="8"></textarea>
@@ -67,7 +69,11 @@
                 <input type="hidden" name="pdfId" value="@Model.Id" />
                 <input type="hidden" id="Prepare" name="Prepare" value="0" />
                 <div class="form-layout-footer mg-t-30 text-center">
+                @if(Model.status != 4)
+                {
                     <input type="submit" value="ارسال للادمن" @* onclick="clicked(event)" *@ class="btn btn-danger">
+
+                }
 
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">
                         ارسال للمراجعة
@@ -89,7 +95,19 @@
 
             </div>
             <div class="modal-body">
-                <form method="post" asp-action="SendForReviewTeam" asp-controller="PDF">
+                <form method="post" asp-action="SendForReviewTeam" asp-controller="PDF" enctype="multipart/form-data">
+                    @if (Model.status == 4)
+                    {
+                        <div class="row mb-3">
+                            <label class="col-sm-4 form-control-label  text-dark font-weight-bold mt-2">الملف النهائي:</label>
+
+                            <div class="col-sm-7 ">
+                                <input type="file" name="pdf" accept=".pdf" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <!-- row -->
+                    }
                     <div class="row mb-3">
                         <label class="col-sm-4 form-control-label  text-dark font-weight-bold mt-2">المشرف</label>
                         <select class="col-sm-7 form-control" required name="ReviewSupervisor">
@@ -124,7 +142,7 @@
                     </div>
                     <input type="hidden" name="pdfId" value="@Model.Id" />
                     <div class="form-layout-footer mg-t-30 text-center">
-                        <input type="submit" value="ارسال للمراجعة" class="btn btn-success">
+                        <input type="submit" value="ارسال لفريق المراجعة" class="btn btn-success">
                     </div>
                 </form>
             </div>

@@ -31,11 +31,13 @@
                 <thead>
                     <tr>
                         <th>اسم الملف</th>
+                        <th> المادة العلمية</th>
                         <th>تاريخ الانشاء</th>
                         <th>الحالة</th>
                         <th>عرض</th>
                         <th>تعديل</th>
                         <th>ارسال </th>
+                        <th> رفع الملف النهائي </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -43,6 +45,7 @@
                     {
                         <tr>
                             <td>@file.Name</td>
+                            <td>@file.BFile.Name</td>
                             <td>@file.CreationDate</td>
                             <td>
                                 @if (file.status == 0)
@@ -65,6 +68,11 @@
                                 {
                                     <span class="text-info">تم قبول الملف</span>
                                 }
+                                else if (file.status == 5)
+                                {
+                                    <span class="text-success"> تم رفع الملف النهائي </span>
+
+                                }
                             </td>
                             <td>
                                 <a href="~/pdffiles/@file.PDFPath" class="btn btn-info" target="_blank">
@@ -77,10 +85,16 @@
                                     <a asp-action="Edit" asp-controller="PDF" asp-route-id="@file.Id" class=" btn btn-warning"> <i class="fas fa-edit"></i> </a>
 
                                 }
-                                else
+                                else if (file.status == 3 || file.status == 1)
                                 {
-                                <span class="text-info">تحت المراجعة</span>
+                                    <span class="text-info">تحت المراجعة</span>
                                 }
+                                else if (file.status == 4)
+                                {
+                                    <span class="text-info">تم قبول الملف</span>
+
+                                }
+                               
                             </td>
                             <td>
                                 @if (file.status == 0)
@@ -103,13 +117,30 @@
                                 }
                                 else if (file.status == 3)
                                 {
-                                    <span class="text-info">تحت مراجعة فريق المراجعة</span>
+                                    <span class="text-info">تحت المراجعة</span>
                                 }
                                 else if (file.status == 4)
                                 {
                                     <span class="text-info">تم قبول الملف</span>
                                 }
                                 
+                            </td>
+                            <td>
+                                @if (file.status != 4 && file.status != 5)
+                                {
+                                    <span class="text-danger">يحتاج مراجعة</span>
+                                }
+
+                                else if (file.status == 5)
+                                {
+                                    <span class="text-danger"> غير متاح </span>
+
+                                }
+                                else 
+                                {
+                                    <a asp-action="ShowFile" asp-controller="PDF" asp-route-id="@file.Id" class=" btn btn-success"> <i class="fas fa-upload"></i> </a>
+                                }
+
                             </td>
                         </tr>
                     }
@@ -138,6 +169,7 @@
             "stripeClasses": [],
             "lengthMenu": [7, 10, 20, 50],
             "pageLength": 20,
+            "scrollX": true,
             drawCallback: function () { $('.dataTables_paginate > .pagination').addClass(' pagination-style-13 pagination-bordered mb-5'); }
         });
     </script>

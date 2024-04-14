@@ -29,7 +29,7 @@
                         <th>اسم المادة</th>
                         <th>اسم الكتاب</th>
                         <th>اسم المعد</th>
-                        <th>الموافق على المادة</th>
+                       @* <th>الموافق على المادة</th>*@
                         <th>الحالة</th>
                         @* <th>عرض</th> *@
                         <th>ارسال للميديا</th>
@@ -42,7 +42,7 @@
                             <td>@file.BFile.Name</td>
                             <td>@file.BFile.Book.Name</td>
                             <td>@file.BFile.User.FullName</td>
-                            <td>@file.User.FullName</td>
+                            @*<td>@file.User.FullName</td>*@
                             <td class="text-center">
                                 @if (file.BFile.status == 10)
                                 {
@@ -59,9 +59,17 @@
                                 </a>
                             </td> *@
                             <td class="text-center">
-                                <a asp-action="ShowFile" asp-controller="AccMaterial" asp-route-id="@file.BFile.Id" class="btn btn-success">
-                                    <i class="fas fa-plane"></i>
-                                </a>
+                                @if (file.BFile.status == 10)
+                                {
+                                    <a asp-action="ShowFile" asp-controller="AccMaterial" asp-route-id="@file.BFile.Id" class="btn btn-success">
+                                        <i class="fas fa-plane"></i>
+                                    </a>
+                                }
+                                else if (file.BFile.status == 7)
+                                {
+                                    <span class="text-success"><i class="fas fa-check-circle"></i> تم الارسال الي الميديا</span>
+                                }
+                                
                             </td>
                         </tr>
                     }

@@ -30,6 +30,7 @@
                         <th>الحالة</th>
                         <th>عرض</th>
                         <th>ارسال </th>
+                        <th>قبول الملف </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -54,6 +55,11 @@
                                 else if (file.PdfFile.status == 4)
                                 {
                                     <span class="text-info">تم قبول الملف</span>
+                                }
+                                else if (file.PdfFile.status == 5)
+                                {
+                                    <span class="text-success"> تم رفع الملف النهائي </span>
+
                                 }
                             </td>
                             <td>
@@ -84,7 +90,36 @@
                                 {
                                     <span class="text-info">تم قبول الملف</span>
                                 }
+                                else if (file.PdfFile.status == 5)
+                                {
+                                    <a asp-action="ShowFile" asp-controller="PDF" asp-route-id="@file.PdfFile.Id" class=" btn btn-success">
+                                        <i class="fas fa-plane"></i>
+                                        ارسال للمطبعة
+                                    </a>
+
+                                }
+                            </td>
+                            <td>
+                                @if (file.PdfFile.status == 1 || file.PdfFile.status == 3)
+                                {
+                                    <a asp-action="AcceptFile" asp-controller="PDF" asp-route-id="@file.PdfFile.Id" class=" btn btn-info">
+                                        قبول
+                                    </a>
+                                }
+                                else if (file.PdfFile.status == 2)
+                                {
+                                    <span class="text-info">تم طلب تعديلات</span>
+                                }
                                 
+                                else if (file.PdfFile.status == 4)
+                                {
+                                    <span class="text-info">تم قبول الملف</span>
+                                }
+                                else if (file.PdfFile.status == 5)
+                                {
+                                    <span class="text-danger"> غير متاح </span>
+
+                                }
                             </td>
                         </tr>
                     }
@@ -96,6 +131,7 @@
 <input type="hidden" id="created" data-value="@ViewBag.created" />
 <input type="hidden" id="Sent" data-value="@ViewBag.Sent" />
 <input type="hidden" id="updated" data-value="@ViewBag.updated" />
+<input type="hidden" id="Accepted" data-value="@ViewBag.Accepted" />
 
 @section scripts {
     <!-- BEGIN PAGE LEVEL SCRIPTS -->
@@ -184,6 +220,28 @@
                     "hideMethod": "fadeOut"
                 }
                 toastr.success("تم الارسال بنجاح");
+            }
+
+            var Accepted = $("#Accepted").data("value");
+            if (Accepted == "True") {
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": true,
+                    "positionClass": "toast-top-left",
+                    "preventDuplicates": true,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "12000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+                toastr.success("تمت الموافقة علي الملف بنجاح");
             }
         });
     </script>

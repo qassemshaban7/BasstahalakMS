@@ -20,5 +20,9 @@ namespace BasstahalakMS.Models
         public string? UserId { get; set; }
         [ForeignKey("UserId")]
         public ApplicationUser User { get; set; }
+
+        public int BfileId { get; set; }
+        [ForeignKey("BfileId")]
+        public BFile BFile { get; set; }
     }
 }
